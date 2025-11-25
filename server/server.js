@@ -19,8 +19,8 @@ connectDB();
 // Add more entries here if needed
 const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:5173',
-  'https://myproject-three-ecru.vercel.app/',
-  'http://play.hotncool.qa'
+  'https://myproject-three-ecru.vercel.app',
+  'http://play.hotncool.qa','https://myproject-4ewda3rak-hncservices-projects.vercel.app'
 ];
 
 // CORS Settings
