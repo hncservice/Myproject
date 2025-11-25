@@ -15,36 +15,17 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Allow multiple origins (dev + production)
-// Add more entries here if needed
-const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:5173',
-  'https://myproject-three-ecru.vercel.app',
-  'http://play.hotncool.qa','https://myproject-4ewda3rak-hncservices-projects.vercel.app'
-];
-
-// CORS Settings
+// 🔥 SIMPLE, PERMISSIVE CORS (DEV + PROD)
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like Postman, curl)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      console.log(`❌ CORS blocked request from: ${origin}`);
-      return callback(new Error('Not allowed by CORS'));
-    },
+    origin: true, // reflect the requesting origin in Access-Control-Allow-Origin
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
-// ❌ REMOVE this line (it causes the PathError crash)
-// app.options('*', cors());
+// No app.options('*') here – cors() already handles OPTIONS
 
 app.use(express.json());
 
@@ -61,5 +42,4 @@ app.use(errorMiddleware);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🌐 Allowed frontend: ${process.env.CLIENT_URL || 'http://localhost:5173'}`);
 });
