@@ -24,7 +24,7 @@ const loginSchema = Joi.object({
   password: Joi.string().required()
 });
 
-exports.registerUser = async (req, res) => {
+exports.registerUser = async (req, res, next) => {
   try {
     const { error } = registerSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
