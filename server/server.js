@@ -12,34 +12,37 @@ const errorMiddleware = require('./middleware/errorMiddleware');
 
 const app = express();
 
-// ✅ Trust Render's proxy so express-rate-limit can use X-Forwarded-For correctly
+// Render proxy trust (optional but recommended)
 app.set('trust proxy', 1);
 
-// Connect to MongoDB
+// Connect to database
 connectDB();
 
-// Super-simple CORS (keep it like this until everything works)
+// CORS — simple & fully open (works with Render + Vercel)
 app.use(
   cors({
-    origin: '*',
+    origin: '*', // allow all — no CORS errors
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
+// Handle preflight OPTIONS requests
+app.options('*', cors());
+
 app.use(express.json());
 
-// Routes
+// API routes
 app.use('/api/auth', authRoutes);
-app.use('/api', spinRoutes);      // /api/wheel, /api/spin
+app.use('/api', spinRoutes); // /api/wheel, /api/spin
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Error handler
+// Central error handler
 app.use(errorMiddleware);
 
-// Start server
+// Start server (Render injects PORT automatically)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on Render at port ${PORT}`);
 });
