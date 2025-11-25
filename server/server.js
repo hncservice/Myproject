@@ -15,17 +15,36 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// 🔥 SIMPLE, PERMISSIVE CORS (DEV + PROD)
+// Allow multiple origins (dev + production)
+const allowedOrigins = [
+  'http://localhost:5173', // Vite local dev
+  process.env.CLIENT_URL,  // main production frontend (set in Render env)
+  'https://myproject-three-ecru.vercel.app',
+  'http://play.hotncool.qa',
+  'https://myproject-4ewda3rak-hncservices-projects.vercel.app',
+].filter(Boolean); // remove any undefined entries
+
+// CORS Settings
 app.use(
   cors({
-    origin: true, // reflect the requesting origin in Access-Control-Allow-Origin
+    origin: function (origin, callback) {
+      // Allow requests with no origin (Postman, curl, etc.)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log(`❌ CORS blocked request from: ${origin}`);
+      return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
-// No app.options('*') here – cors() already handles OPTIONS
+// ❌ DO NOT use app.options('*', cors()); – it breaks path-to-regexp with express 5+
 
 app.use(express.json());
 
@@ -42,4 +61,5 @@ app.use(errorMiddleware);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log('🌐 Allowed origins:', allowedOrigins);
 });
