@@ -1,0 +1,83 @@
+// client/src/routes/AppRoutes.jsx
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+import RegisterPage from '../pages/user/RegisterPage';
+import VerifyOtpPage from '../pages/user/VerifyOtpPage';
+import SpinPage from '../pages/user/SpinPage';
+
+import VendorLoginPage from '../pages/vendor/VendorLoginPage';
+import VendorScanPage from '../pages/vendor/VendorScanPage';
+
+import AdminLoginPage from '../pages/admin/AdminLoginPage';
+import AdminVendorsPage from '../pages/admin/AdminVendorsPage';
+import AdminWheelItemsPage from '../pages/admin/AdminWheelItemsPage';
+import AdminReportPage from '../pages/admin/AdminReportPage';
+
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const { role } = useAuth();
+  if (role !== allowedRole) return <Navigate to="/" replace />;
+  return children;
+};
+
+const AppRoutes = () => {
+  return (
+    <Routes>
+      {/* User */}
+      <Route path="/" element={<RegisterPage />} />
+      <Route path="/verify-otp" element={<VerifyOtpPage />} />
+      <Route
+        path="/spin"
+        element={
+          <ProtectedRoute allowedRole="user">
+            <SpinPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Vendor */}
+      <Route path="/vendor/login" element={<VendorLoginPage />} />
+      <Route
+        path="/vendor/scan"
+        element={
+          <ProtectedRoute allowedRole="vendor">
+            <VendorScanPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin */}
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route
+        path="/admin/vendors"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminVendorsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/wheel-items"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminWheelItemsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/report"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminReportPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+export default AppRoutes;
