@@ -37,7 +37,7 @@ exports.sendPrizeEmail = async ({
         <img
           src="cid:prizeqr"
           alt="Prize QR code"
-          style="max-width: 220px; border: 4px solid #ff9800; border-radius: 12px; display:block;"
+          style="max-width: 220px; border: 4px solid #291874ff; border-radius: 12px; display:block;"
         />
       </div>
 

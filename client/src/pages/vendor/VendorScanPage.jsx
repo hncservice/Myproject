@@ -12,6 +12,28 @@ import {
 } from 'react-bootstrap';
 import { Scanner } from '@yudiel/react-qr-scanner';
 
+// 🔹 helper: get pure token from URL or plain code
+const extractQrToken = (raw) => {
+  if (!raw) return '';
+  const trimmed = raw.trim();
+
+  // If it looks like a URL, try to pull the last path segment
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    try {
+      const url = new URL(trimmed);
+      const segments = url.pathname.split('/').filter(Boolean); // remove empty parts
+      // e.g. /redeem/492c... -> ['redeem', '492c...']
+      return segments[segments.length - 1] || '';
+    } catch (e) {
+      console.warn('Failed to parse QR URL, falling back to raw:', e);
+      return trimmed;
+    }
+  }
+
+  // otherwise assume it's already the token
+  return trimmed;
+};
+
 const VendorScanPage = () => {
   const { profile } = useAuth();
   const [mode, setMode] = useState('camera'); // 'camera' | 'manual'
@@ -26,21 +48,22 @@ const VendorScanPage = () => {
 
   const redeem = useCallback(
     async (tokenValue) => {
-      const trimmed = (tokenValue || '').trim();
-      if (!trimmed) return;
+      const extracted = extractQrToken(tokenValue);
+      if (!extracted) return;
       if (processing) return;
 
       // Prevent processing same token repeatedly
-      if (lastProcessedRef.current === trimmed) return;
-      lastProcessedRef.current = trimmed;
+      if (lastProcessedRef.current === extracted) return;
+      lastProcessedRef.current = extracted;
 
       setProcessing(true);
       setError(null);
       setInfo(null);
 
       try {
-        const res = await scanQrToken(trimmed);
+        const res = await scanQrToken(extracted); // 👈 send pure token
         setInfo(res.data);
+        setQrToken(extracted); // show clean token in input
       } catch (err) {
         const msg =
           err?.response?.data?.message ||
@@ -109,7 +132,6 @@ const VendorScanPage = () => {
             <Scanner
               onScan={handleScanResults}
               onError={(err) => {
-                // Only log to console to avoid UI noise
                 console.log('QR scanner error:', err);
               }}
               components={{}} // default UI
@@ -141,8 +163,8 @@ const VendorScanPage = () => {
             {processing ? 'Processing…' : 'Redeem'}
           </Button>
           <p className="mt-2 small text-muted mb-0">
-            Use this if the camera cannot scan or the customer only has a plain text
-            code.
+            You can paste either the plain code or the full link
+            (https://.../redeem/XXXX) here.
           </p>
         </Form>
       )}
