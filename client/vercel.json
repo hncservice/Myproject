@@ -4,9 +4,22 @@
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
+     {
+      "source": "/(.*)", 
+      "destination": "/index.html"
+    },
     {
-      "source": "/(.*)",
-      "destination": "/"
+      "source": "/(/.*)",
+      "destination": "/*"
+    },
+    {
+
+      "source": "/admin/login",
+      "destination": "/*"
+    },
+    {
+    "source": "/vendor/login",
+      "destination": "/*"
     }
   ]
 }
