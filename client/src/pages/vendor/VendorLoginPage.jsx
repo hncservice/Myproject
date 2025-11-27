@@ -1,3 +1,4 @@
+// client/src/pages/vendor/VendorLoginPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginVendor } from '../../api/authApi';
@@ -12,19 +13,47 @@ const VendorLoginPage = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return; // prevent double submit
+
     setError(null);
     setLoading(true);
+
     try {
-      const res = await loginVendor(form);
-      login('vendor', res.data.token, res.data.vendor);
+      const payload = {
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
+      };
+
+      if (!payload.email || !payload.password) {
+        setError('Please enter both email and password.');
+        setLoading(false);
+        return;
+      }
+
+      const res = await loginVendor(payload);
+      const { token, vendor } = res.data || {};
+
+      if (!token || !vendor) {
+        throw new Error('Invalid response from server');
+      }
+
+      login('vendor', token, vendor);
       navigate('/vendor/scan');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Login failed. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -33,30 +62,36 @@ const VendorLoginPage = () => {
   return (
     <Card className="p-4">
       <h3 className="mb-3">Vendor Login</h3>
+
       {error && <Alert variant="danger">{error}</Alert>}
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
+
+      <Form onSubmit={handleSubmit} noValidate>
+        <Form.Group className="mb-3" controlId="vendorLoginEmail">
           <Form.Label>Email</Form.Label>
           <Form.Control
             name="email"
             type="email"
+            autoComplete="username"
             value={form.email}
             onChange={handleChange}
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3">
+
+        <Form.Group className="mb-3" controlId="vendorLoginPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
             name="password"
             type="password"
+            autoComplete="current-password"
             value={form.password}
             onChange={handleChange}
             required
           />
         </Form.Group>
+
         <Button type="submit" className="w-100" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Logging in…' : 'Login'}
         </Button>
       </Form>
     </Card>

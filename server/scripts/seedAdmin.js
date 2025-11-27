@@ -9,8 +9,12 @@ async function main() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB connected');
 
-    const email = 'hncservice.it@gmail.com';  // change to your email
-    const password = 'Hnc@qa]1991>';       // change to a strong password
+    const email = process.env.ADMIN_EMAIL;
+    const password = process.env.ADMIN_PASSWORD;
+
+    if (!email || !password) {
+      throw new Error('ADMIN_EMAIL or ADMIN_PASSWORD not set');
+    }
 
     let admin = await AdminUser.findOne({ email });
     if (admin) {
@@ -27,9 +31,7 @@ async function main() {
       role: 'admin'
     });
 
-    console.log('✅ Admin created:');
-    console.log('   Email   :', email);
-    console.log('   Password:', password);
+    console.log('✅ Admin created with email:', email);
     process.exit(0);
   } catch (err) {
     console.error(err);

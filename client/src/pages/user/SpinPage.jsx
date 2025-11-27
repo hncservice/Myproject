@@ -40,7 +40,7 @@ const SpinButton = styled(Button)(() => ({
 }));
 
 const SpinPage = () => {
-  const { token, profile } = useAuth();
+  const { profile } = useAuth();
 
   const [wheelItems, setWheelItems] = useState([]);
   const [wheelLoading, setWheelLoading] = useState(true);
@@ -51,7 +51,9 @@ const SpinPage = () => {
 
   const [resultMessage, setResultMessage] = useState('');
   const [isWin, setIsWin] = useState(false);
-  const [locked, setLocked] = useState(false);
+
+  // If backend says user already spun (hasSpun: true), start locked
+  const [locked, setLocked] = useState(() => !!profile?.hasSpun);
   const [spinError, setSpinError] = useState(null);
 
   const [winnerBurst, setWinnerBurst] = useState(false);
@@ -59,11 +61,10 @@ const SpinPage = () => {
   const [wonPrizeText, setWonPrizeText] = useState('');
 
   const loadWheelConfig = async () => {
+    setWheelError(null);
+    setWheelLoading(true);
     try {
-      setWheelLoading(true);
-      setWheelError(null);
-
-      const res = await getWheelConfig(token);
+      const res = await getWheelConfig();
       const data = res?.data || [];
       setWheelItems(data);
     } catch (err) {
@@ -79,8 +80,7 @@ const SpinPage = () => {
 
   useEffect(() => {
     loadWheelConfig();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, []);
 
   const handleSpin = async () => {
     if (locked || spinning) return;
@@ -98,44 +98,56 @@ const SpinPage = () => {
     setSpinError(null);
     setResultMessage('');
     setIsWin(false);
-    setWinnerBurst(false); // reset any previous burst
+    setWinnerBurst(false);
     setPrizePopupOpen(false);
     setWonPrizeText('');
     setSpinning(true);
 
     // For security, backend decides win/lose.
-    // This rotation is only for animation if you later re-add a visual wheel.
+    // This rotation is only for animation.
     const extraDegrees = 360 * 6 + Math.floor(Math.random() * 360);
     setRotation((prev) => prev + extraDegrees);
 
     try {
-      const res = await spinOnce(token);
-      const { status, prize } = res.data;
+      const res = await spinOnce();
+      const { status, prize } = res.data || {};
 
+      // Sync animation duration with visual effect
       setTimeout(() => {
         setSpinning(false);
+
         if (status === 'won') {
           setIsWin(true);
           setResultMessage(`You won: ${prize}`);
           setWonPrizeText(prize || 'Special Prize');
 
-          // trigger winner burst (confetti) for a short time
+          // Confetti burst
           setWinnerBurst(true);
           setTimeout(() => setWinnerBurst(false), 1200);
 
-          // open popup
+          // Show popup
           setPrizePopupOpen(true);
-        } else {
+        } else if (status === 'lost') {
           setIsWin(false);
           setResultMessage('No win this time. Better luck next time!');
+        } else {
+          // Unexpected payload
+          setIsWin(false);
+          setResultMessage('Unexpected result from server.');
         }
+
+        // In all cases, user used their one spin
         setLocked(true);
       }, 3200);
     } catch (err) {
       setSpinning(false);
-      const msg = err?.response?.data?.message || 'Spin failed';
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Spin failed. Please try again later.';
       setSpinError(msg);
 
+      // If server says they already spun, lock the button
       if (/already spun|already spin|already.*wheel/i.test(msg)) {
         setLocked(true);
       }
@@ -325,8 +337,9 @@ const SpinPage = () => {
           </Typography>
 
           <Typography variant="body2" color="text.secondary" mb={2}>
-            Show this screen to the staff to claim your reward.  
-            Terms & conditions may apply.
+            Show this screen to the staff to claim your reward.
+            <br />
+            Terms &amp; conditions may apply.
           </Typography>
         </DialogContent>
 

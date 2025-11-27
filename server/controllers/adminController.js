@@ -8,29 +8,40 @@ const WheelItem = require('../models/WheelItem');
 const Spin = require('../models/Spin');
 const User = require('../models/User');
 
+const normalizeEmail = (email) => (email || '').trim().toLowerCase();
+const trimStr = (v) => (typeof v === 'string' ? v.trim() : v);
+
 const vendorSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string().min(2).max(100).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required()
 });
 
 const wheelItemSchema = Joi.object({
-  title: Joi.string().required(),
+  title: Joi.string().min(1).max(100).required(),
   description: Joi.string().allow('', null),
-  imageUrl: Joi.string().allow('', null),
+  imageUrl: Joi.string().uri().allow('', null),
   probabilityWeight: Joi.number().min(0).required(),
-  quantityTotal: Joi.number().allow(null)
+  quantityTotal: Joi.number().integer().min(0).allow(null),
+  isActive: Joi.boolean().optional()
 });
 
 // VENDORS
 exports.createVendor = async (req, res) => {
   try {
     const { error } = vendorSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
-    const { name, email, password } = req.body;
+    let { name, email, password } = req.body;
+    name = trimStr(name);
+    email = normalizeEmail(email);
+
     const existing = await Vendor.findOne({ email });
-    if (existing) return res.status(400).json({ message: 'Vendor email already used' });
+    if (existing) {
+      return res.status(400).json({ message: 'Vendor email already used' });
+    }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
@@ -41,75 +52,86 @@ exports.createVendor = async (req, res) => {
       createdByAdminId: req.admin._id
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       id: vendor._id,
       name: vendor.name,
       email: vendor.email
     });
   } catch (err) {
     console.error('createVendor error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 exports.listVendors = async (req, res) => {
   try {
     const vendors = await Vendor.find().select('name email createdAt');
-    res.json(vendors);
+    return res.json(vendors);
   } catch (err) {
     console.error('listVendors error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 // WHEEL ITEMS
 exports.createWheelItem = async (req, res) => {
   try {
-    const { error } = wheelItemSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    const { error, value } = wheelItemSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
-    const item = await WheelItem.create(req.body);
-    res.status(201).json(item);
+    const item = await WheelItem.create(value);
+    return res.status(201).json(item);
   } catch (err) {
     console.error('createWheelItem error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 exports.updateWheelItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { error } = wheelItemSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    const { error, value } = wheelItemSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
-    const item = await WheelItem.findByIdAndUpdate(id, req.body, { new: true });
-    if (!item) return res.status(404).json({ message: 'Wheel item not found' });
+    const item = await WheelItem.findByIdAndUpdate(id, value, { new: true });
+    if (!item) {
+      return res.status(404).json({ message: 'Wheel item not found' });
+    }
 
-    res.json(item);
+    return res.json(item);
   } catch (err) {
     console.error('updateWheelItem error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 exports.deleteWheelItem = async (req, res) => {
   try {
     const { id } = req.params;
-    await WheelItem.findByIdAndDelete(id);
-    res.json({ message: 'Deleted' });
+    const existing = await WheelItem.findById(id);
+    if (!existing) {
+      return res.status(404).json({ message: 'Wheel item not found' });
+    }
+
+    await existing.deleteOne();
+    return res.json({ message: 'Deleted' });
   } catch (err) {
     console.error('deleteWheelItem error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 exports.listWheelItems = async (req, res) => {
   try {
-    const items = await WheelItem.find();
-    res.json(items);
+    const items = await WheelItem.find().sort('createdAt');
+    return res.json(items);
   } catch (err) {
     console.error('listWheelItems error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -129,7 +151,7 @@ exports.exportReport = async (req, res) => {
       { header: 'User Email', key: 'userEmail', width: 25 },
       { header: 'Prize', key: 'prize', width: 25 },
       { header: 'Status', key: 'status', width: 10 },
-      { header: 'Redemption Status', key: 'redemptionStatus', width: 15 },
+      { header: 'Redemption Status', key: 'redemptionStatus', width: 18 },
       { header: 'Vendor', key: 'vendorName', width: 20 },
       { header: 'Spun At', key: 'spunAt', width: 25 },
       { header: 'Redeemed At', key: 'redeemedAt', width: 25 }
@@ -141,10 +163,10 @@ exports.exportReport = async (req, res) => {
         userEmail: s.userId?.email || '',
         prize: s.wheelItemId?.title || '',
         status: s.status,
-        redemptionStatus: s.redemptionStatus,
+        redemptionStatus: s.redemptionStatus || '',
         vendorName: s.redeemedByVendorId?.name || '',
         spunAt: s.spunAt,
-        redeemedAt: s.redeemedAt
+        redeemedAt: s.redeemedAt || ''
       });
     });
 
@@ -155,9 +177,9 @@ exports.exportReport = async (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename="spin_report.xlsx"');
 
     await workbook.xlsx.write(res);
-    res.end();
+    return res.end();
   } catch (err) {
     console.error('exportReport error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };

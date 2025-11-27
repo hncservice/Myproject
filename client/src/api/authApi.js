@@ -1,3 +1,4 @@
+// client/src/api/authApi.js
 import axiosInstance from './axiosInstance';
 
 export const registerUser = (payload) =>

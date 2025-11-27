@@ -15,9 +15,13 @@ import AdminVendorsPage from '../pages/admin/AdminVendorsPage';
 import AdminWheelItemsPage from '../pages/admin/AdminWheelItemsPage';
 import AdminReportPage from '../pages/admin/AdminReportPage';
 
-const ProtectedRoute = ({ children, allowedRole }) => {
-  const { role } = useAuth();
-  if (role !== allowedRole) return <Navigate to="/" replace />;
+const ProtectedRoute = ({ children, allowedRole, redirectTo }) => {
+  const { role, token } = useAuth();
+
+  if (!token || role !== allowedRole) {
+    return <Navigate to={redirectTo} replace />;
+  }
+
   return children;
 };
 
@@ -30,7 +34,7 @@ const AppRoutes = () => {
       <Route
         path="/spin"
         element={
-          <ProtectedRoute allowedRole="user">
+          <ProtectedRoute allowedRole="user" redirectTo="/">
             <SpinPage />
           </ProtectedRoute>
         }
@@ -41,7 +45,10 @@ const AppRoutes = () => {
       <Route
         path="/vendor/scan"
         element={
-          <ProtectedRoute allowedRole="vendor">
+          <ProtectedRoute
+            allowedRole="vendor"
+            redirectTo="/vendor/login"
+          >
             <VendorScanPage />
           </ProtectedRoute>
         }
@@ -52,7 +59,10 @@ const AppRoutes = () => {
       <Route
         path="/admin/vendors"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute
+            allowedRole="admin"
+            redirectTo="/admin/login"
+          >
             <AdminVendorsPage />
           </ProtectedRoute>
         }
@@ -60,7 +70,10 @@ const AppRoutes = () => {
       <Route
         path="/admin/wheel-items"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute
+            allowedRole="admin"
+            redirectTo="/admin/login"
+          >
             <AdminWheelItemsPage />
           </ProtectedRoute>
         }
@@ -68,7 +81,10 @@ const AppRoutes = () => {
       <Route
         path="/admin/report"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute
+            allowedRole="admin"
+            redirectTo="/admin/login"
+          >
             <AdminReportPage />
           </ProtectedRoute>
         }

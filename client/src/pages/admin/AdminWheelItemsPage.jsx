@@ -1,12 +1,11 @@
 // client/src/pages/admin/AdminWheelItemsPage.jsx
 import React, { useEffect, useState } from 'react';
-import { Card, Form, Button, Alert, Table, Badge } from 'react-bootstrap';
-import { useAuth } from '../../context/AuthContext';
+import { Card, Form, Button, Alert, Table, Badge, Spinner } from 'react-bootstrap';
 import {
   getWheelItems,
   createWheelItem,
   updateWheelItem,
-  deleteWheelItem
+  deleteWheelItem,
 } from '../../api/adminApi';
 
 const emptyForm = {
@@ -14,31 +13,40 @@ const emptyForm = {
   description: '',
   imageUrl: '',
   probabilityWeight: 1,
-  quantityTotal: ''
+  quantityTotal: '',
 };
 
 const AdminWheelItemsPage = () => {
-  const { token } = useAuth();
   const [items, setItems] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
 
   const [error, setError] = useState(null);
   const [msg, setMsg] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const [loadingList, setLoadingList] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   const loadItems = async () => {
+    setError(null);
+    setLoadingList(true);
     try {
-      const res = await getWheelItems(token);
-      setItems(res.data);
+      const res = await getWheelItems();
+      setItems(res.data || []);
     } catch (err) {
-      setError('Failed to load wheel items');
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to load wheel items';
+      setError(msg);
+    } finally {
+      setLoadingList(false);
     }
   };
 
   useEffect(() => {
     loadItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
@@ -53,43 +61,66 @@ const AdminWheelItemsPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return;
+
     setError(null);
     setMsg(null);
-    setLoading(true);
+    setSaving(true);
 
     const payload = {
-      title: form.title,
-      description: form.description || '',
-      imageUrl: form.imageUrl || '',
+      title: form.title.trim(),
+      description: (form.description || '').trim(),
+      imageUrl: form.imageUrl.trim(),
       probabilityWeight: Number(form.probabilityWeight),
-      quantityTotal: form.quantityTotal === '' ? null : Number(form.quantityTotal)
+      quantityTotal:
+        form.quantityTotal === '' ? null : Number(form.quantityTotal),
     };
+
+    if (!payload.title || Number.isNaN(payload.probabilityWeight)) {
+      setError('Please provide a valid title and probability weight.');
+      setSaving(false);
+      return;
+    }
+
+    if (
+      payload.quantityTotal !== null &&
+      (Number.isNaN(payload.quantityTotal) || payload.quantityTotal < 0)
+    ) {
+      setError('Quantity total must be a non-negative number or left blank.');
+      setSaving(false);
+      return;
+    }
 
     try {
       if (editingId) {
-        await updateWheelItem(token, editingId, payload);
+        await updateWheelItem(editingId, payload);
         setMsg('Wheel item updated');
       } else {
-        await createWheelItem(token, payload);
+        await createWheelItem(payload);
         setMsg('Wheel item created');
       }
       resetForm();
-      loadItems();
+      await loadItems();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to save item');
+      const msg =
+        err?.response?.data?.message || err?.message || 'Failed to save item';
+      setError(msg);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
   const handleEdit = (item) => {
     setEditingId(item._id);
     setForm({
-      title: item.title,
+      title: item.title || '',
       description: item.description || '',
       imageUrl: item.imageUrl || '',
-      probabilityWeight: item.probabilityWeight,
-      quantityTotal: item.quantityTotal ?? ''
+      probabilityWeight: item.probabilityWeight ?? 1,
+      quantityTotal:
+        item.quantityTotal === null || item.quantityTotal === undefined
+          ? ''
+          : item.quantityTotal,
     });
   };
 
@@ -97,24 +128,32 @@ const AdminWheelItemsPage = () => {
     if (!window.confirm('Delete this wheel item?')) return;
     setError(null);
     setMsg(null);
+    setDeletingId(id);
     try {
-      await deleteWheelItem(token, id);
+      await deleteWheelItem(id);
       setMsg('Wheel item deleted');
-      loadItems();
+      await loadItems();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to delete item');
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to delete item';
+      setError(msg);
+    } finally {
+      setDeletingId(null);
     }
   };
 
   return (
     <Card className="p-4">
       <h3 className="mb-3">Wheel Items</h3>
+
       {msg && <Alert variant="success">{msg}</Alert>}
       {error && <Alert variant="danger">{error}</Alert>}
 
       {/* Create / Edit form */}
-      <Form onSubmit={handleSubmit} className="mb-4">
-        <Form.Group className="mb-2">
+      <Form onSubmit={handleSubmit} className="mb-4" noValidate>
+        <Form.Group className="mb-2" controlId="wheelTitle">
           <Form.Label>Title</Form.Label>
           <Form.Control
             name="title"
@@ -123,7 +162,8 @@ const AdminWheelItemsPage = () => {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+
+        <Form.Group className="mb-2" controlId="wheelDescription">
           <Form.Label>Description</Form.Label>
           <Form.Control
             as="textarea"
@@ -133,7 +173,8 @@ const AdminWheelItemsPage = () => {
             onChange={handleChange}
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+
+        <Form.Group className="mb-2" controlId="wheelImageUrl">
           <Form.Label>Image URL (optional)</Form.Label>
           <Form.Control
             name="imageUrl"
@@ -141,7 +182,8 @@ const AdminWheelItemsPage = () => {
             onChange={handleChange}
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+
+        <Form.Group className="mb-2" controlId="wheelWeight">
           <Form.Label>Probability Weight</Form.Label>
           <Form.Control
             type="number"
@@ -153,7 +195,8 @@ const AdminWheelItemsPage = () => {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+
+        <Form.Group className="mb-2" controlId="wheelQuantity">
           <Form.Label>Quantity Total (blank = unlimited)</Form.Label>
           <Form.Control
             type="number"
@@ -163,13 +206,14 @@ const AdminWheelItemsPage = () => {
             onChange={handleChange}
           />
         </Form.Group>
+
         <div className="d-flex gap-2 mt-2">
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={saving}>
             {editingId
-              ? loading
+              ? saving
                 ? 'Saving...'
                 : 'Save Changes'
-              : loading
+              : saving
               ? 'Creating...'
               : 'Create Item'}
           </Button>
@@ -182,61 +226,83 @@ const AdminWheelItemsPage = () => {
       </Form>
 
       {/* Items table */}
-      <Table striped bordered hover size="sm">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Weight</th>
-            <th>Qty (Total / Redeemed)</th>
-            <th>Active</th>
-            <th>Created</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item._id}>
-              <td>{item.title}</td>
-              <td>{item.probabilityWeight}</td>
-              <td>
-                {item.quantityTotal == null ? (
-                  '∞'
-                ) : (
-                  <>
-                    {item.quantityTotal} / {item.quantityRedeemed}
-                  </>
-                )}
-              </td>
-              <td>
-                {item.isActive ? (
-                  <Badge bg="success">Active</Badge>
-                ) : (
-                  <Badge bg="secondary">Inactive</Badge>
-                )}
-              </td>
-              <td>{new Date(item.createdAt).toLocaleString()}</td>
-              <td>
-                <div className="d-flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline-primary"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline-danger"
-                    onClick={() => handleDelete(item._id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </td>
+      <div className="table-responsive">
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Weight</th>
+              <th>Qty (Total / Redeemed)</th>
+              <th>Active</th>
+              <th>Created</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {loadingList ? (
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <Spinner animation="border" size="sm" className="me-2" />
+                  Loading wheel items…
+                </td>
+              </tr>
+            ) : items.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="text-center text-muted">
+                  No wheel items found.
+                </td>
+              </tr>
+            ) : (
+              items.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.title}</td>
+                  <td>{item.probabilityWeight}</td>
+                  <td>
+                    {item.quantityTotal == null ? (
+                      '∞'
+                    ) : (
+                      <>
+                        {item.quantityTotal} / {item.quantityRedeemed}
+                      </>
+                    )}
+                  </td>
+                  <td>
+                    {item.isActive ? (
+                      <Badge bg="success">Active</Badge>
+                    ) : (
+                      <Badge bg="secondary">Inactive</Badge>
+                    )}
+                  </td>
+                  <td>
+                    {item.createdAt
+                      ? new Date(item.createdAt).toLocaleString()
+                      : '-'}
+                  </td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline-primary"
+                        onClick={() => handleEdit(item)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        disabled={deletingId === item._id}
+                        onClick={() => handleDelete(item._id)}
+                      >
+                        {deletingId === item._id ? 'Deleting…' : 'Delete'}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </Table>
+      </div>
     </Card>
   );
 };

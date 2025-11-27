@@ -1,37 +1,27 @@
+// client/src/api/adminApi.js
 import axiosInstance from './axiosInstance';
 
-export const createVendor = (token, data) =>
-  axiosInstance.post('/admin/vendors', data, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+// All these expect token to be in localStorage (added by interceptor)
 
-export const getVendors = (token) =>
-  axiosInstance.get('/admin/vendors', {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const createVendor = (data) =>
+  axiosInstance.post('/admin/vendors', data);
 
-export const getWheelItems = (token) =>
-  axiosInstance.get('/admin/wheel-items', {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const getVendors = () =>
+  axiosInstance.get('/admin/vendors');
 
-export const createWheelItem = (token, data) =>
-  axiosInstance.post('/admin/wheel-items', data, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const getWheelItems = () =>
+  axiosInstance.get('/admin/wheel-items');
 
-export const updateWheelItem = (token, id, data) =>
-  axiosInstance.put(`/admin/wheel-items/${id}`, data, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const createWheelItem = (data) =>
+  axiosInstance.post('/admin/wheel-items', data);
 
-export const deleteWheelItem = (token, id) =>
-  axiosInstance.delete(`/admin/wheel-items/${id}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const updateWheelItem = (id, data) =>
+  axiosInstance.put(`/admin/wheel-items/${id}`, data);
 
-export const downloadReport = (token) =>
+export const deleteWheelItem = (id) =>
+  axiosInstance.delete(`/admin/wheel-items/${id}`);
+
+export const downloadReport = () =>
   axiosInstance.get('/admin/reports/export', {
-    headers: { Authorization: `Bearer ${token}` },
-    responseType: 'blob'
+    responseType: 'blob',
   });

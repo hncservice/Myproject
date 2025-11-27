@@ -8,10 +8,13 @@ const { generateOtp, hashOtp, compareOtp } = require('../services/otpService');
 const { sendOtpEmail } = require('../services/emailService');
 const { signToken } = require('../config/jwt');
 
+const normalizeEmail = (email) => (email || '').trim().toLowerCase();
+const trimString = (value) => (typeof value === 'string' ? value.trim() : value);
+
 const registerSchema = Joi.object({
-  name: Joi.string().min(2).required(),
+  name: Joi.string().min(2).max(100).required().custom((v) => v.trim()),
   email: Joi.string().email().required(),
-  phone: Joi.string().allow('', null)
+  phone: Joi.string().allow('', null).max(30)
 });
 
 const otpVerifySchema = Joi.object({
@@ -21,15 +24,20 @@ const otpVerifySchema = Joi.object({
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().required()
+  password: Joi.string().min(6).required()
 });
 
-exports.registerUser = async (req, res, next) => {
+exports.registerUser = async (req, res) => {
   try {
     const { error } = registerSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
-    const { name, email, phone } = req.body;
+    let { name, email, phone } = req.body;
+    email = normalizeEmail(email);
+    name = trimString(name);
+    phone = trimString(phone);
 
     let user = await User.findOne({ email });
     if (!user) {
@@ -48,21 +56,27 @@ exports.registerUser = async (req, res, next) => {
 
     await sendOtpEmail(email, otp);
 
-    res.json({ message: 'OTP sent to email' });
+    return res.json({ message: 'OTP sent to email' });
   } catch (err) {
     console.error('registerUser error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 exports.verifyUserOtp = async (req, res) => {
   try {
     const { error } = otpVerifySchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
-    const { email, otp } = req.body;
+    let { email, otp } = req.body;
+    email = normalizeEmail(email);
+
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'User not found' });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
 
     if (!user.otpHash || !user.otpExpiresAt) {
       return res.status(400).json({ message: 'OTP not requested' });
@@ -73,7 +87,9 @@ exports.verifyUserOtp = async (req, res) => {
     }
 
     const match = await compareOtp(otp, user.otpHash);
-    if (!match) return res.status(400).json({ message: 'Invalid OTP' });
+    if (!match) {
+      return res.status(400).json({ message: 'Invalid OTP' });
+    }
 
     user.emailVerified = true;
     user.otpHash = null;
@@ -82,7 +98,7 @@ exports.verifyUserOtp = async (req, res) => {
 
     const token = signToken({ id: user._id, type: 'user' });
 
-    res.json({
+    return res.json({
       token,
       user: {
         id: user._id,
@@ -94,7 +110,7 @@ exports.verifyUserOtp = async (req, res) => {
     });
   } catch (err) {
     console.error('verifyUserOtp error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -102,41 +118,73 @@ exports.verifyUserOtp = async (req, res) => {
 exports.loginVendor = async (req, res) => {
   try {
     const { error } = loginSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    email = normalizeEmail(email);
+
     const vendor = await Vendor.findOne({ email });
-    if (!vendor) return res.status(400).json({ message: 'Vendor not found' });
+    if (!vendor) {
+      // Generic error to avoid user enumeration
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
     const ok = await bcrypt.compare(password, vendor.passwordHash);
-    if (!ok) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!ok) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
     const token = signToken({ id: vendor._id, type: 'vendor' });
 
-    res.json({ token, vendor: { id: vendor._id, name: vendor.name, email: vendor.email } });
+    return res.json({
+      token,
+      vendor: {
+        id: vendor._id,
+        name: vendor.name,
+        email: vendor.email
+      }
+    });
   } catch (err) {
     console.error('loginVendor error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 exports.loginAdmin = async (req, res) => {
   try {
     const { error } = loginSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    email = normalizeEmail(email);
+
     const admin = await AdminUser.findOne({ email });
-    if (!admin) return res.status(400).json({ message: 'Admin not found' });
+    if (!admin) {
+      // Generic error to avoid user enumeration
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
     const ok = await bcrypt.compare(password, admin.passwordHash);
-    if (!ok) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!ok) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
     const token = signToken({ id: admin._id, type: 'admin' });
 
-    res.json({ token, admin: { id: admin._id, name: admin.name, email: admin.email } });
+    return res.json({
+      token,
+      admin: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email
+      }
+    });
   } catch (err) {
     console.error('loginAdmin error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
