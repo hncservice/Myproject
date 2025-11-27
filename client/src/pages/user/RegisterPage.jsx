@@ -107,6 +107,25 @@ const RegisterPage = () => {
           {loading ? 'Sending OTP…' : 'Register'}
         </Button>
       </Form>
+
+      {/* extra section for admin/vendor login */}
+      <div className="mt-4 d-flex flex-column gap-2">
+        <Button
+          variant="outline-dark"
+          className="w-100"
+          onClick={() => navigate('/admin/login')}
+        >
+          Admin Login
+        </Button>
+
+        <Button
+          variant="outline-secondary"
+          className="w-100"
+          onClick={() => navigate('/vendor/login')}
+        >
+          Vendor Login
+        </Button>
+      </div>
     </Card>
   );
 };
