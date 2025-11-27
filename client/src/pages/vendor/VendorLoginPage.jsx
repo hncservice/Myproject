@@ -66,7 +66,7 @@ const VendorLoginPage = () => {
           {/* Logo + title */}
           <div style={styles.header}>
             <img
-              src="/logo.png" // 👈 change path if needed
+              src="src\assets\logos.png" // 👈 change path if needed
               alt="Logo"
               style={styles.logoImg}
             />
