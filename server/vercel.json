@@ -3,6 +3,14 @@
     {
       "source": "/(.*)",
       "destination": "/"
+    },
+    {
+      "source":"/admin/login",
+      "destination":"/"
+    },
+    {
+      "source":"/vendor/login",
+      "destination":"/"
     }
   ]
 }

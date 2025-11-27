@@ -38,6 +38,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   process.env.CLIENT_URL,
   'https://myproject-three-ecru.vercel.app',
+  'https://myproject-spin.vercel.app/api',
   'https://myproject-spin.vercel.app',
   'http://play.hotncool.qa',
   'https://myproject-4ewda3rak-hncservices-projects.vercel.app'
