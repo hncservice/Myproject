@@ -595,7 +595,7 @@ const RegisterPage = () => {
             <div className="register-form-group">
               <label className="register-label">
                 <span>Phone Number</span>
-                <span className="register-label-optional">(optional)</span>
+                <span className="register-label-optional"></span>
               </label>
               <div className="register-input-wrapper">
                 <svg
@@ -609,6 +609,7 @@ const RegisterPage = () => {
                   name="phone"
                   value={form.phone}
                   onChange={handleChange}
+                  required
                   autoComplete="tel"
                   placeholder="+974 0000 0000"
                   className="register-input"

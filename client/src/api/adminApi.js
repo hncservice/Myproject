@@ -9,6 +9,12 @@ export const createVendor = (data) =>
 export const getVendors = () =>
   axiosInstance.get('/admin/vendors');
 
+// adminApi.js (example)
+export const updateVendor = (id, data) =>
+  axiosInstance.put(`/admin/vendors/${id}`, data);
+export const getReportStats = () =>
+  axiosInstance.get('/admin/report/stats');
+
 export const getWheelItems = () =>
   axiosInstance.get('/admin/wheel-items');
 
@@ -25,3 +31,4 @@ export const downloadReport = () =>
   axiosInstance.get('/admin/reports/export', {
     responseType: 'blob',
   });
+

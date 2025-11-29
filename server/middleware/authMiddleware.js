@@ -1,4 +1,5 @@
 // server/middleware/authMiddleware.js
+const jwt = require('jsonwebtoken');
 const { verifyToken } = require('../config/jwt');
 const Vendor = require('../models/Vendor');
 const AdminUser = require('../models/AdminUser');
@@ -9,7 +10,8 @@ const extractToken = (req) =>
     ? req.headers.authorization.replace('Bearer ', '')
     : null;
 
-exports.authUser = async (req, res, next) => {
+// ---------- USER AUTH (type: default user via verifyToken) ----------
+const authUser = async (req, res, next) => {
   const token = extractToken(req);
   if (!token) return res.status(401).json({ message: 'No token provided' });
 
@@ -26,7 +28,8 @@ exports.authUser = async (req, res, next) => {
   }
 };
 
-exports.authVendor = async (req, res, next) => {
+// ---------- VENDOR AUTH (type: "vendor") ----------
+const authVendor = async (req, res, next) => {
   const token = extractToken(req);
   if (!token) return res.status(401).json({ message: 'No token provided' });
 
@@ -47,7 +50,8 @@ exports.authVendor = async (req, res, next) => {
   }
 };
 
-exports.authAdmin = async (req, res, next) => {
+// ---------- ADMIN AUTH (type: "admin") ----------
+const authAdmin = async (req, res, next) => {
   const token = extractToken(req);
   if (!token) return res.status(401).json({ message: 'No token provided' });
 
@@ -66,4 +70,41 @@ exports.authAdmin = async (req, res, next) => {
     console.error('authAdmin token error:', err.message);
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
+};
+
+// ---------- LEGACY / GENERIC AUTH (if you still use it anywhere) ----------
+const auth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // decoded should contain { id, role, ... }
+    req.user = decoded;
+    next();
+  } catch (err) {
+    console.error('JWT error:', err.message);
+    return res.status(401).json({ message: 'Invalid or expired token' });
+  }
+};
+
+const requireAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required' });
+  }
+  next();
+};
+
+// ✅ Export everything properly
+module.exports = {
+  authUser,
+  authVendor,
+  authAdmin,
+  auth,
+  requireAdmin,
 };

@@ -9,12 +9,15 @@ const {
   listWheelItems,
   updateWheelItem,
   deleteWheelItem,
-  exportReport
+  exportReport,
+  updateVendor,
+  getReportStats
 } = require('../controllers/adminController');
 
 // vendor management
 router.post('/vendors', authAdmin, createVendor);
 router.get('/vendors', authAdmin, listVendors);
+router.put('/vendors/:id', authAdmin, updateVendor);
 
 // wheel items
 router.post('/wheel-items', authAdmin, createWheelItem);
@@ -24,5 +27,6 @@ router.delete('/wheel-items/:id', authAdmin, deleteWheelItem);
 
 // reports
 router.get('/reports/export', authAdmin, exportReport);
+router.get('/report/stats', authAdmin, getReportStats);
 
 module.exports = router;
