@@ -23,6 +23,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import StarIcon from '@mui/icons-material/Star';
 import CloseIcon from '@mui/icons-material/Close';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import FlagIcon from '@mui/icons-material/Flag';
 
 import { useAuth } from '../../context/AuthContext';
 import { spinOnce, getWheelConfig } from '../../api/spinApi';
@@ -77,6 +78,15 @@ const shimmer = keyframes`
 const confetti = keyframes`
   0% { transform: translateY(0) rotate(0deg); opacity: 1; }
   100% { transform: translateY(1000px) rotate(720deg); opacity: 0; }
+`;
+
+// NEW: flag waving animation
+const flagWave = keyframes`
+  0%   { transform: translateX(0) skewY(0deg); }
+  25%  { transform: translateX(4px) skewY(2deg); }
+  50%  { transform: translateX(2px) skewY(-1deg); }
+  75%  { transform: translateX(4px) skewY(1deg); }
+  100% { transform: translateX(0) skewY(0deg); }
 `;
 
 // Styled Components
@@ -243,6 +253,59 @@ const PrizeBox = styled(Box)({
   },
 });
 
+// NEW: Qatar flag + popup styled components
+const QatarFlagWrapper = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: 16,
+});
+
+const QatarFlag = styled(Box)({
+  width: 170,
+  height: 100,
+  borderRadius: 8,
+  overflow: 'hidden',
+  display: 'flex',
+  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
+  border: '2px solid rgba(248, 250, 252, 0.5)',
+  animation: `${flagWave} 2.4s ease-in-out infinite`,
+});
+
+const QatarFlagLeft = styled(Box)({
+  width: '32%',
+  background: '#ffffff',
+});
+
+const QatarFlagRight = styled(Box)({
+  flex: 1,
+  background: '#8A1538', // Qatar maroon
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    left: -18,
+    top: 0,
+    bottom: 0,
+    width: 36,
+    backgroundImage:
+      'linear-gradient(135deg, #ffffff 16px, transparent 0), ' +
+      'linear-gradient(-135deg, #ffffff 16px, transparent 0)',
+    backgroundSize: '16px 32px',
+    backgroundPosition: '0 0, 0 16px',
+    backgroundRepeat: 'repeat-y',
+  },
+});
+
+const ConfettiPiece = styled(Box)({
+  position: 'absolute',
+  width: 8,
+  height: 14,
+  borderRadius: 3,
+  animation: `${confetti} 3.5s linear infinite`,
+  opacity: 0.9,
+});
+
 const SpinPage = () => {
   const { profile } = useAuth();
 
@@ -262,6 +325,15 @@ const SpinPage = () => {
   const [winnerBurst, setWinnerBurst] = useState(false);
   const [prizePopupOpen, setPrizePopupOpen] = useState(false);
   const [wonPrizeText, setWonPrizeText] = useState('');
+
+  // NEW: Qatar National Day popup control
+  const [nationalPopupOpen, setNationalPopupOpen] = useState(true);
+
+  useEffect(() => {
+    // Auto-close national day popup after 5 seconds
+    const timer = setTimeout(() => setNationalPopupOpen(false), 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const loadWheelConfig = async () => {
     setWheelError(null);
@@ -351,6 +423,177 @@ const SpinPage = () => {
 
   return (
     <MobileContainer>
+      {/* 🇶🇦 Qatar National Day Popup (first 5 seconds) */}
+      <Dialog
+        open={nationalPopupOpen}
+        onClose={() => setNationalPopupOpen(false)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            background:
+              'radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98))',
+            border: '1px solid rgba(248, 250, 252, 0.2)',
+            backdropFilter: 'blur(30px)',
+            m: 2,
+            maxWidth: 380,
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow:
+              '0 26px 80px rgba(0,0,0,0.9), 0 0 80px rgba(148, 27, 89, 0.6)',
+          },
+        }}
+        TransitionComponent={Slide}
+        TransitionProps={{ direction: 'down' }}
+      >
+        <Box sx={{ position: 'relative', overflow: 'hidden', minHeight: 260 }}>
+          {/* soft background glow */}
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'radial-gradient(circle at top, rgba(148, 27, 89, 0.35), transparent 55%), ' +
+                'radial-gradient(circle at bottom, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1))',
+              pointerEvents: 'none',
+            }}
+          />
+
+          {/* Confetti pieces */}
+          {Array.from({ length: 14 }).map((_, i) => (
+            <ConfettiPiece
+              key={i}
+              sx={{
+                left: `${Math.random() * 100}%`,
+                top: `${-10 - Math.random() * 40}%`,
+                background:
+                  i % 3 === 0
+                    ? '#ffffff'
+                    : i % 3 === 1
+                    ? '#8A1538'
+                    : '#fbbf24',
+                animationDelay: `${Math.random() * 1.8}s`,
+              }}
+            />
+          ))}
+
+          <IconButton
+            onClick={() => setNationalPopupOpen(false)}
+            sx={{
+              position: 'absolute',
+              right: 10,
+              top: 10,
+              zIndex: 2,
+              color: 'rgba(248, 250, 252, 0.8)',
+              bgcolor: 'rgba(15, 23, 42, 0.9)',
+              '&:hover': {
+                bgcolor: 'rgba(15, 23, 42, 1)',
+                color: '#fff',
+              },
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+
+          <DialogContent
+            sx={{
+              textAlign: 'center',
+              py: 4,
+              px: 3,
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            <QatarFlagWrapper>
+              <QatarFlag>
+                <QatarFlagLeft />
+                <QatarFlagRight />
+              </QatarFlag>
+            </QatarFlagWrapper>
+
+            <Stack
+              direction="row"
+              spacing={1}
+              justifyContent="center"
+              alignItems="center"
+              sx={{ mb: 1.5 }}
+            >
+              <FlagIcon sx={{ color: '#fbbf24', fontSize: 22 }} />
+              <Typography
+                sx={{
+                  fontSize: 11,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.16em',
+                  color: 'rgba(248, 250, 252, 0.9)',
+                }}
+              >
+                Qatar National Day
+              </Typography>
+            </Stack>
+
+            <Typography
+              variant="h5"
+              fontWeight={900}
+              sx={{
+                color: '#f9fafb',
+                mb: 1,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              كل عام وقطر بخير 🇶🇦
+            </Typography>
+
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'rgba(226, 232, 240, 0.9)',
+                mb: 2.5,
+                fontSize: '0.9rem',
+                lineHeight: 1.6,
+              }}
+            >
+              Celebrate Qatar National Day with a special{' '}
+              <span style={{ color: '#f97373', fontWeight: 700 }}>
+                Lucky Spin
+              </span>{' '}
+              experience. May your spin be as lucky as this beautiful day!
+            </Typography>
+
+            <Box
+              sx={{
+                mt: 1,
+                px: 2,
+                py: 1.5,
+                borderRadius: 999,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1,
+                background:
+                  'linear-gradient(135deg, rgba(148, 27, 89, 0.9), rgba(88, 28, 135, 0.95))',
+                boxShadow: '0 12px 30px rgba(88, 28, 135, 0.7)',
+              }}
+            >
+              <LocalFireDepartmentIcon
+                sx={{ color: '#fef3c7', fontSize: 20 }}
+              />
+              <Typography
+                sx={{
+                  fontSize: 11,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.14em',
+                  color: '#fef9c3',
+                  fontWeight: 700,
+                }}
+              >
+                Special Celebration Spin
+              </Typography>
+            </Box>
+          </DialogContent>
+        </Box>
+      </Dialog>
+
+      {/* Header */}
       <HeaderSection>
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.5}>
           <Stack direction="row" spacing={1.5} alignItems="center">
