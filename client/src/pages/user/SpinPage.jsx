@@ -1,6 +1,5 @@
-// client/src/pages/user/SpinPage.jsx
 import React, { useEffect, useState } from 'react';
-import { Alert, Card as BsCard, Container } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import {
   Box,
   Button,
@@ -9,77 +8,166 @@ import {
   Chip,
   Paper,
   Fade,
-  Zoom,
+  Slide,
   Dialog,
-  DialogTitle,
   DialogContent,
-  DialogActions,
   Stack,
-  Divider,
+  IconButton,
+  Grow,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, keyframes } from '@mui/material/styles';
 import CasinoIcon from '@mui/icons-material/Casino';
 import LockIcon from '@mui/icons-material/Lock';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import StarIcon from '@mui/icons-material/Star';
+import CloseIcon from '@mui/icons-material/Close';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 import { useAuth } from '../../context/AuthContext';
 import { spinOnce, getWheelConfig } from '../../api/spinApi';
 import SpinWheel from '../../components/SpinWheel';
 
-// COLORS
-const NAVY_DARK = '#020617';   // very dark navy
-const NAVY = '#0f172a';        // slate/navy
-const NAVY_ACCENT = '#1e3a8a'; // accent navy
-const RED = '#dc2626';
-const RED_DARK = '#991b1b';
+// Animations
+const float = keyframes`
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+`;
 
-// Outer card
-const StyledCard = styled(BsCard)(() => ({
-  borderRadius: 28,
-  border: '1px solid rgba(148, 163, 184, 0.35)',
-  background:
-    'radial-gradient(circle at top left, rgba(30,64,175,0.18), transparent 60%), ' +
-    'radial-gradient(circle at bottom right, rgba(220,38,38,0.16), transparent 55%), ' +
-    'linear-gradient(160deg, #020617 0%, #020617 35%, #020617 100%)',
+const pulse = keyframes`
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+`;
+
+const glow = keyframes`
+  0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.4), 0 0 40px rgba(220, 38, 38, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.6), 0 0 60px rgba(220, 38, 38, 0.3); }
+`;
+
+// Styled Components
+const MobileContainer = styled(Box)(({ theme }) => ({
+  minHeight: '100vh',
+  background: 'linear-gradient(180deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%)',
+  padding: 0,
+  position: 'relative',
   overflow: 'hidden',
-  backdropFilter: 'blur(18px)',
-  boxShadow: '0 30px 80px rgba(15,23,42,0.8)',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 
+      'radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 50%), ' +
+      'radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)',
+    pointerEvents: 'none',
+  },
 }));
 
-// Main spin button
-const SpinButton = styled(Button)(() => ({
-  textTransform: 'uppercase',
+const HeaderSection = styled(Box)(({ theme }) => ({
+  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%)',
+  backdropFilter: 'blur(20px)',
+  borderBottom: '1px solid rgba(148, 163, 184, 0.1)',
+  padding: '20px 20px 16px',
+  position: 'sticky',
+  top: 0,
+  zIndex: 10,
+}));
+
+const StatusBadge = styled(Chip)(({ locked }) => ({
+  height: 28,
+  borderRadius: 14,
+  fontSize: '0.75rem',
+  fontWeight: 700,
+  padding: '0 8px',
+  background: locked 
+    ? 'linear-gradient(135deg, #475569 0%, #334155 100%)'
+    : 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+  color: '#fff',
+  border: locked 
+    ? '1px solid rgba(148, 163, 184, 0.3)'
+    : '1px solid rgba(248, 113, 113, 0.5)',
+  animation: locked ? 'none' : `${pulse} 2s ease-in-out infinite`,
+  boxShadow: locked 
+    ? 'none'
+    : '0 4px 12px rgba(220, 38, 38, 0.4)',
+}));
+
+const SpinButton = styled(Button)(({ disabled }) => ({
+  width: '100%',
+  maxWidth: 280,
+  height: 64,
+  borderRadius: 32,
+  fontSize: '1.1rem',
   fontWeight: 800,
-  padding: '14px 52px',
-  borderRadius: 999,
-  fontSize: '0.95rem',
-  boxShadow: '0 14px 40px rgba(220,38,38,0.6)',
-  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
+  background: disabled
+    ? 'linear-gradient(135deg, #475569 0%, #334155 100%)'
+    : 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
+  color: '#fff',
   border: 'none',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    transform: 'translateY(-2px) scale(1.01)',
-    boxShadow: '0 18px 50px rgba(248,113,113,0.85)',
+  boxShadow: disabled
+    ? 'none'
+    : '0 8px 24px rgba(220, 38, 38, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+    transition: 'left 0.5s',
   },
-  '&:disabled': {
-    boxShadow: 'none',
-    opacity: 0.7,
-    transform: 'none',
+  '&:hover': disabled ? {} : {
+    transform: 'translateY(-2px) scale(1.02)',
+    boxShadow: '0 12px 32px rgba(220, 38, 38, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+    '&::before': {
+      left: '100%',
+    },
+  },
+  '&:active': disabled ? {} : {
+    transform: 'translateY(0) scale(0.98)',
   },
 }));
 
-// Small tag chip in header
-const HeaderChip = styled(Chip)(() => ({
-  borderRadius: 999,
-  fontSize: '0.7rem',
-  height: 24,
-  paddingInline: 4,
-  background:
-    'linear-gradient(135deg, rgba(248,250,252,0.09), rgba(15,23,42,0.9))',
-  border: '1px solid rgba(148,163,184,0.6)',
-  color: '#e5e7eb',
+const InfoCard = styled(Paper)({
+  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: 20,
+  border: '1px solid rgba(148, 163, 184, 0.15)',
+  padding: '20px',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+});
+
+const WheelContainer = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '40px 20px',
+  position: 'relative',
+  animation: `${float} 3s ease-in-out infinite`,
+});
+
+const ResultChip = styled(Chip)(({ iswin }) => ({
+  height: 48,
+  borderRadius: 24,
+  fontSize: '0.95rem',
+  fontWeight: 700,
+  padding: '0 20px',
+  background: iswin
+    ? 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)'
+    : 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
+  color: '#fff',
+  boxShadow: iswin
+    ? '0 8px 24px rgba(220, 38, 38, 0.5)'
+    : '0 4px 12px rgba(0, 0, 0, 0.3)',
+  animation: iswin ? `${glow} 2s ease-in-out infinite` : 'none',
 }));
 
 const SpinPage = () => {
@@ -188,346 +276,190 @@ const SpinPage = () => {
 
   const spinDisabled = locked || spinning || wheelLoading || !!wheelError;
 
-  const buttonIcon = spinning ? (
-    <CircularProgress size={18} sx={{ color: '#fee2e2' }} />
-  ) : locked ? (
-    <LockIcon />
-  ) : (
-    <CasinoIcon />
-  );
-
-  const buttonLabel = spinning
-    ? 'Spinning...'
-    : locked
-    ? 'Already Spun'
-    : 'Spin Now';
-
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        background:
-          'radial-gradient(circle at top, #1e3a8a 0, #020617 60%, #020617 100%)',
-        py: { xs: 3, md: 5 },
-        px: 2,
-      }}
-    >
-      <Container style={{ maxWidth: 920 }}>
-        <StyledCard>
-          {/* Header Section */}
-          <Box
-            sx={{
-              px: { xs: 3, md: 4 },
-              pt: { xs: 3, md: 4 },
-              pb: 2,
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              alignItems: { xs: 'flex-start', md: 'center' },
-              justifyContent: 'space-between',
-              gap: 2,
-            }}
-          >
-            <Box>
-              <Typography
-                variant="h5"
-                fontWeight={800}
-                sx={{
-                  color: '#f9fafb',
-                  letterSpacing: 0.4,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  mb: 0.3,
-                }}
-              >
-                <EmojiEventsIcon
-                  sx={{ color: RED, fontSize: 26, transform: 'translateY(1px)' }}
-                />
-                Lucky Spin Wheel
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ color: 'rgba(148,163,184,0.95)' }}
-              >
-                Hello,{' '}
-                <strong style={{ color: '#e5e7eb' }}>
-                  {profile?.name || 'Guest'}
-                </strong>
-                . One spin, one chance. Make it count.
-              </Typography>
-            </Box>
-
-            <Stack direction="row" spacing={1.5} alignItems="center">
-              <HeaderChip
-                icon={<StarIcon sx={{ fontSize: 16, color: '#e5e7eb' }} />}
-                label="1 Spin Per User"
-              />
-              <HeaderChip
-                label={locked ? 'Spin Locked' : 'Ready to Spin'}
-                sx={{
-                  backgroundColor: locked
-                    ? 'rgba(148,163,184,0.25)'
-                    : 'rgba(220,38,38,0.2)',
-                  borderColor: locked
-                    ? 'rgba(148,163,184,0.7)'
-                    : 'rgba(248,113,113,0.7)',
-                  color: locked ? '#e5e7eb' : '#fecaca',
-                }}
-              />
-            </Stack>
-          </Box>
-
-          <Divider
-            sx={{
-              borderColor: 'rgba(31,41,55,0.9)',
-              mt: 1,
-              mb: { xs: 2, md: 3 },
-            }}
+    <MobileContainer>
+      {/* Header */}
+      <HeaderSection>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.5}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <LocalFireDepartmentIcon sx={{ color: '#dc2626', fontSize: 28 }} />
+            <Typography
+              variant="h6"
+              fontWeight={800}
+              sx={{ color: '#fff', letterSpacing: 0.3 }}
+            >
+              Lucky Spin
+            </Typography>
+          </Stack>
+          <StatusBadge
+            locked={locked ? 1 : 0}
+            icon={locked ? <LockIcon sx={{ fontSize: 16 }} /> : <StarIcon sx={{ fontSize: 16 }} />}
+            label={locked ? 'Locked' : 'Active'}
           />
+        </Stack>
+        <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.8)', fontSize: '0.85rem' }}>
+          Welcome, <strong style={{ color: '#e2e8f0' }}>{profile?.name || 'Guest'}</strong>
+        </Typography>
+      </HeaderSection>
 
-          {/* Main Content */}
-          <Box sx={{ p: { xs: 3, md: 4 }, pt: { xs: 2, md: 1 } }}>
+      <Box sx={{ position: 'relative', zIndex: 1, pb: 4 }}>
+        {/* Hero Section */}
+        <Box sx={{ px: 3, pt: 3, pb: 2, textAlign: 'center' }}>
+          <Fade in timeout={800}>
+            <Typography
+              variant="h5"
+              fontWeight={900}
+              sx={{
+                color: '#fff',
+                mb: 1,
+                background: 'linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
+              }}
+            >
+              Spin & Win Amazing Prizes
+            </Typography>
+          </Fade>
+          <Fade in timeout={1000}>
             <Typography
               variant="body2"
-              color="rgba(148,163,184,0.95)"
-              textAlign="center"
-              mb={3}
+              sx={{ color: 'rgba(203, 213, 225, 0.9)', maxWidth: 320, mx: 'auto', lineHeight: 1.6 }}
             >
-              Spin the wheel for a chance to win{' '}
-              <span style={{ color: '#fecaca', fontWeight: 600 }}>
-                exclusive prizes
-              </span>
-              .<br />
-              <span style={{ color: RED, fontWeight: 700 }}>You only spin once.</span>
+              One spin. One chance. <span style={{ color: '#fca5a5', fontWeight: 700 }}>Make it count!</span>
             </Typography>
+          </Fade>
+        </Box>
 
-            {/* Wheel Error Alert */}
-            {wheelError && (
-              <Fade in={!!wheelError}>
-                <Alert variant="warning" className="mb-3">
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    flexWrap="wrap"
-                    gap={2}
-                  >
-                    <span>
-                      <strong>Wheel error:</strong> {wheelError}
-                    </span>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      startIcon={<RefreshIcon />}
-                      onClick={loadWheelConfig}
-                      sx={{
-                        borderColor: NAVY_ACCENT,
-                        color: NAVY_ACCENT,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        '&:hover': {
-                          borderColor: NAVY_ACCENT,
-                          background: 'rgba(30, 64, 175, 0.08)',
-                        },
-                      }}
-                    >
-                      Retry
-                    </Button>
-                  </Stack>
-                </Alert>
-              </Fade>
-            )}
-
-            {/* Spin Error Alert */}
-            {spinError && (
-              <Fade in={!!spinError}>
-                <Alert variant="danger" className="mb-3">
-                  {spinError}
-                </Alert>
-              </Fade>
-            )}
-
-            {/* Wheel + Side Info */}
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '1.3fr 1fr' },
-                gap: { xs: 3, md: 4 },
-                alignItems: 'center',
-                mb: 3,
-              }}
-            >
-              {/* Wheel Container */}
-              <Box display="flex" justifyContent="center">
-                {wheelLoading ? (
-                  <Paper
-                    elevation={6}
-                    sx={{
-                      width: 280,
-                      height: 280,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '50%',
-                      background:
-                        'radial-gradient(circle at 30% 20%, rgba(248,250,252,0.15), rgba(15,23,42,1))',
-                      border: '8px solid rgba(30,64,175,0.7)',
-                    }}
-                  >
-                    <Box textAlign="center">
-                      <CircularProgress
-                        size={44}
-                        sx={{ color: RED, mb: 2 }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{ color: '#e5e7eb', fontWeight: 600 }}
-                      >
-                        Loading prizes...
-                      </Typography>
-                    </Box>
-                  </Paper>
-                ) : (
-                  <SpinWheel
-                    items={wheelItems}
-                    rotation={rotation}
-                    spinning={spinning}
-                    winnerBurst={winnerBurst}
-                  />
-                )}
-              </Box>
-
-              {/* Info panel on right */}
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 2.5,
-                  borderRadius: 3,
-                  background:
-                    'linear-gradient(145deg, rgba(15,23,42,0.95), rgba(30,64,175,0.35))',
-                  border: '1px solid rgba(51,65,85,0.9)',
-                }}
-              >
-                <Typography
-                  variant="subtitle2"
-                  sx={{
-                    color: '#e5e7eb',
-                    fontWeight: 700,
-                    mb: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.8,
-                  }}
-                >
-                  <StarIcon sx={{ fontSize: 18, color: '#facc15' }} />
-                  How it works
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ color: 'rgba(148,163,184,0.95)', mb: 1.5 }}
-                >
-                  • Spin is calculated securely on the server.
-                  <br />
-                  • You only get <b>one spin</b> per user.
-                  <br />
-                  • Winners receive prize details via email.
-                </Typography>
-
-                <Divider
-                  sx={{
-                    borderColor: 'rgba(51,65,85,0.9)',
-                    my: 1.5,
-                  }}
-                />
-
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: 'rgba(148,163,184,0.9)',
-                    display: 'block',
-                    lineHeight: 1.6,
-                  }}
-                >
-                  ℹ️ Once you spin, your account is locked from spinning again.
-                  Please ensure you are ready before starting the wheel.
-                </Typography>
-              </Paper>
+        {/* Alerts */}
+        {wheelError && (
+          <Slide direction="down" in={!!wheelError}>
+            <Box sx={{ px: 3, mb: 2 }}>
+              <Alert variant="warning" style={{ borderRadius: 12 }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <span><strong>Error:</strong> {wheelError}</span>
+                  <IconButton size="small" onClick={loadWheelConfig} sx={{ color: '#1e3a8a' }}>
+                    <RefreshIcon fontSize="small" />
+                  </IconButton>
+                </Stack>
+              </Alert>
             </Box>
+          </Slide>
+        )}
 
-            {/* Result Message */}
-            {resultMessage && (
-              <Zoom in={!!resultMessage}>
-                <Box mb={3} display="flex" justifyContent="center">
-                  <Chip
-                    icon={isWin ? <EmojiEventsIcon /> : undefined}
-                    label={resultMessage}
-                    sx={{
-                      fontWeight: 700,
-                      px: 2.5,
-                      py: 2.2,
-                      fontSize: '0.9rem',
-                      background: isWin
-                        ? 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)'
-                        : 'linear-gradient(135deg, #64748b 0%, #1e293b 100%)',
-                      color: '#f9fafb',
-                      boxShadow: '0 6px 14px rgba(15,23,42,0.9)',
-                    }}
-                  />
-                </Box>
-              </Zoom>
-            )}
-
-            {/* Spin Button */}
-            <Box mb={3} textAlign="center">
-              <SpinButton
-                variant="contained"
-                startIcon={buttonIcon}
-                disabled={spinDisabled}
-                onClick={handleSpin}
-                sx={{
-                  background: locked
-                    ? 'linear-gradient(135deg, #4b5563 0%, #1f2937 100%)'
-                    : 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
-                  color: '#f9fafb',
-                  '&:hover': {
-                    background: locked
-                      ? 'linear-gradient(135deg, #4b5563 0%, #111827 100%)'
-                      : 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-                  },
-                }}
-              >
-                {buttonLabel}
-              </SpinButton>
+        {spinError && (
+          <Slide direction="down" in={!!spinError}>
+            <Box sx={{ px: 3, mb: 2 }}>
+              <Alert variant="danger" style={{ borderRadius: 12 }}>
+                {spinError}
+              </Alert>
             </Box>
+          </Slide>
+        )}
 
-            {/* Info Note */}
+        {/* Wheel */}
+        <WheelContainer>
+          {wheelLoading ? (
             <Paper
+              elevation={8}
               sx={{
-                p: 1.8,
-                background:
-                  'linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.98))',
-                border: '1px solid rgba(30,64,175,0.5)',
-                borderRadius: 2,
+                width: { xs: 280, sm: 320 },
+                height: { xs: 280, sm: 320 },
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 1) 100%)',
+                border: '6px solid rgba(220, 38, 38, 0.3)',
               }}
             >
-              <Typography
-                variant="caption"
+              <Box textAlign="center">
+                <CircularProgress size={50} sx={{ color: '#dc2626', mb: 2 }} />
+                <Typography variant="body2" sx={{ color: '#e2e8f0', fontWeight: 600 }}>
+                  Loading...
+                </Typography>
+              </Box>
+            </Paper>
+          ) : (
+            <SpinWheel
+              items={wheelItems}
+              rotation={rotation}
+              spinning={spinning}
+              winnerBurst={winnerBurst}
+            />
+          )}
+        </WheelContainer>
+
+        {/* Result Message */}
+        {resultMessage && (
+          <Grow in={!!resultMessage} timeout={500}>
+            <Box sx={{ px: 3, mb: 3, display: 'flex', justifyContent: 'center' }}>
+              <ResultChip
+                iswin={isWin ? 1 : 0}
+                icon={isWin ? <EmojiEventsIcon sx={{ fontSize: 20 }} /> : undefined}
+                label={resultMessage}
+              />
+            </Box>
+          </Grow>
+        )}
+
+        {/* Spin Button */}
+        <Box sx={{ px: 3, mb: 3, display: 'flex', justifyContent: 'center' }}>
+          <SpinButton
+            disabled={spinDisabled}
+            onClick={handleSpin}
+            startIcon={
+              spinning ? (
+                <CircularProgress size={20} sx={{ color: '#fff' }} />
+              ) : locked ? (
+                <LockIcon />
+              ) : (
+                <CasinoIcon />
+              )
+            }
+          >
+            {spinning ? 'Spinning...' : locked ? 'Already Spun' : 'Spin Now'}
+          </SpinButton>
+        </Box>
+
+        {/* Info Cards */}
+        <Box sx={{ px: 3, mb: 3 }}>
+          <InfoCard elevation={0}>
+            <Stack spacing={2}>
+              <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                <StarIcon sx={{ color: '#fbbf24', fontSize: 22, mt: 0.3 }} />
+                <Box>
+                  <Typography variant="subtitle2" fontWeight={700} sx={{ color: '#e2e8f0', mb: 0.5 }}>
+                    How It Works
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.8)', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                    • Server-calculated results ensure fairness{'\n'}
+                    • One spin per user only{'\n'}
+                    • Winners notified via email with QR code
+                  </Typography>
+                </Box>
+              </Stack>
+
+              <Box
                 sx={{
-                  color: 'rgba(148,163,184,0.95)',
-                  display: 'block',
-                  textAlign: 'center',
-                  lineHeight: 1.6,
+                  borderTop: '1px solid rgba(148, 163, 184, 0.15)',
+                  pt: 2,
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 1,
                 }}
               >
-                🔒 For fairness and security, the result is calculated on the
-                server. The wheel animation is a visual representation only.
-              </Typography>
-            </Paper>
-          </Box>
-        </StyledCard>
-      </Container>
+                <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.7)', fontSize: '0.8rem', lineHeight: 1.5 }}>
+                  🔒 Once you spin, your account is permanently locked. Wheel animation is for visual effect only—results are server-determined.
+                </Typography>
+              </Box>
+            </Stack>
+          </InfoCard>
+        </Box>
+      </Box>
 
-      {/* Prize Winner Dialog */}
+      {/* Prize Dialog */}
       <Dialog
         open={prizePopupOpen}
         onClose={() => setPrizePopupOpen(false)}
@@ -536,121 +468,118 @@ const SpinPage = () => {
         PaperProps={{
           sx: {
             borderRadius: 4,
-            overflow: 'hidden',
-            border: '2px solid rgba(252, 165, 165, 0.9)',
-            background:
-              'radial-gradient(circle at top, rgba(30,64,175,0.4), #020617 65%)',
+            background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%)',
+            border: '2px solid rgba(220, 38, 38, 0.5)',
+            m: 2,
+            maxWidth: 360,
           },
         }}
+        TransitionComponent={Grow}
+        transitionDuration={400}
       >
-        <DialogTitle
-          sx={{
-            textAlign: 'center',
-            fontWeight: 900,
-            py: 3,
-            background:
-              'linear-gradient(135deg, rgba(30,64,175,1) 0%, rgba(15,23,42,1) 60%)',
-            color: 'white',
-            fontSize: '1.5rem',
-            letterSpacing: 0.5,
-            textShadow: '0 3px 8px rgba(15,23,42,0.8)',
-          }}
-        >
-          🎉 Congratulations!
-        </DialogTitle>
-
-        <DialogContent
-          sx={{
-            textAlign: 'center',
-            py: 4,
-            px: 3,
-          }}
-        >
-          <EmojiEventsIcon
-            sx={{
-              fontSize: 68,
-              color: RED,
-              mb: 2,
-              filter: 'drop-shadow(0 8px 20px rgba(248,113,113,0.7))',
-            }}
-          />
-
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: 600, mb: 2, color: '#e5e7eb' }}
-          >
-            You have unlocked
-          </Typography>
-
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 900,
-              mb: 3,
-              color: '#fecaca',
-              textShadow: '0 3px 10px rgba(15,23,42,0.9)',
-            }}
-          >
-            {wonPrizeText || 'A Mystery Prize'}
-          </Typography>
-
-          <Paper
-            sx={{
-              p: 2,
-              background:
-                'linear-gradient(135deg, rgba(15,23,42,0.96), rgba(30,64,175,0.5))',
-              border: '1px dashed rgba(148,163,184,0.8)',
-              borderRadius: 2,
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ color: 'rgba(226,232,240,0.9)', mb: 1 }}
-            >
-              Show this screen or the email QR to the staff to claim your reward.
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                color: 'rgba(148,163,184,0.95)',
-                fontStyle: 'italic',
-              }}
-            >
-              Terms &amp; conditions may apply.
-            </Typography>
-          </Paper>
-        </DialogContent>
-
-        <DialogActions
-          sx={{
-            justifyContent: 'center',
-            pb: 3,
-            pt: 0,
-          }}
-        >
-          <Button
-            variant="contained"
+        <Box sx={{ position: 'relative' }}>
+          <IconButton
             onClick={() => setPrizePopupOpen(false)}
             sx={{
-              borderRadius: 999,
-              px: 5,
-              py: 1.4,
-              fontWeight: 700,
-              textTransform: 'none',
-              background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
-              color: '#f9fafb',
-              boxShadow: '0 10px 28px rgba(248,113,113,0.8)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-                boxShadow: '0 14px 36px rgba(248,113,113,0.9)',
-              },
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: 'rgba(203, 213, 225, 0.7)',
+              zIndex: 1,
             }}
           >
-            Awesome!
-          </Button>
-        </DialogActions>
+            <CloseIcon />
+          </IconButton>
+
+          <DialogContent sx={{ textAlign: 'center', py: 5, px: 3 }}>
+            <Box
+              sx={{
+                animation: `${pulse} 1.5s ease-in-out infinite`,
+                display: 'inline-block',
+                mb: 3,
+              }}
+            >
+              <EmojiEventsIcon
+                sx={{
+                  fontSize: 80,
+                  color: '#dc2626',
+                  filter: 'drop-shadow(0 8px 24px rgba(220, 38, 38, 0.6))',
+                }}
+              />
+            </Box>
+
+            <Typography
+              variant="h4"
+              fontWeight={900}
+              sx={{
+                color: '#fff',
+                mb: 1,
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              🎉 Congratulations!
+            </Typography>
+
+            <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.8)', mb: 3 }}>
+              You've won an amazing prize
+            </Typography>
+
+            <Box
+              sx={{
+                background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(153, 27, 27, 0.3) 100%)',
+                border: '2px solid rgba(220, 38, 38, 0.5)',
+                borderRadius: 3,
+                py: 3,
+                px: 2,
+                mb: 3,
+              }}
+            >
+              <Typography
+                variant="h5"
+                fontWeight={800}
+                sx={{
+                  color: '#fca5a5',
+                  mb: 1,
+                  textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                {wonPrizeText || 'Mystery Prize'}
+              </Typography>
+            </Box>
+
+            <InfoCard elevation={0} sx={{ mb: 3 }}>
+              <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.9)', mb: 1, lineHeight: 1.6 }}>
+                Show this screen or your email QR code to staff to claim your reward.
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'rgba(148, 163, 184, 0.7)', fontStyle: 'italic' }}>
+                Terms & conditions may apply
+              </Typography>
+            </InfoCard>
+
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => setPrizePopupOpen(false)}
+              sx={{
+                height: 56,
+                borderRadius: 3,
+                fontSize: '1rem',
+                fontWeight: 700,
+                textTransform: 'none',
+                background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
+                boxShadow: '0 8px 24px rgba(220, 38, 38, 0.5)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+                  boxShadow: '0 12px 32px rgba(220, 38, 38, 0.6)',
+                },
+              }}
+            >
+              Awesome!
+            </Button>
+          </DialogContent>
+        </Box>
       </Dialog>
-    </Box>
+    </MobileContainer>
   );
 };
 
