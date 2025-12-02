@@ -200,6 +200,7 @@ exports.exportReport = async (req, res) => {
     sheet.columns = [
       { header: 'User Name', key: 'userName', width: 20 },
       { header: 'User Email', key: 'userEmail', width: 25 },
+      { header: 'User Phone',      key: 'userPhone',  width: 18 },
       { header: 'Prize', key: 'prize', width: 25 },
       { header: 'Status', key: 'status', width: 10 },
       { header: 'Redemption Status', key: 'redemptionStatus', width: 18 },
@@ -212,6 +213,7 @@ exports.exportReport = async (req, res) => {
       sheet.addRow({
         userName: s.userId?.name || '',
         userEmail: s.userId?.email || '',
+        userPhone: s.userId?.phone || '',
         prize: s.wheelItemId?.title || '',
         status: s.status,
         redemptionStatus: s.redemptionStatus || '',
