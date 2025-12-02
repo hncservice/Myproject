@@ -80,7 +80,7 @@ const confetti = keyframes`
   100% { transform: translateY(1000px) rotate(720deg); opacity: 0; }
 `;
 
-// NEW: mixed shaking animation (for flag / CTA box)
+// Mixed shaking animation (still used for flag if you like)
 const shakeMix = keyframes`
   0%   { transform: translate(0, 0) rotate(0deg); }
   15%  { transform: translate(-3px, -2px) rotate(-2deg); }
@@ -89,6 +89,19 @@ const shakeMix = keyframes`
   60%  { transform: translate(2px, 1px) rotate(1.5deg); }
   75%  { transform: translate(-1px, -1px) rotate(-1deg); }
   100% { transform: translate(0, 0) rotate(0deg); }
+`;
+
+// Box shuffling / sliding animation (for CTA box)
+const boxShuffle = keyframes`
+  0%   { transform: translateX(0) scale(1); }
+  10%  { transform: translateX(-6px) scale(1.02); }
+  20%  { transform: translateX(6px) scale(1.02); }
+  30%  { transform: translateX(-10px) scale(1.03); }
+  40%  { transform: translateX(10px) scale(1.03); }
+  55%  { transform: translateX(-4px) scale(1.01); }
+  70%  { transform: translateX(4px) scale(1.01); }
+  85%  { transform: translateX(-2px) scale(1); }
+  100% { transform: translateX(0) scale(1); }
 `;
 
 // ================== Styled Components ==================
@@ -343,7 +356,7 @@ const ConfettiPiece = styled(Box)({
   opacity: 0.9,
 });
 
-// NEW: Click option box with mixed shaking
+// Click option box with shuffling motion
 const CelebrationCtaBox = styled(Box)({
   marginTop: 20,
   borderRadius: 999,
@@ -356,7 +369,7 @@ const CelebrationCtaBox = styled(Box)({
     'linear-gradient(135deg, rgba(148, 27, 89, 0.95), rgba(88, 28, 135, 0.95))',
   boxShadow: '0 12px 30px rgba(88, 28, 135, 0.7)',
   cursor: 'pointer',
-  animation: `${shakeMix} 1.4s ease-in-out infinite`,
+  animation: `${boxShuffle} 1.4s ease-in-out infinite`,
   userSelect: 'none',
 });
 
@@ -622,7 +635,7 @@ const SpinPage = () => {
               experience. May your spin be as lucky as this beautiful day!
             </Typography>
 
-            {/* CLICK OPTION BOX (mixed shaking) */}
+            {/* CLICK OPTION BOX (box shuffling) */}
             <CelebrationCtaBox onClick={() => setNationalPopupOpen(false)}>
               <LocalFireDepartmentIcon
                 sx={{ color: '#fef3c7', fontSize: 20 }}

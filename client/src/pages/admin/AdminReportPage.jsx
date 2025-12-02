@@ -156,6 +156,107 @@ const AdminReportPage = () => {
         margin-left: 4px;
       }
 
+      /* Redemption donut section */
+      .admin-report-ring-row {
+        margin-bottom: 18px;
+      }
+
+      .admin-report-ring-card {
+        border-radius: 18px;
+        padding: 12px 14px;
+        background: radial-gradient(circle at top right, rgba(30, 64, 175, 0.9), rgba(15, 23, 42, 0.98));
+        border: 1px solid rgba(129, 140, 248, 0.7);
+        box-shadow:
+          0 20px 40px rgba(30, 64, 175, 0.7),
+          0 0 0 1px rgba(96, 165, 250, 0.5);
+      }
+
+      .admin-report-ring-layout {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .admin-report-ring-wrapper {
+        position: relative;
+        width: 86px;
+        height: 86px;
+        flex-shrink: 0;
+      }
+
+      .admin-report-ring-svg {
+        transform: rotate(-90deg);
+      }
+
+      .admin-report-ring-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .admin-report-ring-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #eff6ff;
+        line-height: 1;
+      }
+
+      .admin-report-ring-value span {
+        font-size: 12px;
+        margin-left: 1px;
+      }
+
+      .admin-report-ring-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: rgba(219, 234, 254, 0.85);
+        margin-top: 5px;
+      }
+
+      .admin-report-ring-meta {
+        flex: 1;
+      }
+
+      .admin-report-ring-meta-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: rgba(219, 234, 254, 0.9);
+        margin-bottom: 4px;
+      }
+
+      .admin-report-ring-meta-label {
+        opacity: 0.9;
+      }
+
+      .admin-report-ring-meta-value {
+        font-weight: 600;
+      }
+
+      .admin-report-ring-meta-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(129, 140, 248, 0.7);
+        font-size: 10px;
+        color: #e5e7eb;
+        margin-top: 6px;
+      }
+
+      .admin-report-ring-meta-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+
       .admin-report-layout {
         display: grid;
         grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
@@ -190,6 +291,17 @@ const AdminReportPage = () => {
       .admin-report-chart-subtitle {
         font-size: 11px;
         color: rgba(148, 163, 184, 0.9);
+      }
+
+      .admin-report-chart-tag {
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(59, 130, 246, 0.7);
+        color: rgba(191, 219, 254, 0.95);
+        background: rgba(15, 23, 42, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
       }
 
       .admin-report-chart {
@@ -239,16 +351,20 @@ const AdminReportPage = () => {
       }
 
       .admin-report-toplist-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 5px 0;
+        padding: 6px 0;
         border-bottom: 1px dashed rgba(55, 65, 81, 0.9);
         font-size: 12px;
       }
 
       .admin-report-toplist-item:last-child {
         border-bottom: none;
+      }
+
+      .admin-report-toplist-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
       }
 
       .admin-report-toplist-title {
@@ -258,6 +374,22 @@ const AdminReportPage = () => {
       .admin-report-toplist-value {
         color: #f97373;
         font-weight: 600;
+      }
+
+      .admin-report-toplist-bar-track {
+        position: relative;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(31, 41, 55, 0.9);
+        overflow: hidden;
+      }
+
+      .admin-report-toplist-bar-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #22c55e, #f97316);
+        box-shadow: 0 0 12px rgba(249, 115, 22, 0.7);
+        transition: width 0.25s ease;
       }
 
       .admin-report-download-card {
@@ -379,6 +511,9 @@ const AdminReportPage = () => {
         .admin-report-layout {
           grid-template-columns: 1fr;
         }
+        .admin-report-ring-layout {
+          flex-direction: row;
+        }
       }
 
       @media (max-width: 576px) {
@@ -388,6 +523,10 @@ const AdminReportPage = () => {
         }
         .admin-report-title {
           font-size: 18px;
+        }
+        .admin-report-ring-layout {
+          flex-direction: column;
+          align-items: flex-start;
         }
         .admin-report-download-header {
           flex-direction: column;
@@ -482,6 +621,16 @@ const AdminReportPage = () => {
   );
 
   const topPrizes = stats?.topPrizes || []; // [{ title, wins }]
+  const maxPrizeWins = topPrizes.reduce(
+    (max, p) => (p.wins > max ? p.wins : max),
+    0
+  );
+
+  // For donut chart (redemption)
+  const ringRadius = 36;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+  const ringOffset =
+    ringCircumference - (Math.min(redemptionRate, 100) / 100) * ringCircumference;
 
   return (
     <div className="admin-report-page">
@@ -517,60 +666,148 @@ const AdminReportPage = () => {
             <span className="admin-report-spinner" /> Loading performance data…
           </div>
         ) : (
-          <div className="admin-report-kpi-grid">
-            <div className="admin-report-kpi-card">
-              <div className="admin-report-kpi-label">Total Spins</div>
-              <div className="admin-report-kpi-value">
-                {totalSpins}
+          <>
+            <div className="admin-report-kpi-grid">
+              <div className="admin-report-kpi-card">
+                <div className="admin-report-kpi-label">Total Spins</div>
+                <div className="admin-report-kpi-value">
+                  {totalSpins}
+                </div>
+                <div className="admin-report-kpi-sub">
+                  Unique users:{' '}
+                  <span className="admin-report-kpi-highlight">
+                    {uniqueUsers}
+                  </span>
+                </div>
               </div>
-              <div className="admin-report-kpi-sub">
-                Unique users:{' '}
-                <span className="admin-report-kpi-highlight">
-                  {uniqueUsers}
-                </span>
+
+              <div className="admin-report-kpi-card">
+                <div className="admin-report-kpi-label">Prizes Won</div>
+                <div className="admin-report-kpi-value">
+                  {totalPrizes}
+                </div>
+                <div className="admin-report-kpi-sub">
+                  Redeemed:{' '}
+                  <span className="admin-report-kpi-highlight">
+                    {redeemedCount}
+                  </span>{' '}
+                  / Pending: {pendingCount}
+                </div>
+              </div>
+
+              <div className="admin-report-kpi-card">
+                <div className="admin-report-kpi-label">Redemption Rate</div>
+                <div className="admin-report-kpi-value">
+                  {redemptionRate}
+                  <span style={{ fontSize: 13 }}>%</span>
+                </div>
+                <div className="admin-report-kpi-sub">
+                  <span className="admin-report-kpi-chip">
+                    <span>Goal</span> <strong>70%</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div className="admin-report-kpi-card">
+                <div className="admin-report-kpi-label">Top Prize</div>
+                <div className="admin-report-kpi-value">
+                  {topPrizes[0]?.title || '—'}
+                </div>
+                <div className="admin-report-kpi-sub">
+                  Wins:{' '}
+                  <span className="admin-report-kpi-highlight">
+                    {topPrizes[0]?.wins ?? 0}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="admin-report-kpi-card">
-              <div className="admin-report-kpi-label">Prizes Won</div>
-              <div className="admin-report-kpi-value">
-                {totalPrizes}
-              </div>
-              <div className="admin-report-kpi-sub">
-                Redeemed:{' '}
-                <span className="admin-report-kpi-highlight">
-                  {redeemedCount}
-                </span>{' '}
-                / Pending: {pendingCount}
-              </div>
-            </div>
+            {/* Redemption donut / visual summary */}
+            <div className="admin-report-ring-row">
+              <div className="admin-report-ring-card">
+                <div className="admin-report-section-title">
+                  Redemption Overview
+                </div>
+                <div className="admin-report-ring-layout">
+                  <div className="admin-report-ring-wrapper">
+                    <svg
+                      className="admin-report-ring-svg"
+                      width="86"
+                      height="86"
+                    >
+                      <circle
+                        cx="43"
+                        cy="43"
+                        r={ringRadius}
+                        fill="none"
+                        stroke="rgba(30, 64, 175, 0.4)"
+                        strokeWidth="8"
+                      />
+                      <circle
+                        cx="43"
+                        cy="43"
+                        r={ringRadius}
+                        fill="none"
+                        stroke="url(#ringGradient)"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        strokeDasharray={ringCircumference}
+                        strokeDashoffset={ringOffset}
+                      />
+                      <defs>
+                        <linearGradient
+                          id="ringGradient"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="0%"
+                        >
+                          <stop offset="0%" stopColor="#22c55e" />
+                          <stop offset="50%" stopColor="#a3e635" />
+                          <stop offset="100%" stopColor="#f97316" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="admin-report-ring-center">
+                      <div className="admin-report-ring-value">
+                        {redemptionRate}
+                        <span>%</span>
+                      </div>
+                      <div className="admin-report-ring-label">
+                        redeemed 
+                      </div>
+                    </div>
+                  </div>
 
-            <div className="admin-report-kpi-card">
-              <div className="admin-report-kpi-label">Redemption Rate</div>
-              <div className="admin-report-kpi-value">
-                {redemptionRate}
-                <span style={{ fontSize: 13 }}>%</span>
-              </div>
-              <div className="admin-report-kpi-sub">
-                <span className="admin-report-kpi-chip">
-                  <span>Goal</span> <strong>70%</strong>
-                </span>
+                  <div className="admin-report-ring-meta">
+                    <div className="admin-report-ring-meta-row">
+                      <span className="admin-report-ring-meta-label">
+                        Total prizes won
+                      </span>
+                      <span className="admin-report-ring-meta-value">
+                        {totalPrizes}
+                      </span>
+                    </div>
+                    <div className="admin-report-ring-meta-row">
+                      <span className="admin-report-ring-meta-label">
+                        Redeemed vs pending
+                      </span>
+                      <span className="admin-report-ring-meta-value">
+                        {redeemedCount} / {pendingCount}
+                      </span>
+                    </div>
+                    <div className="admin-report-ring-meta-badge">
+                      <span className="admin-report-ring-meta-dot" />
+                      <span>
+                        Higher redemption =&nbsp;
+                        <strong>stronger campaign impact</strong>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="admin-report-kpi-card">
-              <div className="admin-report-kpi-label">Top Prize</div>
-              <div className="admin-report-kpi-value">
-                {topPrizes[0]?.title || '—'}
-              </div>
-              <div className="admin-report-kpi-sub">
-                Wins:{' '}
-                <span className="admin-report-kpi-highlight">
-                  {topPrizes[0]?.wins ?? 0}
-                </span>
-              </div>
-            </div>
-          </div>
+          </>
         )}
 
         {/* Charts + Top prizes */}
@@ -585,6 +822,17 @@ const AdminReportPage = () => {
                   How many times users spun the wheel per day
                 </div>
               </div>
+              {dailySpins && dailySpins.length > 0 && (
+                <div className="admin-report-chart-tag">
+                  Peak day:&nbsp;
+                  {dailySpins.reduce(
+                    (best, d) =>
+                      !best || d.count > best.count ? d : best,
+                    null
+                  )?.count}{' '}
+                  spins
+                </div>
+              )}
             </div>
 
             {(!dailySpins || dailySpins.length === 0) && !loadingStats ? (
@@ -642,16 +890,30 @@ const AdminReportPage = () => {
               </div>
             ) : (
               <ul className="admin-report-toplist">
-                {topPrizes.slice(0, 5).map((p) => (
-                  <li key={p.title} className="admin-report-toplist-item">
-                    <span className="admin-report-toplist-title">
-                      {p.title}
-                    </span>
-                    <span className="admin-report-toplist-value">
-                      {p.wins}
-                    </span>
-                  </li>
-                ))}
+                {topPrizes.slice(0, 5).map((p) => {
+                  const width =
+                    maxPrizeWins > 0
+                      ? Math.max((p.wins / maxPrizeWins) * 100, 8)
+                      : 0;
+                  return (
+                    <li key={p.title} className="admin-report-toplist-item">
+                      <div className="admin-report-toplist-row">
+                        <span className="admin-report-toplist-title">
+                          {p.title}
+                        </span>
+                        <span className="admin-report-toplist-value">
+                          {p.wins}
+                        </span>
+                      </div>
+                      <div className="admin-report-toplist-bar-track">
+                        <div
+                          className="admin-report-toplist-bar-fill"
+                          style={{ width: `${width}%` }}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

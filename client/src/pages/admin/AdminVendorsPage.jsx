@@ -1,7 +1,6 @@
 // client/src/pages/admin/AdminVendorsPage.jsx
 import React, { useEffect, useState } from 'react';
 import { createVendor, getVendors, updateVendor } from '../../api/adminApi';
-
 const initialForm = { name: '', email: '', password: '' };
 
 const AdminVendorsPage = () => {

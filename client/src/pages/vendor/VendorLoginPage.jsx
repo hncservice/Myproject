@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginVendor } from '../../api/authApi';
 import { useAuth } from '../../context/AuthContext';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
+import logo from '../../assets/logos.png';
 
 const VendorLoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -66,7 +67,7 @@ const VendorLoginPage = () => {
           {/* Logo + title */}
           <div style={styles.header}>
             <img
-              src="src\assets\logos.png" // 👈 change path if needed
+              src={logo} // 👈 change path if needed
               alt="Logo"
               style={styles.logoImg}
             />
