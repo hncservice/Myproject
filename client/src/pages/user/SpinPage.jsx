@@ -29,7 +29,7 @@ import { useAuth } from '../../context/AuthContext';
 import { spinOnce, getWheelConfig } from '../../api/spinApi';
 import SpinWheel from '../../components/SpinWheel';
 
-// Animations
+// ================== Animations ==================
 const float = keyframes`
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   25% { transform: translateY(-8px) rotate(1deg); }
@@ -80,22 +80,26 @@ const confetti = keyframes`
   100% { transform: translateY(1000px) rotate(720deg); opacity: 0; }
 `;
 
-// NEW: flag waving animation
-const flagWave = keyframes`
-  0%   { transform: translateX(0) skewY(0deg); }
-  25%  { transform: translateX(4px) skewY(2deg); }
-  50%  { transform: translateX(2px) skewY(-1deg); }
-  75%  { transform: translateX(4px) skewY(1deg); }
-  100% { transform: translateX(0) skewY(0deg); }
+// NEW: mixed shaking animation (for flag / CTA box)
+const shakeMix = keyframes`
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  15%  { transform: translate(-3px, -2px) rotate(-2deg); }
+  30%  { transform: translate(3px, -1px) rotate(2deg); }
+  45%  { transform: translate(-2px, 2px) rotate(-1.5deg); }
+  60%  { transform: translate(2px, 1px) rotate(1.5deg); }
+  75%  { transform: translate(-1px, -1px) rotate(-1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 `;
 
-// Styled Components
+// ================== Styled Components ==================
 const MobileContainer = styled(Box)({
   minHeight: '100vh',
   background: '#0a0e1a',
   padding: 0,
   position: 'relative',
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -122,16 +126,19 @@ const MobileContainer = styled(Box)({
   },
 });
 
-const HeaderSection = styled(Box)({
-  background: 'rgba(15, 23, 42, 0.6)',
+const HeaderSection = styled(Box)(({ theme }) => ({
+  background: 'rgba(15, 23, 42, 0.7)',
   backdropFilter: 'blur(30px) saturate(180%)',
   borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
-  padding: '20px',
+  padding: '16px 20px',
   position: 'sticky',
   top: 0,
   zIndex: 10,
   boxShadow: '0 4px 24px rgba(0, 0, 0, 0.4)',
-});
+  [theme.breakpoints.down('sm')]: {
+    padding: '12px 16px',
+  },
+}));
 
 const StatusBadge = styled(Chip)(({ locked }) => ({
   height: 32,
@@ -151,12 +158,12 @@ const StatusBadge = styled(Chip)(({ locked }) => ({
   transition: 'all 0.3s ease',
 }));
 
-const SpinButton = styled(Button)(({ disabled }) => ({
+const SpinButton = styled(Button)(({ disabled, theme }) => ({
   width: '100%',
-  maxWidth: 300,
+  maxWidth: 320,
   height: 70,
   borderRadius: 35,
-  fontSize: '1.15rem',
+  fontSize: '1.05rem',
   fontWeight: 900,
   textTransform: 'uppercase',
   letterSpacing: '0.1em',
@@ -179,39 +186,56 @@ const SpinButton = styled(Button)(({ disabled }) => ({
     left: '-50%',
     width: '200%',
     height: '200%',
-    background: 'linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+    background:
+      'linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
     transform: 'rotate(45deg)',
     animation: disabled ? 'none' : `${shimmer} 3s linear infinite`,
   },
-  '&:hover': disabled ? {} : {
-    transform: 'translateY(-4px) scale(1.05)',
-    boxShadow: '0 15px 40px rgba(220, 38, 38, 0.8), 0 0 80px rgba(220, 38, 38, 0.4)',
-  },
-  '&:active': disabled ? {} : {
-    transform: 'translateY(-1px) scale(1.02)',
+  '&:hover': disabled
+    ? {}
+    : {
+        transform: 'translateY(-4px) scale(1.05)',
+        boxShadow:
+          '0 15px 40px rgba(220, 38, 38, 0.8), 0 0 80px rgba(220, 38, 38, 0.4)',
+      },
+  '&:active': disabled
+    ? {}
+    : {
+        transform: 'translateY(-1px) scale(1.02)',
+      },
+  [theme.breakpoints.down('sm')]: {
+    height: 60,
+    fontSize: '0.95rem',
   },
 }));
 
 const InfoCard = styled(Paper)({
-  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%)',
+  background:
+    'linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%)',
   backdropFilter: 'blur(20px) saturate(180%)',
   borderRadius: 24,
   border: '1px solid rgba(139, 92, 246, 0.2)',
-  padding: '24px',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+  padding: '20px',
+  boxShadow:
+    '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
   animation: `${slideUp} 0.6s ease-out`,
 });
 
-const WheelContainer = styled(Box)(({ spinning }) => ({
+const WheelContainer = styled(Box)(({ spinning, theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  padding: '50px 20px',
+  padding: '40px 20px',
   position: 'relative',
   animation: spinning ? 'none' : `${float} 4s ease-in-out infinite`,
   transition: 'all 0.5s ease',
   '& > *': {
-    filter: spinning ? 'blur(0)' : 'drop-shadow(0 20px 60px rgba(220, 38, 38, 0.3))',
+    filter: spinning
+      ? 'blur(0)'
+      : 'drop-shadow(0 20px 60px rgba(220, 38, 38, 0.3))',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: '30px 12px',
   },
 }));
 
@@ -221,6 +245,7 @@ const ResultChip = styled(Chip)(({ iswin }) => ({
   fontSize: '1rem',
   fontWeight: 800,
   padding: '0 24px',
+  maxWidth: '90%',
   background: iswin
     ? 'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)'
     : 'linear-gradient(135deg, #475569 0%, #1e293b 100%)',
@@ -230,16 +255,20 @@ const ResultChip = styled(Chip)(({ iswin }) => ({
     : '0 4px 16px rgba(0, 0, 0, 0.4)',
   animation: iswin ? `${glow} 2s ease-in-out infinite` : `${slideUp} 0.5s ease-out`,
   border: iswin ? '2px solid rgba(248, 113, 113, 0.5)' : 'none',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
 }));
 
 const PrizeBox = styled(Box)({
-  background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(124, 45, 18, 0.3) 100%)',
+  background:
+    'linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(124, 45, 18, 0.3) 100%)',
   border: '2px solid rgba(220, 38, 38, 0.6)',
   borderRadius: 20,
-  padding: '32px 24px',
+  padding: '24px 20px',
   position: 'relative',
   overflow: 'hidden',
-  boxShadow: '0 8px 32px rgba(220, 38, 38, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.1)',
+  boxShadow:
+    '0 8px 32px rgba(220, 38, 38, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.1)',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -247,21 +276,25 @@ const PrizeBox = styled(Box)({
     left: '-50%',
     width: '200%',
     height: '200%',
-    background: 'linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent)',
+    background:
+      'linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent)',
     transform: 'rotate(45deg)',
     animation: `${shimmer} 3s linear infinite`,
   },
 });
 
-// NEW: Qatar flag + popup styled components
-const QatarFlagWrapper = styled(Box)({
+// ========== Qatar flag + popup ==========
+const QatarFlagWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   marginBottom: 16,
-});
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: 12,
+  },
+}));
 
-const QatarFlag = styled(Box)({
+const QatarFlag = styled(Box)(({ theme }) => ({
   width: 170,
   height: 100,
   borderRadius: 8,
@@ -269,8 +302,12 @@ const QatarFlag = styled(Box)({
   display: 'flex',
   boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
   border: '2px solid rgba(248, 250, 252, 0.5)',
-  animation: `${flagWave} 2.4s ease-in-out infinite`,
-});
+  animation: `${shakeMix} 1.7s ease-in-out infinite`,
+  [theme.breakpoints.down('sm')]: {
+    width: 150,
+    height: 88,
+  },
+}));
 
 const QatarFlagLeft = styled(Box)({
   width: '32%',
@@ -279,7 +316,7 @@ const QatarFlagLeft = styled(Box)({
 
 const QatarFlagRight = styled(Box)({
   flex: 1,
-  background: '#8A1538', // Qatar maroon
+  background: '#8A1538',
   position: 'relative',
   '&::before': {
     content: '""',
@@ -306,6 +343,24 @@ const ConfettiPiece = styled(Box)({
   opacity: 0.9,
 });
 
+// NEW: Click option box with mixed shaking
+const CelebrationCtaBox = styled(Box)({
+  marginTop: 20,
+  borderRadius: 999,
+  padding: '10px 18px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 8,
+  background:
+    'linear-gradient(135deg, rgba(148, 27, 89, 0.95), rgba(88, 28, 135, 0.95))',
+  boxShadow: '0 12px 30px rgba(88, 28, 135, 0.7)',
+  cursor: 'pointer',
+  animation: `${shakeMix} 1.4s ease-in-out infinite`,
+  userSelect: 'none',
+});
+
+// ================== Component ==================
 const SpinPage = () => {
   const { profile } = useAuth();
 
@@ -326,11 +381,11 @@ const SpinPage = () => {
   const [prizePopupOpen, setPrizePopupOpen] = useState(false);
   const [wonPrizeText, setWonPrizeText] = useState('');
 
-  // NEW: Qatar National Day popup control
+  // Qatar National Day popup
   const [nationalPopupOpen, setNationalPopupOpen] = useState(true);
 
+  // Auto-close national day popup after 5 seconds
   useEffect(() => {
-    // Auto-close national day popup after 5 seconds
     const timer = setTimeout(() => setNationalPopupOpen(false), 5000);
     return () => clearTimeout(timer);
   }, []);
@@ -436,7 +491,7 @@ const SpinPage = () => {
               'radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98))',
             border: '1px solid rgba(248, 250, 252, 0.2)',
             backdropFilter: 'blur(30px)',
-            m: 2,
+            m: { xs: 1.5, sm: 2 },
             maxWidth: 380,
             position: 'relative',
             overflow: 'hidden',
@@ -447,7 +502,13 @@ const SpinPage = () => {
         TransitionComponent={Slide}
         TransitionProps={{ direction: 'down' }}
       >
-        <Box sx={{ position: 'relative', overflow: 'hidden', minHeight: 260 }}>
+        <Box
+          sx={{
+            position: 'relative',
+            overflow: 'hidden',
+            minHeight: { xs: 230, sm: 260 },
+          }}
+        >
           {/* soft background glow */}
           <Box
             sx={{
@@ -499,8 +560,8 @@ const SpinPage = () => {
           <DialogContent
             sx={{
               textAlign: 'center',
-              py: 4,
-              px: 3,
+              py: { xs: 3, sm: 4 },
+              px: { xs: 2, sm: 3 },
               position: 'relative',
               zIndex: 1,
             }}
@@ -533,22 +594,23 @@ const SpinPage = () => {
             </Stack>
 
             <Typography
-              variant="h5"
+              variant="h6"
               fontWeight={900}
               sx={{
                 color: '#f9fafb',
-                mb: 1,
+                mb: 0.75,
                 letterSpacing: '-0.02em',
+                fontSize: { xs: '1rem', sm: '1.2rem' },
               }}
             >
-              كل عام وقطر بخير 🇶🇦
+              بكم تعلو ومنكم تنتصر
             </Typography>
 
             <Typography
               variant="body2"
               sx={{
                 color: 'rgba(226, 232, 240, 0.9)',
-                mb: 2.5,
+                mb: 1.5,
                 fontSize: '0.9rem',
                 lineHeight: 1.6,
               }}
@@ -560,20 +622,8 @@ const SpinPage = () => {
               experience. May your spin be as lucky as this beautiful day!
             </Typography>
 
-            <Box
-              sx={{
-                mt: 1,
-                px: 2,
-                py: 1.5,
-                borderRadius: 999,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 1,
-                background:
-                  'linear-gradient(135deg, rgba(148, 27, 89, 0.9), rgba(88, 28, 135, 0.95))',
-                boxShadow: '0 12px 30px rgba(88, 28, 135, 0.7)',
-              }}
-            >
+            {/* CLICK OPTION BOX (mixed shaking) */}
+            <CelebrationCtaBox onClick={() => setNationalPopupOpen(false)}>
               <LocalFireDepartmentIcon
                 sx={{ color: '#fef3c7', fontSize: 20 }}
               />
@@ -586,23 +636,29 @@ const SpinPage = () => {
                   fontWeight: 700,
                 }}
               >
-                Special Celebration Spin
+                Tap to start your spin
               </Typography>
-            </Box>
+            </CelebrationCtaBox>
           </DialogContent>
         </Box>
       </Dialog>
 
       {/* Header */}
       <HeaderSection>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.5}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={1.5}
+        >
           <Stack direction="row" spacing={1.5} alignItems="center">
             <Box
               sx={{
                 width: 40,
                 height: 40,
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)',
+                background:
+                  'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -610,15 +666,18 @@ const SpinPage = () => {
                 animation: `${pulse} 2s ease-in-out infinite`,
               }}
             >
-              <LocalFireDepartmentIcon sx={{ color: '#fff', fontSize: 24 }} />
+              <LocalFireDepartmentIcon
+                sx={{ color: '#fff', fontSize: 24 }}
+              />
             </Box>
             <Typography
               variant="h6"
               fontWeight={900}
-              sx={{ 
-                color: '#fff', 
+              sx={{
+                color: '#fff',
                 letterSpacing: 0.5,
                 textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
+                fontSize: { xs: '1rem', sm: '1.1rem' },
               }}
             >
               Lucky Spin
@@ -626,16 +685,42 @@ const SpinPage = () => {
           </Stack>
           <StatusBadge
             locked={locked ? 1 : 0}
-            icon={locked ? <LockIcon sx={{ fontSize: 16 }} /> : <StarIcon sx={{ fontSize: 16 }} />}
+            icon={
+              locked ? (
+                <LockIcon sx={{ fontSize: 16 }} />
+              ) : (
+                <StarIcon sx={{ fontSize: 16 }} />
+              )
+            }
             label={locked ? 'Locked' : 'Active'}
           />
         </Stack>
-        <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.7)', fontSize: '0.85rem' }}>
-          Hey <strong style={{ color: '#8b5cf6', fontWeight: 700 }}>{profile?.name || 'Guest'}</strong>, ready to win?
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'rgba(203, 213, 225, 0.7)',
+            fontSize: '0.85rem',
+          }}
+        >
+          Hey{' '}
+          <strong
+            style={{ color: '#8b5cf6', fontWeight: 700 }}
+          >
+            {profile?.name || 'Guest'}
+          </strong>
+          , ready to win?
         </Typography>
       </HeaderSection>
 
-      <Box sx={{ position: 'relative', zIndex: 1, pb: 4 }}>
+      {/* Main content */}
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          pb: 4,
+          flex: 1,
+        }}
+      >
         {/* Hero Section */}
         <Box sx={{ px: 3, pt: 4, pb: 3, textAlign: 'center' }}>
           <Fade in timeout={800}>
@@ -646,13 +731,16 @@ const SpinPage = () => {
                 sx={{
                   color: '#fff',
                   mb: 1.5,
-                  background: 'linear-gradient(135deg, #ffffff 0%, #8b5cf6 50%, #dc2626 100%)',
+                  background:
+                    'linear-gradient(135deg, #ffffff 0%, #8b5cf6 50%, #dc2626 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  textShadow: '0 4px 20px rgba(139, 92, 246, 0.3)',
+                  textShadow:
+                    '0 4px 20px rgba(139, 92, 246, 0.3)',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.2,
+                  fontSize: { xs: '1.5rem', sm: '1.8rem' },
                 }}
               >
                 Spin the Wheel
@@ -664,15 +752,23 @@ const SpinPage = () => {
           <Fade in timeout={1200}>
             <Typography
               variant="body1"
-              sx={{ 
-                color: 'rgba(203, 213, 225, 0.8)', 
-                maxWidth: 340, 
-                mx: 'auto', 
+              sx={{
+                color: 'rgba(203, 213, 225, 0.8)',
+                maxWidth: 360,
+                mx: 'auto',
                 lineHeight: 1.7,
                 fontSize: '0.95rem',
               }}
             >
-              One spin, one opportunity. <span style={{ color: '#8b5cf6', fontWeight: 700 }}>Make your moment count!</span>
+              One spin, one opportunity.{' '}
+              <span
+                style={{
+                  color: '#8b5cf6',
+                  fontWeight: 700,
+                }}
+              >
+                Make your moment count!
+              </span>
             </Typography>
           </Fade>
         </Box>
@@ -681,10 +777,23 @@ const SpinPage = () => {
         {wheelError && (
           <Slide direction="down" in={!!wheelError}>
             <Box sx={{ px: 3, mb: 2 }}>
-              <Alert variant="warning" style={{ borderRadius: 12 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <span><strong>Error:</strong> {wheelError}</span>
-                  <IconButton size="small" onClick={loadWheelConfig} sx={{ color: '#1e3a8a' }}>
+              <Alert
+                variant="warning"
+                style={{ borderRadius: 12 }}
+              >
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <span>
+                    <strong>Error:</strong> {wheelError}
+                  </span>
+                  <IconButton
+                    size="small"
+                    onClick={loadWheelConfig}
+                    sx={{ color: '#1e3a8a' }}
+                  >
                     <RefreshIcon fontSize="small" />
                   </IconButton>
                 </Stack>
@@ -696,7 +805,10 @@ const SpinPage = () => {
         {spinError && (
           <Slide direction="down" in={!!spinError}>
             <Box sx={{ px: 3, mb: 2 }}>
-              <Alert variant="danger" style={{ borderRadius: 12 }}>
+              <Alert
+                variant="danger"
+                style={{ borderRadius: 12 }}
+              >
                 {spinError}
               </Alert>
             </Box>
@@ -709,15 +821,18 @@ const SpinPage = () => {
             <Paper
               elevation={12}
               sx={{
-                width: { xs: 300, sm: 340 },
-                height: { xs: 300, sm: 340 },
+                width: { xs: 280, sm: 320 },
+                height: { xs: 280, sm: 320 },
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%)',
-                border: '8px solid rgba(139, 92, 246, 0.3)',
-                boxShadow: '0 20px 80px rgba(139, 92, 246, 0.3)',
+                background:
+                  'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                border:
+                  '8px solid rgba(139, 92, 246, 0.3)',
+                boxShadow:
+                  '0 20px 80px rgba(139, 92, 246, 0.3)',
                 position: 'relative',
                 overflow: 'hidden',
                 '&::before': {
@@ -727,15 +842,29 @@ const SpinPage = () => {
                   left: '-50%',
                   width: '200%',
                   height: '200%',
-                  background: 'linear-gradient(45deg, transparent, rgba(139, 92, 246, 0.1), transparent)',
+                  background:
+                    'linear-gradient(45deg, transparent, rgba(139, 92, 246, 0.1), transparent)',
                   transform: 'rotate(45deg)',
                   animation: `${shimmer} 2s linear infinite`,
                 },
               }}
             >
-              <Box textAlign="center" sx={{ position: 'relative', zIndex: 1 }}>
-                <CircularProgress size={60} thickness={4} sx={{ color: '#8b5cf6', mb: 2 }} />
-                <Typography variant="body1" sx={{ color: '#e2e8f0', fontWeight: 700 }}>
+              <Box
+                textAlign="center"
+                sx={{ position: 'relative', zIndex: 1 }}
+              >
+                <CircularProgress
+                  size={60}
+                  thickness={4}
+                  sx={{ color: '#8b5cf6', mb: 2 }}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: '#e2e8f0',
+                    fontWeight: 700,
+                  }}
+                >
                   Loading Prizes...
                 </Typography>
               </Box>
@@ -744,8 +873,8 @@ const SpinPage = () => {
             <Box
               sx={{
                 position: 'relative',
-                filter: spinning 
-                  ? 'brightness(1.2) saturate(1.3)' 
+                filter: spinning
+                  ? 'brightness(1.2) saturate(1.3)'
                   : 'brightness(1) saturate(1)',
                 transition: 'filter 0.3s ease',
               }}
@@ -763,10 +892,21 @@ const SpinPage = () => {
         {/* Result Message */}
         {resultMessage && (
           <Grow in={!!resultMessage} timeout={500}>
-            <Box sx={{ px: 3, mb: 3, display: 'flex', justifyContent: 'center' }}>
+            <Box
+              sx={{
+                px: 3,
+                mb: 3,
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
               <ResultChip
                 iswin={isWin ? 1 : 0}
-                icon={isWin ? <EmojiEventsIcon sx={{ fontSize: 20 }} /> : undefined}
+                icon={
+                  isWin ? (
+                    <EmojiEventsIcon sx={{ fontSize: 20 }} />
+                  ) : undefined
+                }
                 label={resultMessage}
               />
             </Box>
@@ -774,13 +914,23 @@ const SpinPage = () => {
         )}
 
         {/* Spin Button */}
-        <Box sx={{ px: 3, mb: 3, display: 'flex', justifyContent: 'center' }}>
+        <Box
+          sx={{
+            px: 3,
+            mb: 3,
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
           <SpinButton
             disabled={spinDisabled}
             onClick={handleSpin}
             startIcon={
               spinning ? (
-                <CircularProgress size={20} sx={{ color: '#fff' }} />
+                <CircularProgress
+                  size={20}
+                  sx={{ color: '#fff' }}
+                />
               ) : locked ? (
                 <LockIcon />
               ) : (
@@ -788,7 +938,11 @@ const SpinPage = () => {
               )
             }
           >
-            {spinning ? 'Spinning...' : locked ? 'Already Spun' : 'Spin Now'}
+            {spinning
+              ? 'Spinning...'
+              : locked
+              ? 'Already Spun'
+              : 'Spin Now'}
           </SpinButton>
         </Box>
 
@@ -796,43 +950,73 @@ const SpinPage = () => {
         <Box sx={{ px: 3, mb: 3 }}>
           <InfoCard elevation={0}>
             <Stack spacing={2.5}>
-              <Stack direction="row" spacing={2} alignItems="flex-start">
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems="flex-start"
+              >
                 <Box
                   sx={{
                     width: 48,
                     height: 48,
                     borderRadius: '14px',
-                    background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+                    background:
+                      'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    boxShadow: '0 8px 24px rgba(139, 92, 246, 0.4)',
+                    boxShadow:
+                      '0 8px 24px rgba(139, 92, 246, 0.4)',
                   }}
                 >
-                  <StarIcon sx={{ color: '#fff', fontSize: 26 }} />
+                  <StarIcon
+                    sx={{ color: '#fff', fontSize: 26 }}
+                  />
                 </Box>
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={800} sx={{ color: '#fff', mb: 1, fontSize: '1.05rem' }}>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight={800}
+                    sx={{
+                      color: '#fff',
+                      mb: 1,
+                      fontSize: '1.05rem',
+                    }}
+                  >
                     How It Works
                   </Typography>
                   <Stack spacing={1}>
                     {[
                       'Results calculated securely on server',
                       'One spin per user - make it memorable',
-                      'Winners get instant email with QR code'
+                      'Winners get instant email with QR code',
                     ].map((text, idx) => (
-                      <Stack key={idx} direction="row" spacing={1.5} alignItems="center">
+                      <Stack
+                        key={idx}
+                        direction="row"
+                        spacing={1.5}
+                        alignItems="center"
+                      >
                         <Box
                           sx={{
                             width: 6,
                             height: 6,
                             borderRadius: '50%',
-                            background: 'linear-gradient(135deg, #8b5cf6 0%, #dc2626 100%)',
+                            background:
+                              'linear-gradient(135deg, #8b5cf6 0%, #dc2626 100%)',
                             flexShrink: 0,
                           }}
                         />
-                        <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.9)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color:
+                              'rgba(203, 213, 225, 0.9)',
+                            fontSize: '0.9rem',
+                            lineHeight: 1.6,
+                          }}
+                        >
                           {text}
                         </Typography>
                       </Stack>
@@ -843,16 +1027,29 @@ const SpinPage = () => {
 
               <Box
                 sx={{
-                  borderTop: '1px solid rgba(139, 92, 246, 0.2)',
+                  borderTop:
+                    '1px solid rgba(139, 92, 246, 0.2)',
                   pt: 2,
                   px: 2,
                   py: 1.5,
-                  background: 'rgba(139, 92, 246, 0.05)',
+                  background:
+                    'rgba(139, 92, 246, 0.05)',
                   borderRadius: 2,
                 }}
               >
-                <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.8)', fontSize: '0.85rem', lineHeight: 1.6 }}>
-                  🔒 <strong>Fair Play:</strong> Once you spin, no more chances. The wheel animation is visual only—your fate is sealed on the server!
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color:
+                      'rgba(203, 213, 225, 0.8)',
+                    fontSize: '0.85rem',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  🔒 <strong>Fair Play:</strong> Once you
+                  spin, no more chances. The wheel animation
+                  is visual only—your fate is sealed on the
+                  server!
                 </Typography>
               </Box>
             </Stack>
@@ -869,12 +1066,14 @@ const SpinPage = () => {
         PaperProps={{
           sx: {
             borderRadius: 5,
-            background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%)',
+            background:
+              'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.98) 100%)',
             border: '2px solid rgba(139, 92, 246, 0.4)',
             backdropFilter: 'blur(30px)',
-            m: 2,
+            m: { xs: 1.5, sm: 2 },
             maxWidth: 380,
-            boxShadow: '0 20px 80px rgba(139, 92, 246, 0.4), 0 0 100px rgba(220, 38, 38, 0.2)',
+            boxShadow:
+              '0 20px 80px rgba(139, 92, 246, 0.4), 0 0 100px rgba(220, 38, 38, 0.2)',
           },
         }}
         TransitionComponent={Grow}
@@ -889,7 +1088,7 @@ const SpinPage = () => {
               left: '-50%',
               width: '200%',
               height: '200%',
-              background: 
+              background:
                 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 50%), ' +
                 'radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 50%)',
               animation: `${spin} 20s linear infinite`,
@@ -915,7 +1114,15 @@ const SpinPage = () => {
             <CloseIcon />
           </IconButton>
 
-          <DialogContent sx={{ textAlign: 'center', py: 6, px: 4, position: 'relative', zIndex: 1 }}>
+          <DialogContent
+            sx={{
+              textAlign: 'center',
+              py: 6,
+              px: 4,
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
             <Box
               sx={{
                 animation: `${pulse} 1.5s ease-in-out infinite`,
@@ -928,11 +1135,13 @@ const SpinPage = () => {
                   width: 100,
                   height: 100,
                   borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)',
+                  background:
+                    'linear-gradient(135deg, #dc2626 0%, #7c2d12 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 12px 40px rgba(220, 38, 38, 0.6), 0 0 80px rgba(220, 38, 38, 0.3)',
+                  boxShadow:
+                    '0 12px 40px rgba(220, 38, 38, 0.6), 0 0 80px rgba(220, 38, 38, 0.3)',
                   position: 'relative',
                   '&::before': {
                     content: '""',
@@ -940,8 +1149,10 @@ const SpinPage = () => {
                     inset: -4,
                     borderRadius: '50%',
                     padding: 4,
-                    background: 'linear-gradient(135deg, #8b5cf6, #dc2626)',
-                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    background:
+                      'linear-gradient(135deg, #8b5cf6, #dc2626)',
+                    WebkitMask:
+                      'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                     WebkitMaskComposite: 'xor',
                     maskComposite: 'exclude',
                     animation: `${spin} 3s linear infinite`,
@@ -952,7 +1163,8 @@ const SpinPage = () => {
                   sx={{
                     fontSize: 56,
                     color: '#fff',
-                    filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))',
+                    filter:
+                      'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))',
                   }}
                 />
               </Box>
@@ -964,14 +1176,23 @@ const SpinPage = () => {
               sx={{
                 color: '#fff',
                 mb: 1.5,
-                textShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+                textShadow:
+                  '0 4px 20px rgba(0, 0, 0, 0.5)',
                 letterSpacing: '-0.02em',
+                fontSize: '1.8rem',
               }}
             >
               🎉 You Won!
             </Typography>
 
-            <Typography variant="body1" sx={{ color: 'rgba(203, 213, 225, 0.8)', mb: 4, fontSize: '1rem' }}>
+            <Typography
+              variant="body1"
+              sx={{
+                color: 'rgba(203, 213, 225, 0.8)',
+                mb: 4,
+                fontSize: '1rem',
+              }}
+            >
               Congratulations on your amazing prize!
             </Typography>
 
@@ -981,22 +1202,46 @@ const SpinPage = () => {
                 fontWeight={900}
                 sx={{
                   color: '#fca5a5',
-                  textShadow: '0 2px 12px rgba(220, 38, 38, 0.8)',
+                  textShadow:
+                    '0 2px 12px rgba(220, 38, 38, 0.8)',
                   position: 'relative',
                   zIndex: 1,
                   letterSpacing: '-0.01em',
+                  fontSize: '1.3rem',
                 }}
               >
                 {wonPrizeText || 'Mystery Prize'}
               </Typography>
             </PrizeBox>
 
-            <InfoCard elevation={0} sx={{ mt: 4, mb: 3 }}>
-              <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.9)', mb: 1.5, lineHeight: 1.7, fontWeight: 500 }}>
-                📱 Show this screen or your email QR code to our staff to claim your reward.
+            <InfoCard
+              elevation={0}
+              sx={{ mt: 4, mb: 3, p: 2 }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  color:
+                    'rgba(203, 213, 225, 0.9)',
+                  mb: 1.5,
+                  lineHeight: 1.7,
+                  fontWeight: 500,
+                }}
+              >
+                📱 Show this screen or your email QR code 
+                Near HOTNCOOL Branch to claim your reward.
               </Typography>
-              <Typography variant="caption" sx={{ color: 'rgba(148, 163, 184, 0.7)', fontStyle: 'italic', fontSize: '0.8rem' }}>
-                Terms & conditions apply. Prize must be claimed within validity period.
+              <Typography
+                variant="caption"
+                sx={{
+                  color:
+                    'rgba(148, 163, 184, 0.7)',
+                  fontStyle: 'italic',
+                  fontSize: '0.8rem',
+                }}
+              >
+                Terms &amp; conditions apply. Prize must be
+                claimed within validity period.
               </Typography>
             </InfoCard>
 
@@ -1005,18 +1250,22 @@ const SpinPage = () => {
               fullWidth
               onClick={() => setPrizePopupOpen(false)}
               sx={{
-                height: 60,
+                height: 56,
                 borderRadius: 4,
                 fontSize: '1.05rem',
                 fontWeight: 800,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
-                background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-                boxShadow: '0 10px 30px rgba(139, 92, 246, 0.5)',
+                background:
+                  'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                boxShadow:
+                  '0 10px 30px rgba(139, 92, 246, 0.5)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
-                  boxShadow: '0 15px 40px rgba(139, 92, 246, 0.6)',
+                  background:
+                    'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                  boxShadow:
+                    '0 15px 40px rgba(139, 92, 246, 0.6)',
                   transform: 'translateY(-2px)',
                 },
               }}
