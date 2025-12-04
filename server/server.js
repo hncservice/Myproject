@@ -40,7 +40,8 @@ const allowedOrigins = [
   'https://myproject-three-ecru.vercel.app',
   'https://myproject-spin.vercel.app/api',
   'https://myproject-spin.vercel.app',
-  'http://play.hotncool.qa',
+  'http://spin.hotncool.qa',
+  'https://spin.hotncool.qa',
   'https://myproject-4ewda3rak-hncservices-projects.vercel.app'
 ].filter(Boolean);
 
