@@ -46,7 +46,21 @@ exports.sendPrizeEmail = async ({
         <code>${qrToken || 'N/A'}</code>
       </p>
 
-      <p style="margin-top: 20px;">Thank you for playing Spin &amp; Win with us! 🎁</p>
+      <p style="margin-top: 20px;">
+        Thank you for playing Spin &amp; Win with us! 🎁
+      </p>
+
+      <hr style="margin:20px 0; border:none; border-top:1px solid #eee;" />
+
+      <p style="font-size: 11px; color:#555; margin:0 0 4px;">
+        <strong>Terms &amp; Conditions:</strong>
+      </p>
+      <ul style="font-size: 11px; color:#777; padding-left:18px; margin:4px 0 0;">
+        <li>Winning prizes are redeemable only on <strong>18 December (Qatar National Day)</strong>.</li>
+        <li>Offers are applicable only for <strong>dine-in</strong> orders.</li>
+        <li>Offer is valid only on selected items and cannot be replaced, exchanged, or upgraded.</li>
+        <li>The Jackpot box prize is limited to <strong>3 members</strong> only.</li>
+      </ul>
     </div>
   `;
 

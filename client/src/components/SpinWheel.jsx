@@ -1,4 +1,3 @@
-// client/src/components/SpinWheel.jsx
 import React from 'react';
 import {
   Box,
@@ -15,167 +14,237 @@ import { keyframes } from '@mui/system';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 
-const WrapperCard = styled(Card)(() => ({
-  borderRadius: 20,
-  boxShadow: '0 10px 30px rgba(15, 23, 42, 0.12)',
-  border: '1px solid #e5e7eb',
+const WrapperCard = styled(Card)(({ theme }) => ({
+  borderRadius: 24,
+  boxShadow: '0 20px 60px rgba(220, 38, 38, 0.15)',
+  border: '2px solid #e5e7eb',
+  background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+  overflow: 'hidden',
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '4px',
+    background: 'linear-gradient(90deg, #dc2626, #1e3a8a)',
+  },
+  [theme.breakpoints.down('sm')]: {
+    borderRadius: 16,
+    boxShadow: '0 10px 40px rgba(220, 38, 38, 0.1)',
+  },
 }));
 
-const HeaderTitle = styled(Typography)(() => ({
+const HeaderTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
-  background: 'linear-gradient(90deg, #2563eb, #7c3aed)',
+  fontSize: '1.5rem',
+  background: 'linear-gradient(135deg, #dc2626 0%, #1e3a8a 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1.25rem',
+  },
 }));
 
-// Shake animation for the gift box
+// FAST 3D spin on Y axis
+const fastSpinY = keyframes`
+  0% { transform: perspective(1000px) rotateY(0deg); }
+  100% { transform: perspective(1000px) rotateY(360deg); }
+`;
+
+// Shake (applied only to inner content, not rotation)
 const shake = keyframes`
-  0%   { transform: translateX(0) rotate(0deg); }
-  10%  { transform: translateX(-4px) rotate(-4deg); }
-  20%  { transform: translateX(4px) rotate(4deg); }
-  30%  { transform: translateX(-3px) rotate(-3deg); }
-  40%  { transform: translateX(3px) rotate(3deg); }
-  50%  { transform: translateX(-2px) rotate(-2deg); }
-  60%  { transform: translateX(2px) rotate(2deg); }
-  70%  { transform: translateX(-1px) rotate(-1deg); }
-  80%  { transform: translateX(1px) rotate(1deg); }
-  90%  { transform: translateX(0px) rotate(0deg); }
-  100% { transform: translateX(0) rotate(0deg); }
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  10% { transform: translateX(-8px) rotate(-3deg); }
+  20% { transform: translateX(8px) rotate(3deg); }
+  30% { transform: translateX(-6px) rotate(-2deg); }
+  40% { transform: translateX(6px) rotate(2deg); }
+  50% { transform: translateX(-4px) rotate(-1deg); }
+  60% { transform: translateX(4px) rotate(1deg); }
+  70% { transform: translateX(-2px) rotate(-1deg); }
+  80% { transform: translateX(2px) rotate(1deg); }
+  90% { transform: translateX(0) rotate(0deg); }
 `;
 
-// Glow / pulse behind box
+// Glow pulse for circle behind box
 const pulse = keyframes`
-  0%   { transform: scale(1); opacity: 0.5; }
-  50%  { transform: scale(1.08); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.5; }
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 0.4; 
+    filter: blur(8px);
+  }
+  50% { 
+    transform: scale(1.15); 
+    opacity: 0.8; 
+    filter: blur(12px);
+  }
 `;
 
-// Confetti falling animation
-const confettiFall = keyframes`
+// Confetti burst
+const confettiBurst = keyframes`
   0% {
     opacity: 0;
-    transform: translate3d(0, -20px, 0) rotateZ(0deg);
+    transform: translate3d(0, 0, 0) rotateZ(0deg) scale(0);
   }
-  15% {
+  10% {
     opacity: 1;
+    transform: translate3d(0, -10px, 0) rotateZ(20deg) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translate3d(0, 120px, 0) rotateZ(360deg);
+    transform: translate3d(var(--tx), var(--ty), 0) rotateZ(var(--rz)) scale(0.5);
   }
 `;
 
-/**
- * Pure presentational component.
- * props:
- *  - items: array of prize objects (used just for count & labels)
- *  - rotation: number (deg)  // kept for compatibility (not used)
- *  - spinning: boolean       // box shaking when true
- *  - winnerBurst: boolean    // confetti burst when true
- */
 const SpinWheel = ({
   items = [],
-  rotation = 0,
-  spinning = false,
-  winnerBurst = false,
+  spinning = false,      // fast spin phase
+  stopping = false,      // slow stop phase
+  finalRotation = 0,     // landing angle in deg
+  winnerBurst = false,   // confetti on win
+  finalShake = false,    // shake after landing
 }) => {
   const hasItems = items && items.length > 0;
 
   const getLabel = (item, index) =>
     item.title || item.label || item.name || `Prize ${index + 1}`;
 
-  const confettiColors = ['#f97316', '#22c55e', '#3b82f6', '#ec4899', '#eab308'];
+  const prizeColors = ['#dc2626', '#1e3a8a', '#ef4444', '#355fbbff', '#991b1b'];
+
+  const getGiftAnimation = () => {
+    if (stopping) return 'none'; // only transition on transform
+    if (spinning) return `${fastSpinY} 0.4s linear infinite`; // quick 3D spin
+    return 'none';
+  };
 
   return (
-    <Box maxWidth={480} mx="auto">
+    <Box 
+      sx={{ 
+        width: '100%',
+        maxWidth: 600,
+        mx: 'auto',
+        px: { xs: 2, sm: 3 },
+        py: { xs: 2, sm: 3 },
+      }}
+    >
       <WrapperCard>
-        <CardContent>
+        <CardContent sx={{ p: { xs: 2.5, sm: 4 }, '&:last-child': { pb: { xs: 2.5, sm: 4 } } }}>
           {/* Header */}
           <Stack
             direction="row"
-            spacing={1.5}
+            spacing={{ xs: 1.5, sm: 2 }}
             alignItems="center"
             justifyContent="center"
-            mb={1.5}
+            mb={{ xs: 2, sm: 2.5 }}
           >
-            <Avatar sx={{ bgcolor: '#2563eb', width: 40, height: 40 }}>
-              <EmojiEventsIcon fontSize="small" />
+            <Avatar 
+              sx={{ 
+                bgcolor: '#dc2626', 
+                width: { xs: 44, sm: 52 }, 
+                height: { xs: 44, sm: 52 },
+                boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)',
+              }}
+            >
+              <EmojiEventsIcon sx={{ fontSize: { xs: 24, sm: 28 } }} />
             </Avatar>
-            <HeaderTitle variant="h6">Mystery Gift Spin</HeaderTitle>
+            <HeaderTitle variant="h5">Mystery Gift Spin</HeaderTitle>
           </Stack>
 
-          <Box textAlign="center" mb={2}>
+          <Box textAlign="center" mb={{ xs: 2.5, sm: 3 }}>
             <Chip
-              icon={<CardGiftcardIcon />}
+              icon={<CardGiftcardIcon sx={{ color: '#dc2626 !important' }} />}
               label={
                 hasItems
-                  ? `${items.length} hidden prize${items.length > 1 ? 's' : ''}`
+                  ? `${items.length} Hidden Prize${items.length > 1 ? 's' : ''}`
                   : 'No prizes configured'
               }
-              size="small"
-              sx={{ fontWeight: 500 }}
+              size="medium"
+              sx={{ 
+                fontWeight: 600,
+                fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                px: 1.5,
+                py: 2.5,
+                background: 'linear-gradient(135deg, #fee2e2 0%, #dbeafe 100%)',
+                border: '1px solid #fecaca',
+                color: '#1e3a8a',
+              }}
             />
           </Box>
 
-          <Divider sx={{ mb: 3 }} />
+          <Divider sx={{ mb: { xs: 3, sm: 4 }, borderColor: '#e5e7eb' }} />
 
-          {/* Gift box area */}
-          <Box display="flex" justifyContent="center" alignItems="center" mb={3}>
+          {/* Gift Box Section */}
+          <Box 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="center" 
+            mb={{ xs: 3, sm: 4 }}
+            sx={{ minHeight: { xs: 260, sm: 300 } }}
+          >
             <Box
               sx={{
                 position: 'relative',
-                width: 220,
-                height: 220,
+                width: { xs: 240, sm: 280 },
+                height: { xs: 240, sm: 280 },
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                overflow: 'visible',
               }}
             >
-              {/* Glow / pulse behind the box */}
+              {/* Animated glow background */}
               <Box
                 sx={{
                   position: 'absolute',
-                  width: 180,
-                  height: 180,
+                  width: { xs: '85%', sm: '80%' },
+                  height: { xs: '85%', sm: '80%' },
                   borderRadius: '50%',
-                  background:
-                    'radial-gradient(circle at 30% 20%, #fef9c3, #f97316 60%, #7c2d12)',
-                  opacity: spinning ? 0.9 : 0.6,
-                  animation: `${pulse} 1.4s ease-in-out infinite`,
-                  filter: 'blur(2px)',
+                  background: spinning || stopping
+                    ? 'radial-gradient(circle, #fee2e2, #dc2626 40%, #1e3a8a 80%)'
+                    : 'radial-gradient(circle, #dbeafe, #2563eb 50%, #dc2626)',
+                  opacity: spinning || stopping ? 1 : 0.5,
+                  animation: `${pulse} 2s ease-in-out infinite`,
                 }}
               />
 
-              {/* Confetti burst when winnerBurst is true */}
+              {/* Confetti particles */}
               {winnerBurst && (
                 <Box
                   sx={{
                     position: 'absolute',
                     inset: 0,
                     pointerEvents: 'none',
-                    zIndex: 3,
+                    zIndex: 10,
                   }}
                 >
-                  {Array.from({ length: 28 }).map((_, i) => {
-                    const color = confettiColors[i % confettiColors.length];
-                    const left = 40 + (i * 7) % 40; // between ~40–80%
-                    const delay = (i % 7) * 0.05; // staggered
-                    const size = 6 + (i % 4); // 6–9px
+                  {Array.from({ length: 36 }).map((_, i) => {
+                    const angle = (i * 10) * (Math.PI / 180);
+                    const distance = 100 + (i % 3) * 20;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    const rz = 360 + (i * 30);
+                    const color = prizeColors[i % prizeColors.length];
+                    const delay = (i % 9) * 0.03;
+                    const size = 8 + (i % 4);
+                    
                     return (
                       <Box
                         key={i}
                         sx={{
+                          '--tx': `${tx}px`,
+                          '--ty': `${ty}px`,
+                          '--rz': `${rz}deg`,
                           position: 'absolute',
-                          top: '25%',
-                          left: `${left}%`,
+                          top: '50%',
+                          left: '50%',
                           width: size,
-                          height: size * 1.4,
-                          borderRadius: 0.5,
+                          height: size * 1.5,
+                          borderRadius: 1,
                           backgroundColor: color,
                           opacity: 0,
-                          animation: `${confettiFall} 0.9s ease-out`,
+                          animation: `${confettiBurst} 1.2s ease-out`,
                           animationDelay: `${delay}s`,
+                          boxShadow: `0 0 8px ${color}`,
                         }}
                       />
                     );
@@ -183,135 +252,196 @@ const SpinWheel = ({
                 </Box>
               )}
 
-              {/* Gift box itself */}
+              {/* Outer box: handles Y rotation + fast spin + slow stop */}
               <Box
                 sx={{
                   position: 'relative',
-                  width: 120,
-                  height: 120,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  zIndex: 2,
-                  animation: spinning ? `${shake} 0.7s ease-in-out infinite` : 'none',
-                  transformOrigin: '50% 100%',
+                  width: { xs: 140, sm: 160 },
+                  height: { xs: 140, sm: 160 },
+                  zIndex: 5,
+                  transformStyle: 'preserve-3d',
+                  animation: getGiftAnimation(),
+                  transition: stopping
+                    ? 'transform 3.2s cubic-bezier(.1,.7,.1,1)'
+                    : 'none',
+                  // important: no inline transform while spinning, so CSS animation controls it
+                  transform: spinning
+                    ? 'none'
+                    : `perspective(1000px) rotateY(${finalRotation}deg)`,
                 }}
               >
-                {/* Lid */}
+                {/* Box Shadow */}
                 <Box
                   sx={{
-                    width: '90%',
-                    height: '26%',
-                    borderRadius: '14px 14px 8px 8px',
-                    background: 'linear-gradient(90deg, #f97316, #fb923c)',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.25)',
-                    position: 'relative',
-                    mb: '-4px',
-                  }}
-                >
-                  {/* Vertical ribbon on lid */}
-                  <Box
-                    sx={{
-                      width: '24%',
-                      height: '120%',
-                      background: 'linear-gradient(180deg, #facc15, #eab308)',
-                      position: 'absolute',
-                      left: '50%',
-                      top: '-10%',
-                      transform: 'translateX(-50%)',
-                      borderRadius: '999px',
-                    }}
-                  />
-                </Box>
-
-                {/* Box body */}
-                <Box
-                  sx={{
-                    width: '90%',
-                    height: '56%',
-                    borderRadius: '10px',
-                    background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                    boxShadow: '0 8px 16px rgba(0,0,0,0.35)',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {/* Vertical ribbon */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      left: '50%',
-                      top: 0,
-                      transform: 'translateX(-50%)',
-                      width: '24%',
-                      height: '100%',
-                      background: 'linear-gradient(180deg, #facc15, #eab308)',
-                    }}
-                  />
-                  {/* Horizontal ribbon */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: 0,
-                      transform: 'translateY(-50%)',
-                      width: '100%',
-                      height: '22%',
-                      background: 'linear-gradient(90deg, #facc15, #eab308)',
-                    }}
-                  />
-
-                  {/* Icon / emoji in center */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#fff',
-                      fontSize: 32,
-                    }}
-                  >
-                    {spinning ? '✨' : winnerBurst ? '🏆' : '🎁'}
-                  </Box>
-                </Box>
-
-                {/* Bottom shadow */}
-                <Box
-                  sx={{
-                    width: '70%',
-                    height: 10,
+                    position: 'absolute',
+                    bottom: { xs: -20, sm: -24 },
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '80%',
+                    height: { xs: 12, sm: 16 },
                     borderRadius: '50%',
-                    background: 'rgba(15,23,42,0.6)',
-                    filter: 'blur(4px)',
-                    mt: 1,
+                    background: 'rgba(30, 58, 138, 0.4)',
+                    filter: 'blur(8px)',
                   }}
                 />
+
+                {/* Inner container: shakes only content, not rotation */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    animation: finalShake ? `${shake} 0.6s ease-in-out` : 'none',
+                  }}
+                >
+                  {/* Gift Box Lid */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '100%',
+                      height: '32%',
+                      borderRadius: '16px 16px 10px 10px',
+                      background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
+                      boxShadow: '0 6px 16px rgba(220, 38, 38, 0.4)',
+                      zIndex: 3,
+                    }}
+                  >
+                    {/* Lid ribbon vertical */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '-8%',
+                        transform: 'translateX(-50%)',
+                        width: '28%',
+                        height: '130%',
+                        background: 'linear-gradient(180deg, #1e3a8a, #3b82f6)',
+                        borderRadius: '20px',
+                        boxShadow: '0 2px 8px rgba(30, 58, 138, 0.4)',
+                      }}
+                    />
+                    
+                    {/* Bow on top */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '-25%',
+                        transform: 'translateX(-50%)',
+                        width: '45%',
+                        height: '35%',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #2563eb, #1e3a8a)',
+                        boxShadow: '0 2px 8px rgba(30, 58, 138, 0.5)',
+                      }}
+                    />
+                  </Box>
+
+                  {/* Gift Box Body */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '30%',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '100%',
+                      height: '70%',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%)',
+                      boxShadow: '0 12px 24px rgba(220, 38, 38, 0.5)',
+                      overflow: 'hidden',
+                      zIndex: 2,
+                    }}
+                  >
+                    {/* Vertical ribbon */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: 0,
+                        transform: 'translateX(-50%)',
+                        width: '28%',
+                        height: '100%',
+                        background: 'linear-gradient(180deg, #1e3a8a, #3b82f6)',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.2)',
+                      }}
+                    />
+                    
+                    {/* Horizontal ribbon */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: 0,
+                        transform: 'translateY(-50%)',
+                        width: '100%',
+                        height: '26%',
+                        background: 'linear-gradient(90deg, #1e3a8a, #3b82f6, #1e3a8a)',
+                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.2)',
+                      }}
+                    />
+
+                    {/* Center icon */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: { xs: 36, sm: 42 },
+                        zIndex: 5,
+                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                      }}
+                    >
+                      {spinning || stopping
+                        ? '✨'
+                        : winnerBurst
+                          ? '🏆'
+                          : '🎁'}
+                    </Box>
+                  </Box>
+                </Box>
               </Box>
             </Box>
           </Box>
 
-          {/* Optional: show prize list (data still visible) */}
+          {/* Prize List */}
           {hasItems && (
             <>
-              <Divider sx={{ mb: 2 }} />
+              <Divider sx={{ mb: { xs: 2, sm: 2.5 }, borderColor: '#e5e7eb' }} />
               <Box>
                 <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  mb={1}
-                  textAlign="center"
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 600,
+                    color: '#1e3a8a',
+                    mb: 1.5,
+                    textAlign: 'center',
+                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                  }}
                 >
-                  Possible prizes inside this box
+                  Possible Prizes
                 </Typography>
                 <Stack
-                  spacing={0.75}
+                  spacing={1}
                   sx={{
-                    maxHeight: 140,
+                    maxHeight: { xs: 160, sm: 180 },
                     overflowY: 'auto',
-                    pr: 0.5,
+                    pr: 1,
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      background: '#f1f5f9',
+                      borderRadius: '10px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      background: 'linear-gradient(135deg, #dc2626, #1e3a8a)',
+                      borderRadius: '10px',
+                    },
                   }}
                 >
                   {items.map((item, index) => (
@@ -319,21 +449,36 @@ const SpinWheel = ({
                       key={item._id || index}
                       direction="row"
                       alignItems="center"
-                      spacing={1}
+                      spacing={1.5}
+                      sx={{
+                        p: { xs: 1, sm: 1.25 },
+                        borderRadius: 2,
+                        background: 'linear-gradient(135deg, #fef2f2 0%, #eff6ff 100%)',
+                        border: '1px solid #e5e7eb',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          transform: 'translateX(4px)',
+                          boxShadow: '0 2px 8px rgba(220, 38, 38, 0.1)',
+                        },
+                      }}
                     >
                       <Box
                         sx={{
-                          width: 8,
-                          height: 8,
+                          width: { xs: 10, sm: 12 },
+                          height: { xs: 10, sm: 12 },
                           borderRadius: '50%',
-                          backgroundColor:
-                            confettiColors[index % confettiColors.length],
+                          background: `linear-gradient(135deg, ${prizeColors[index % prizeColors.length]}, ${prizeColors[(index + 1) % prizeColors.length]})`,
                           flexShrink: 0,
+                          boxShadow: `0 0 8px ${prizeColors[index % prizeColors.length]}40`,
                         }}
                       />
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 500 }}
+                        sx={{ 
+                          fontWeight: 600,
+                          color: '#1e293b',
+                          fontSize: { xs: '0.875rem', sm: '0.925rem' },
+                        }}
                         noWrap
                       >
                         {getLabel(item, index)}

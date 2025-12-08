@@ -745,7 +745,7 @@ const SpinPage = () => {
                   color: '#fff',
                   mb: 1.5,
                   background:
-                    'linear-gradient(135deg, #ffffff 0%, #8b5cf6 50%, #dc2626 100%)',
+                    'linear-gradient(135deg, #ffffff 0%, #ff0000ff 50%, #dc2626 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -776,7 +776,7 @@ const SpinPage = () => {
               One spin, one opportunity.{' '}
               <span
                 style={{
-                  color: '#8b5cf6',
+                  color: '#ff0000ff',
                   fontWeight: 700,
                 }}
               >
