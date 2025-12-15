@@ -21,6 +21,8 @@ const WrapperCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
   overflow: 'hidden',
   position: 'relative',
+  maxWidth: 600,
+  margin: '0 auto',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -31,8 +33,9 @@ const WrapperCard = styled(Card)(({ theme }) => ({
     background: 'linear-gradient(90deg, #dc2626, #1e3a8a)',
   },
   [theme.breakpoints.down('sm')]: {
-    borderRadius: 16,
+    borderRadius: 18,
     boxShadow: '0 10px 40px rgba(220, 38, 38, 0.1)',
+    borderWidth: 1,
   },
 }));
 
@@ -43,7 +46,7 @@ const HeaderTitle = styled(Typography)(({ theme }) => ({
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   [theme.breakpoints.down('sm')]: {
-    fontSize: '1.25rem',
+    fontSize: '1.2rem',
   },
 }));
 
@@ -119,39 +122,47 @@ const SpinWheel = ({
   };
 
   return (
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         width: '100%',
-        maxWidth: 600,
-        mx: 'auto',
-        px: { xs: 2, sm: 3 },
-        py: { xs: 2, sm: 3 },
+        px: { xs: 1.5, sm: 2.5, md: 3 },
+        py: { xs: 1.5, sm: 2.5, md: 3 },
+        boxSizing: 'border-box',
       }}
     >
       <WrapperCard>
-        <CardContent sx={{ p: { xs: 2.5, sm: 4 }, '&:last-child': { pb: { xs: 2.5, sm: 4 } } }}>
+        <CardContent
+          sx={{
+            p: { xs: 2, sm: 3, md: 4 },
+            '&:last-child': {
+              pb: { xs: 2, sm: 3, md: 4 },
+            },
+          }}
+        >
           {/* Header */}
           <Stack
             direction="row"
-            spacing={{ xs: 1.5, sm: 2 }}
+            spacing={{ xs: 1.25, sm: 1.75 }}
             alignItems="center"
             justifyContent="center"
-            mb={{ xs: 2, sm: 2.5 }}
+            mb={{ xs: 1.75, sm: 2.25, md: 2.75 }}
           >
-            <Avatar 
-              sx={{ 
-                bgcolor: '#dc2626', 
-                width: { xs: 44, sm: 52 }, 
-                height: { xs: 44, sm: 52 },
+            <Avatar
+              sx={{
+                bgcolor: '#dc2626',
+                width: { xs: 40, sm: 48, md: 52 },
+                height: { xs: 40, sm: 48, md: 52 },
                 boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)',
               }}
             >
-              <EmojiEventsIcon sx={{ fontSize: { xs: 24, sm: 28 } }} />
+              <EmojiEventsIcon sx={{ fontSize: { xs: 22, sm: 26 } }} />
             </Avatar>
-            <HeaderTitle variant="h5">Mystery Gift Spin</HeaderTitle>
+            <HeaderTitle variant="h5">
+              Mystery Gift Spin
+            </HeaderTitle>
           </Stack>
 
-          <Box textAlign="center" mb={{ xs: 2.5, sm: 3 }}>
+          <Box textAlign="center" mb={{ xs: 2, sm: 2.5, md: 3 }}>
             <Chip
               icon={<CardGiftcardIcon sx={{ color: '#dc2626 !important' }} />}
               label={
@@ -160,11 +171,12 @@ const SpinWheel = ({
                   : 'No prizes configured'
               }
               size="medium"
-              sx={{ 
+              sx={{
                 fontWeight: 600,
-                fontSize: { xs: '0.875rem', sm: '0.95rem' },
+                fontSize: { xs: '0.8rem', sm: '0.9rem', md: '0.95rem' },
                 px: 1.5,
                 py: 2.5,
+                maxWidth: '100%',
                 background: 'linear-gradient(135deg, #fee2e2 0%, #dbeafe 100%)',
                 border: '1px solid #fecaca',
                 color: '#1e3a8a',
@@ -172,21 +184,28 @@ const SpinWheel = ({
             />
           </Box>
 
-          <Divider sx={{ mb: { xs: 3, sm: 4 }, borderColor: '#e5e7eb' }} />
+          <Divider
+            sx={{
+              mb: { xs: 2.25, sm: 3, md: 3.5 },
+              borderColor: '#e5e7eb',
+            }}
+          />
 
           {/* Gift Box Section */}
-          <Box 
-            display="flex" 
-            justifyContent="center" 
-            alignItems="center" 
-            mb={{ xs: 3, sm: 4 }}
-            sx={{ minHeight: { xs: 260, sm: 300 } }}
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mb={{ xs: hasItems ? 2.5 : 1.5, sm: hasItems ? 3 : 2 }}
+            sx={{
+              minHeight: { xs: 220, sm: 260, md: 300 },
+            }}
           >
             <Box
               sx={{
                 position: 'relative',
-                width: { xs: 240, sm: 280 },
-                height: { xs: 240, sm: 280 },
+                width: { xs: 220, sm: 260, md: 280 },
+                height: { xs: 220, sm: 260, md: 280 },
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -196,8 +215,8 @@ const SpinWheel = ({
               <Box
                 sx={{
                   position: 'absolute',
-                  width: { xs: '85%', sm: '80%' },
-                  height: { xs: '85%', sm: '80%' },
+                  width: { xs: '88%', sm: '82%' },
+                  height: { xs: '88%', sm: '82%' },
                   borderRadius: '50%',
                   background: spinning || stopping
                     ? 'radial-gradient(circle, #fee2e2, #dc2626 40%, #1e3a8a 80%)'
@@ -217,16 +236,16 @@ const SpinWheel = ({
                     zIndex: 10,
                   }}
                 >
-                  {Array.from({ length: 36 }).map((_, i) => {
-                    const angle = (i * 10) * (Math.PI / 180);
-                    const distance = 100 + (i % 3) * 20;
+                  {Array.from({ length: 32 }).map((_, i) => {
+                    const angle = (i * 11.25) * (Math.PI / 180);
+                    const distance = 90 + (i % 3) * 20;
                     const tx = Math.cos(angle) * distance;
                     const ty = Math.sin(angle) * distance;
-                    const rz = 360 + (i * 30);
+                    const rz = 360 + (i * 24);
                     const color = prizeColors[i % prizeColors.length];
-                    const delay = (i % 9) * 0.03;
-                    const size = 8 + (i % 4);
-                    
+                    const delay = (i % 8) * 0.03;
+                    const size = 7 + (i % 3);
+
                     return (
                       <Box
                         key={i}
@@ -238,7 +257,7 @@ const SpinWheel = ({
                           top: '50%',
                           left: '50%',
                           width: size,
-                          height: size * 1.5,
+                          height: size * 1.4,
                           borderRadius: 1,
                           backgroundColor: color,
                           opacity: 0,
@@ -252,19 +271,18 @@ const SpinWheel = ({
                 </Box>
               )}
 
-              {/* Outer box: handles Y rotation + fast spin + slow stop */}
+              {/* Outer box: handles Y rotation + spin/stop */}
               <Box
                 sx={{
                   position: 'relative',
-                  width: { xs: 140, sm: 160 },
-                  height: { xs: 140, sm: 160 },
+                  width: { xs: 130, sm: 150, md: 160 },
+                  height: { xs: 130, sm: 150, md: 160 },
                   zIndex: 5,
                   transformStyle: 'preserve-3d',
                   animation: getGiftAnimation(),
                   transition: stopping
                     ? 'transform 3.2s cubic-bezier(.1,.7,.1,1)'
                     : 'none',
-                  // important: no inline transform while spinning, so CSS animation controls it
                   transform: spinning
                     ? 'none'
                     : `perspective(1000px) rotateY(${finalRotation}deg)`,
@@ -274,18 +292,18 @@ const SpinWheel = ({
                 <Box
                   sx={{
                     position: 'absolute',
-                    bottom: { xs: -20, sm: -24 },
+                    bottom: { xs: -16, sm: -20 },
                     left: '50%',
                     transform: 'translateX(-50%)',
                     width: '80%',
-                    height: { xs: 12, sm: 16 },
+                    height: { xs: 10, sm: 14 },
                     borderRadius: '50%',
                     background: 'rgba(30, 58, 138, 0.4)',
                     filter: 'blur(8px)',
                   }}
                 />
 
-                {/* Inner container: shakes only content, not rotation */}
+                {/* Inner container: shakes only content */}
                 <Box
                   sx={{
                     position: 'absolute',
@@ -303,7 +321,8 @@ const SpinWheel = ({
                       width: '100%',
                       height: '32%',
                       borderRadius: '16px 16px 10px 10px',
-                      background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
+                      background:
+                        'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
                       boxShadow: '0 6px 16px rgba(220, 38, 38, 0.4)',
                       zIndex: 3,
                     }}
@@ -317,12 +336,13 @@ const SpinWheel = ({
                         transform: 'translateX(-50%)',
                         width: '28%',
                         height: '130%',
-                        background: 'linear-gradient(180deg, #1e3a8a, #3b82f6)',
+                        background:
+                          'linear-gradient(180deg, #1e3a8a, #3b82f6)',
                         borderRadius: '20px',
                         boxShadow: '0 2px 8px rgba(30, 58, 138, 0.4)',
                       }}
                     />
-                    
+
                     {/* Bow on top */}
                     <Box
                       sx={{
@@ -333,7 +353,8 @@ const SpinWheel = ({
                         width: '45%',
                         height: '35%',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #2563eb, #1e3a8a)',
+                        background:
+                          'linear-gradient(135deg, #2563eb, #1e3a8a)',
                         boxShadow: '0 2px 8px rgba(30, 58, 138, 0.5)',
                       }}
                     />
@@ -349,7 +370,8 @@ const SpinWheel = ({
                       width: '100%',
                       height: '70%',
                       borderRadius: '12px',
-                      background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%)',
+                      background:
+                        'linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%)',
                       boxShadow: '0 12px 24px rgba(220, 38, 38, 0.5)',
                       overflow: 'hidden',
                       zIndex: 2,
@@ -364,11 +386,13 @@ const SpinWheel = ({
                         transform: 'translateX(-50%)',
                         width: '28%',
                         height: '100%',
-                        background: 'linear-gradient(180deg, #1e3a8a, #3b82f6)',
-                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.2)',
+                        background:
+                          'linear-gradient(180deg, #1e3a8a, #3b82f6)',
+                        boxShadow:
+                          'inset 0 0 10px rgba(0, 0, 0, 0.2)',
                       }}
                     />
-                    
+
                     {/* Horizontal ribbon */}
                     <Box
                       sx={{
@@ -378,8 +402,10 @@ const SpinWheel = ({
                         transform: 'translateY(-50%)',
                         width: '100%',
                         height: '26%',
-                        background: 'linear-gradient(90deg, #1e3a8a, #3b82f6, #1e3a8a)',
-                        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.2)',
+                        background:
+                          'linear-gradient(90deg, #1e3a8a, #3b82f6, #1e3a8a)',
+                        boxShadow:
+                          'inset 0 0 10px rgba(0, 0, 0, 0.2)',
                       }}
                     />
 
@@ -391,16 +417,17 @@ const SpinWheel = ({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: { xs: 36, sm: 42 },
+                        fontSize: { xs: 32, sm: 38, md: 42 },
                         zIndex: 5,
-                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                        textShadow:
+                          '0 2px 8px rgba(0, 0, 0, 0.3)',
                       }}
                     >
                       {spinning || stopping
                         ? '✨'
                         : winnerBurst
-                          ? '🏆'
-                          : '🎁'}
+                        ? '🏆'
+                        : '🎁'}
                     </Box>
                   </Box>
                 </Box>
@@ -411,16 +438,21 @@ const SpinWheel = ({
           {/* Prize List */}
           {hasItems && (
             <>
-              <Divider sx={{ mb: { xs: 2, sm: 2.5 }, borderColor: '#e5e7eb' }} />
+              <Divider
+                sx={{
+                  mb: { xs: 1.75, sm: 2.25 },
+                  borderColor: '#e5e7eb',
+                }}
+              />
               <Box>
                 <Typography
                   variant="subtitle1"
                   sx={{
                     fontWeight: 600,
                     color: '#1e3a8a',
-                    mb: 1.5,
+                    mb: 1.25,
                     textAlign: 'center',
-                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                    fontSize: { xs: '0.85rem', sm: '0.95rem' },
                   }}
                 >
                   Possible Prizes
@@ -428,7 +460,11 @@ const SpinWheel = ({
                 <Stack
                   spacing={1}
                   sx={{
-                    maxHeight: { xs: 160, sm: 180 },
+                    maxHeight: {
+                      xs: 130,        // smaller on tiny screens
+                      sm: 160,
+                      md: 190,
+                    },
                     overflowY: 'auto',
                     pr: 1,
                     '&::-webkit-scrollbar': {
@@ -439,7 +475,8 @@ const SpinWheel = ({
                       borderRadius: '10px',
                     },
                     '&::-webkit-scrollbar-thumb': {
-                      background: 'linear-gradient(135deg, #dc2626, #1e3a8a)',
+                      background:
+                        'linear-gradient(135deg, #dc2626, #1e3a8a)',
                       borderRadius: '10px',
                     },
                   }}
@@ -449,35 +486,44 @@ const SpinWheel = ({
                       key={item._id || index}
                       direction="row"
                       alignItems="center"
-                      spacing={1.5}
+                      spacing={1.25}
                       sx={{
-                        p: { xs: 1, sm: 1.25 },
+                        p: { xs: 0.85, sm: 1.1 },
                         borderRadius: 2,
-                        background: 'linear-gradient(135deg, #fef2f2 0%, #eff6ff 100%)',
+                        background:
+                          'linear-gradient(135deg, #fef2f2 0%, #eff6ff 100%)',
                         border: '1px solid #e5e7eb',
                         transition: 'all 0.2s ease',
+                        minHeight: { xs: 32, sm: 36 },
                         '&:hover': {
                           transform: 'translateX(4px)',
-                          boxShadow: '0 2px 8px rgba(220, 38, 38, 0.1)',
+                          boxShadow:
+                            '0 2px 8px rgba(220, 38, 38, 0.1)',
                         },
                       }}
                     >
                       <Box
                         sx={{
-                          width: { xs: 10, sm: 12 },
-                          height: { xs: 10, sm: 12 },
+                          width: { xs: 9, sm: 11 },
+                          height: { xs: 9, sm: 11 },
                           borderRadius: '50%',
-                          background: `linear-gradient(135deg, ${prizeColors[index % prizeColors.length]}, ${prizeColors[(index + 1) % prizeColors.length]})`,
+                          background: `linear-gradient(135deg, ${
+                            prizeColors[index % prizeColors.length]
+                          }, ${
+                            prizeColors[(index + 1) % prizeColors.length]
+                          })`,
                           flexShrink: 0,
-                          boxShadow: `0 0 8px ${prizeColors[index % prizeColors.length]}40`,
+                          boxShadow: `0 0 8px ${
+                            prizeColors[index % prizeColors.length]
+                          }40`,
                         }}
                       />
                       <Typography
                         variant="body2"
-                        sx={{ 
+                        sx={{
                           fontWeight: 600,
                           color: '#1e293b',
-                          fontSize: { xs: '0.875rem', sm: '0.925rem' },
+                          fontSize: { xs: '0.8rem', sm: '0.9rem' },
                         }}
                         noWrap
                       >
