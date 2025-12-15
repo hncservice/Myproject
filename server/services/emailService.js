@@ -56,10 +56,11 @@ exports.sendPrizeEmail = async ({
         <strong>Terms &amp; Conditions:</strong>
       </p>
       <ul style="font-size: 11px; color:#777; padding-left:18px; margin:4px 0 0;">
-        <li>Winning prizes are redeemable only on <strong>18 December (Qatar National Day)</strong>.</li>
+        <li>Winning prizes are redeemable only on <strong>18 December (Qatar National Day) to 21 December</strong>.</li>
         <li>Offers are applicable only for <strong>dine-in</strong> orders.</li>
         <li>Offer is valid only on selected items and cannot be replaced, exchanged, or upgraded.</li>
         <li>The Jackpot box prize is limited to <strong>3 members</strong> only.</li>
+        <li>T&C Apply</li>
       </ul>
     </div>
   `;

@@ -10,12 +10,19 @@ const { signToken } = require('../config/jwt');
 
 const normalizeEmail = (email) => (email || '').trim().toLowerCase();
 const trimString = (value) => (typeof value === 'string' ? value.trim() : value);
-
+const phoneRegex = /^(\+974)?\s?\d{8}$/;
 const registerSchema = Joi.object({
   name: Joi.string().min(2).max(100).required().custom((v) => v.trim()),
   email: Joi.string().email().required(),
-  phone: Joi.string().allow('', null).max(30)
-});
+  phone: Joi.string()
+    .pattern(phoneRegex)
+    .required()
+    .messages({
+      'string.pattern.base':
+        'Please enter a valid Qatar phone number (e.g. +974 12345678).',
+      'string.empty': 'Phone number is required.'
+    })
+})
 
 const otpVerifySchema = Joi.object({
   email: Joi.string().email().required(),
@@ -39,7 +46,30 @@ exports.registerUser = async (req, res) => {
     name = trimString(name);
     phone = trimString(phone);
 
-    let user = await User.findOne({ email });
+    // 1️⃣ Check if email already belongs to a verified user
+    let userByEmail = await User.findOne({ email });
+
+    if (userByEmail && userByEmail.emailVerified) {
+      return res
+        .status(400)
+        .json({ message: 'This email is already registered. Please log in or use another email.' });
+    }
+
+    // 2️⃣ Check if phone is already used by another user
+    const userByPhone = await User.findOne({ phone });
+
+    if (
+      userByPhone &&
+      (!userByEmail || userByPhone._id.toString() !== userByEmail._id.toString())
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'This phone number is already registered with another account.' });
+    }
+
+    // 3️⃣ Create or update user (unverified)
+    let user = userByEmail;
+
     if (!user) {
       user = await User.create({ name, email, phone });
     } else {
@@ -47,6 +77,7 @@ exports.registerUser = async (req, res) => {
       user.phone = phone;
     }
 
+    // 4️⃣ Generate and save OTP
     const otp = generateOtp();
     const otpHash = await hashOtp(otp);
 
@@ -54,14 +85,27 @@ exports.registerUser = async (req, res) => {
     user.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
+    // 5️⃣ Send OTP email
     await sendOtpEmail(email, otp);
 
     return res.json({ message: 'OTP sent to email' });
   } catch (err) {
     console.error('registerUser error:', err);
+
+    // Handle unique index error (email/phone)
+    if (err.code === 11000 && err.keyPattern) {
+      if (err.keyPattern.email) {
+        return res.status(400).json({ message: 'This email is already registered.' });
+      }
+      if (err.keyPattern.phone) {
+        return res.status(400).json({ message: 'This phone number is already registered.' });
+      }
+    }
+
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 exports.verifyUserOtp = async (req, res) => {
   try {

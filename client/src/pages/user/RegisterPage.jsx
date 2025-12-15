@@ -438,48 +438,59 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (loading) return;
+  e.preventDefault();
+  if (loading) return;
 
-    setMsg(null);
-    setError(null);
-    setLoading(true);
+  setMsg(null);
+  setError(null);
 
-    try {
-      const payload = {
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
-        phone: form.phone.trim(),
-      };
-
-      if (!payload.name || payload.name.length < 2) {
-        setError('Please enter your full name (at least 2 characters).');
-        setLoading(false);
-        return;
-      }
-
-      if (!payload.email) {
-        setError('Please enter a valid email address.');
-        setLoading(false);
-        return;
-      }
-
-      await registerUser(payload);
-      setMsg('OTP sent to your email successfully!');
-
-      setTimeout(() => {
-        navigate('/verify-otp', { state: { email: payload.email } });
-      }, 1000);
-    } catch (err) {
-      const m =
-        err?.response?.data?.message ||
-        err?.message ||
-        'Registration failed';
-      setError(m);
-    } finally {
-      setLoading(false);
-    }
+  const payload = {
+    name: form.name.trim(),
+    email: form.email.trim().toLowerCase(),
+    phone: form.phone.trim(),
   };
+
+  // Simple email regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Qatar phone: +974 12345678 or 12345678
+  const qatarPhoneRegex = /^(\+974)?\s?\d{8}$/;
+
+  // ✅ Frontend validations
+  if (!payload.name || payload.name.length < 2) {
+    setError('Please enter your full name (at least 2 characters).');
+    return;
+  }
+
+  if (!payload.email || !emailRegex.test(payload.email)) {
+    setError('Please enter a valid email address.');
+    return;
+  }
+
+  if (!payload.phone || !qatarPhoneRegex.test(payload.phone)) {
+    setError('Please enter a valid Qatar phone number (e.g. +974 12345678).');
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    await registerUser(payload);
+    setMsg('OTP sent to your email successfully!');
+
+    setTimeout(() => {
+      navigate('/verify-otp', { state: { email: payload.email } });
+    }, 1000);
+  } catch (err) {
+    const m =
+      err?.response?.data?.message ||
+      err?.message ||
+      'Registration failed';
+    setError(m);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="register-page">
