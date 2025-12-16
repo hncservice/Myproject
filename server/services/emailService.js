@@ -60,6 +60,7 @@ exports.sendPrizeEmail = async ({
         <li>Offers are applicable only for <strong>dine-in</strong> orders.</li>
         <li>Offer is valid only on selected items and cannot be replaced, exchanged, or upgraded.</li>
         <li>The Jackpot box prize is limited to <strong>3 members</strong> only.</li>
+        <li> further Details whatsapp <strong> +97459996635<strong></li>
         <li>T&C Apply</li>
       </ul>
     </div>
