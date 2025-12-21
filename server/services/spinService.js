@@ -14,6 +14,7 @@ const { sendPrizeEmail } = require('./emailService');
  * - Ensures user has not already spun
  * - Respects quantityTotal / quantityRedeemed
  * - Generates QR + email if won
+ * -monkey chances max 3
  *
  * Returns:
  * {
@@ -23,6 +24,8 @@ const { sendPrizeEmail } = require('./emailService');
  *   selectedItem      // WheelItem or null
  * }
  */
+
+
 exports.performSpinForUser = async (userId) => {
   const user = await User.findById(userId);
 

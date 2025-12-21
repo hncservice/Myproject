@@ -21,7 +21,15 @@ const userSchema = new mongoose.Schema(
     otpHash: { type: String },
     otpExpiresAt: { type: Date },
 
-    hasSpun: { type: Boolean, default: false }
+    hasSpun: { type: Boolean, default: false },
+     monkeyAttempts: {
+    type: Number,
+    default: 0,
+  },
+  monkeyLocked: {
+    type: Boolean,
+    default: false,
+  }
   },
   {
     timestamps: true

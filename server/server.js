@@ -68,7 +68,8 @@ app.use(express.json({ limit: '1mb' }));
 
 // 7) Routes
 app.use('/api/auth', authRoutes);
-app.use('/api', spinRoutes);        // /api/wheel, /api/spin
+// app.use('/api', spinRoutes);        // /api/wheel, /api/spin
+app.use('/api/spin', spinRoutes);
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/admin', adminRoutes);
 

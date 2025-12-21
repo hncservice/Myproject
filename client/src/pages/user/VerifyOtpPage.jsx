@@ -90,7 +90,7 @@ const VerifyOtpPage = () => {
 
       // ✅ Save auth (role: user) and go to spin page
       login('user', token, user);
-      navigate('/spin');
+      navigate('/monkey-game');
     } catch (err) {
       const msg =
         err?.response?.data?.message ||

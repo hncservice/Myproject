@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import RegisterPage from '../pages/user/RegisterPage';
 import VerifyOtpPage from '../pages/user/VerifyOtpPage';
 import SpinPage from '../pages/user/SpinPage';
+import MonkeyGamePage from '../pages/user/MonkeyGamePage';
 
 import VendorLoginPage from '../pages/vendor/VendorLoginPage';
 import VendorScanPage from '../pages/vendor/VendorScanPage';
@@ -31,6 +32,7 @@ const AppRoutes = () => {
       {/* User */}
       <Route path="/" element={<RegisterPage />} />
       <Route path="/verify-otp" element={<VerifyOtpPage />} />
+      <Route path="/monkey-game" element={<MonkeyGamePage />} />
       <Route
         path="/spin"
         element={
