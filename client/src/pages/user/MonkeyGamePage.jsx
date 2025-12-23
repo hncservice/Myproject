@@ -67,7 +67,6 @@ const MobileContainer = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
-  // subtle background decor
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -169,6 +168,7 @@ const MonkeyGrid = styled(Box)(() => ({
   gap: 8,
 }));
 
+// ✅ FIX: mobile tap reliability
 const Hole = styled(Box)(({ active, disabled }) => ({
   position: 'relative',
   aspectRatio: '1 / 1',
@@ -184,6 +184,10 @@ const Hole = styled(Box)(({ active, disabled }) => ({
   transition: 'all 0.15s ease-out',
   userSelect: 'none',
   WebkitTapHighlightColor: 'transparent',
+
+  // IMPORTANT for iOS/Android fast tapping:
+  touchAction: 'manipulation',
+  WebkitUserSelect: 'none',
 }));
 
 const Monkey = styled(Box)(({ active }) => ({
@@ -262,7 +266,7 @@ const MonkeyGamePage = () => {
   const startLockRef = useRef(false);
   const sessionIdRef = useRef(null);
 
-  // 🔐 lock only AFTER last game ends
+  // lock after last game ends
   const lockAfterThisGameRef = useRef(false);
 
   // Locking / errors
@@ -367,7 +371,6 @@ const MonkeyGamePage = () => {
       if (typeof maxChances === 'number') setMaxChances(maxChances);
       else setMaxChances(FALLBACK_MAX_CHANCES);
 
-      // if game currently running, keep unlocked so taps work
       setLocked((prev) => (isRunning ? false : !!locked));
     } catch (err) {
       console.error('getMonkeyStatus error:', err);
@@ -422,7 +425,6 @@ const MonkeyGamePage = () => {
       return;
     }
 
-    // If UI says no chances AND locked, block; otherwise let server decide.
     if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) {
       setSpinError('You have used all your chances.');
       return;
@@ -437,32 +439,19 @@ const MonkeyGamePage = () => {
     try {
       const res = await requestMonkeyAttempt(sessionId);
 
-      const {
-        chancesLeft: serverChances,
-        maxChances: serverMax,
-        locked: serverLocked,
-        allowed,
-      } = res?.data || {};
-
-      // Debug (remove later)
-      // console.log('monkey-attempt response:', res?.data);
+      const { chancesLeft: serverChances, maxChances: serverMax, locked: serverLocked, allowed } = res?.data || {};
 
       if (typeof serverChances === 'number') setChancesLeft(serverChances);
       if (typeof serverMax === 'number') setMaxChances(serverMax);
 
-      // ✅ If server explicitly says not allowed
       if (allowed === false) {
         setLocked(true);
         setSpinError('You have used all your chances.');
         return;
       }
 
-      // ✅ If server doesn't send "allowed", fallback:
-      // allow start even when serverLocked=true (last chance), but stop if it returns 0 chances and also says locked AND NOT running.
-      // (We still start this game; lock is applied after game ends)
       lockAfterThisGameRef.current = !!serverLocked;
 
-      // While playing, keep unlocked so taps are enabled
       setLocked(false);
 
       resetGameState();
@@ -523,6 +512,7 @@ const MonkeyGamePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hits, roundCount, isRunning]);
 
+  // ✅ No minus points
   const handleHoleTap = (index) => {
     if (!isRunning) return;
     if (hasHitThisRoundRef.current) return;
@@ -532,10 +522,9 @@ const MonkeyGamePage = () => {
       setHits((prev) => prev + 1);
       playSound(hitRef);
     } else {
-  setMisses((prev) => prev + 1);
-  playSound(missRef);
-  // ✅ no hit reduction
-}
+      setMisses((prev) => prev + 1);
+      playSound(missRef);
+    }
   };
 
   const endGame = async (didWin) => {
@@ -544,7 +533,6 @@ const MonkeyGamePage = () => {
     setActiveIndex(null);
     stopSound(bgLoopRef);
 
-    // ✅ apply lock AFTER game ends if this was the last chance
     if (lockAfterThisGameRef.current) {
       setLocked(true);
     }
@@ -559,9 +547,7 @@ const MonkeyGamePage = () => {
         setResultMessage('No more chances left. Better luck next time 🐒');
       } else {
         const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
-        setResultMessage(
-          `Round over. You still have ${displayChances} chance${displayChances === 1 ? '' : 's'} left.`
-        );
+        setResultMessage(`Round over. You still have ${displayChances} chance${displayChances === 1 ? '' : 's'} left.`);
       }
       playSound(loseRef);
       return;
@@ -582,8 +568,7 @@ const MonkeyGamePage = () => {
         if (prize && typeof prize === 'object') prizeObj = prize;
         else if (typeof prize === 'string') {
           const normalized = prize.trim().toLowerCase();
-          prizeObj =
-            prizeItems.find((item) => item?.title && item.title.trim().toLowerCase() === normalized) || null;
+          prizeObj = prizeItems.find((item) => item?.title && item.title.trim().toLowerCase() === normalized) || null;
         }
 
         setIsWin(true);
@@ -609,7 +594,6 @@ const MonkeyGamePage = () => {
       setResultMessage('We could not confirm your prize. Please contact staff.');
       playSound(loseRef);
     } finally {
-      // refresh status after finish
       loadMonkeyStatus();
     }
   };
@@ -617,22 +601,19 @@ const MonkeyGamePage = () => {
   const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
 
   const gameDisabled =
-    locked || isRunning || isStarting || wheelLoading || !!wheelError || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked);
+    locked ||
+    isRunning ||
+    isStarting ||
+    wheelLoading ||
+    !!wheelError ||
+    (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked);
 
   const progress = MAX_ROUNDS > 0 ? Math.min(100, (roundCount / MAX_ROUNDS) * 100) : 0;
 
   return (
     <MobileContainer>
       {/* floating particles (lightweight) */}
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          zIndex: 0,
-          opacity: 0.6,
-        }}
-      >
+      <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.6 }}>
         {Array.from({ length: 10 }).map((_, i) => (
           <Box
             key={i}
@@ -671,39 +652,20 @@ const MonkeyGamePage = () => {
             </Box>
 
             <Box>
-              <Typography
-                variant="h6"
-                fontWeight={900}
-                sx={{
-                  color: '#fff',
-                  letterSpacing: 0.5,
-                  fontSize: { xs: '0.95rem', sm: '1.1rem' },
-                }}
-              >
+              <Typography variant="h6" fontWeight={900} sx={{ color: '#fff', letterSpacing: 0.5, fontSize: { xs: '0.95rem', sm: '1.1rem' } }}>
                 Tap The Monkey
               </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: 'rgba(148, 163, 184, 0.9)',
-                  fontSize: '0.7rem',
-                }}
-              >
+              <Typography variant="caption" sx={{ color: 'rgba(148, 163, 184, 0.9)', fontSize: '0.7rem' }}>
                 Hit {REQUIRED_HITS} times in max {MAX_ROUNDS} rounds
               </Typography>
             </Box>
           </Stack>
 
-          <StatusBadge
-            locked={locked ? 1 : 0}
-            icon={locked ? <LockIcon sx={{ fontSize: 16 }} /> : <StarIcon sx={{ fontSize: 16 }} />}
-            label={locked ? 'Locked' : 'Ready'}
-          />
+          <StatusBadge locked={locked ? 1 : 0} icon={locked ? <LockIcon sx={{ fontSize: 16 }} /> : <StarIcon sx={{ fontSize: 16 }} />} label={locked ? 'Locked' : 'Ready'} />
         </Stack>
 
         <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.75)', fontSize: '0.8rem' }}>
-          Hey{' '}
-          <strong style={{ color: HNC_RED, fontWeight: 800 }}>{profile?.name || 'Guest'}</strong>, you have{' '}
+          Hey <strong style={{ color: HNC_RED, fontWeight: 800 }}>{profile?.name || 'Guest'}</strong>, you have{' '}
           <strong>
             {displayChances}/{maxChances}
           </strong>{' '}
@@ -743,8 +705,7 @@ const MonkeyGamePage = () => {
                 fontSize: { xs: '0.85rem', sm: '0.92rem' },
               }}
             >
-              Tap only when the monkey pops up. Get <strong>{REQUIRED_HITS}</strong> hits within{' '}
-              <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps count as a miss.
+              Tap only when the monkey pops up. Get <strong>{REQUIRED_HITS}</strong> hits within <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps count as a miss.
             </Typography>
           </Fade>
         </Box>
@@ -828,12 +789,25 @@ const MonkeyGamePage = () => {
             <MonkeyGrid>
               {Array.from({ length: 9 }).map((_, index) => {
                 const isActive = index === activeIndex;
+
+                // ✅ FIX: use pointer/touch (click sometimes fails on mobile)
+                const tap = (e) => {
+                  e.preventDefault();
+                  handleHoleTap(index);
+                };
+
                 return (
                   <Hole
                     key={index}
                     active={isActive ? 1 : 0}
                     disabled={!isRunning}
-                    onClick={() => handleHoleTap(index)}
+                    role="button"
+                    tabIndex={0}
+                    onPointerDown={tap}
+                    onTouchStart={tap}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') tap(e);
+                    }}
                   >
                     <Monkey active={isActive ? 1 : 0}>{isActive ? '🐵' : '🕳️'}</Monkey>
                   </Hole>
@@ -847,11 +821,7 @@ const MonkeyGamePage = () => {
         {resultMessage && (
           <Grow in={!!resultMessage} timeout={400}>
             <Box sx={{ px: { xs: 2, sm: 3 }, mb: 2.5, display: 'flex', justifyContent: 'center' }}>
-              <ResultChip
-                iswin={isWin ? 1 : 0}
-                icon={isWin ? <EmojiEventsIcon sx={{ fontSize: 18 }} /> : undefined}
-                label={resultMessage}
-              />
+              <ResultChip iswin={isWin ? 1 : 0} icon={isWin ? <EmojiEventsIcon sx={{ fontSize: 18 }} /> : undefined} label={resultMessage} />
             </Box>
           </Grow>
         )}
@@ -862,13 +832,7 @@ const MonkeyGamePage = () => {
             disabled={gameDisabled}
             onClick={startGame}
             startIcon={
-              locked ? (
-                <LockIcon />
-              ) : isRunning || isStarting ? (
-                <CircularProgress size={18} sx={{ color: '#fff' }} />
-              ) : (
-                <CasinoIcon />
-              )
+              locked ? <LockIcon /> : isRunning || isStarting ? <CircularProgress size={18} sx={{ color: '#fff' }} /> : <CasinoIcon />
             }
           >
             {locked || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked)
@@ -881,38 +845,7 @@ const MonkeyGamePage = () => {
           </GameButton>
         </Box>
 
-        {/* Prize List */}
-        {prizeItems && prizeItems.length > 0 && (
-          <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
-            <PrizeListCard elevation={0}>
-              <Typography variant="subtitle2" sx={{ color: '#e5e7eb', fontWeight: 800, mb: 0.8, fontSize: '0.85rem' }}>
-                Sample Prizes You Can Win
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{ color: 'rgba(148, 163, 184, 0.9)', fontSize: '0.75rem', display: 'block', mb: 1 }}
-              >
-                Prize is selected securely after you win.
-              </Typography>
-              <Stack spacing={0.6}>
-                {prizeItems.slice(0, 6).map((item, idx) => (
-                  <Stack key={item._id || idx} direction="row" spacing={1} alignItems="center">
-                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', background: HNC_RED, flexShrink: 0 }} />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: 'rgba(209, 213, 219, 0.95)', fontSize: '0.8rem' }}
-                      noWrap
-                    >
-                      {item.title || item.label || item.name || `Prize ${idx + 1}`}
-                    </Typography>
-                  </Stack>
-                ))}
-              </Stack>
-            </PrizeListCard>
-          </Box>
-        )}
-
-        {/* Rules */}
+        {/* Rules (fixed text) */}
         <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
           <InfoCard elevation={0}>
             <Typography variant="subtitle2" sx={{ color: '#e5e7eb', fontWeight: 800, mb: 0.6, fontSize: '0.85rem' }}>
@@ -922,7 +855,7 @@ const MonkeyGamePage = () => {
               • You get <strong>{maxChances}</strong> chances total. <br />
               • Tap only when the monkey appears. <br />
               • Reach {REQUIRED_HITS} hits within {MAX_ROUNDS} rounds. <br />
-              • Wrong tap reduces score by 1. <br />
+              • Wrong tap counts as a miss. <br />
               • If you win, prize is selected on server and emailed to you.
             </Typography>
           </InfoCard>
@@ -954,10 +887,7 @@ const MonkeyGamePage = () => {
         transitionDuration={400}
       >
         <Box sx={{ position: 'relative' }}>
-          <IconButton
-            onClick={() => setPrizePopupOpen(false)}
-            sx={{ position: 'absolute', right: 10, top: 10, color: 'rgba(209, 213, 219, 0.9)' }}
-          >
+          <IconButton onClick={() => setPrizePopupOpen(false)} sx={{ position: 'absolute', right: 10, top: 10, color: 'rgba(209, 213, 219, 0.9)' }}>
             <CloseIcon />
           </IconButton>
 
@@ -989,31 +919,12 @@ const MonkeyGamePage = () => {
 
             <Box sx={{ background: '#020617', borderRadius: 16, border: '1px solid rgba(55, 65, 81, 0.9)', p: 2 }}>
               {wonPrize?.imageUrl && (
-                <Box
-                  sx={{
-                    mb: 1.4,
-                    borderRadius: 3,
-                    overflow: 'hidden',
-                    border: '1px solid rgba(243, 244, 246, 0.8)',
-                  }}
-                >
-                  <img
-                    src={wonPrize.imageUrl}
-                    alt={wonPrize.title || wonPrizeText || 'Prize'}
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                  />
+                <Box sx={{ mb: 1.4, borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(243, 244, 246, 0.8)' }}>
+                  <img src={wonPrize.imageUrl} alt={wonPrize.title || wonPrizeText || 'Prize'} style={{ width: '100%', height: 'auto', display: 'block' }} />
                 </Box>
               )}
 
-              <Typography
-                variant="h5"
-                fontWeight={900}
-                sx={{
-                  color: '#fecaca',
-                  mb: wonPrize?.description ? 0.5 : 0,
-                  fontSize: '1.1rem',
-                }}
-              >
+              <Typography variant="h5" fontWeight={900} sx={{ color: '#fecaca', mb: wonPrize?.description ? 0.5 : 0, fontSize: '1.1rem' }}>
                 {wonPrize?.title || wonPrizeText || 'Mystery Prize'}
               </Typography>
 
