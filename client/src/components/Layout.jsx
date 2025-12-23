@@ -246,9 +246,9 @@ const Layout = ({ children }) => {
               <img src={logo} alt="HNC Logo" className="app-shell-logo" />
             </div>
             <div className="app-shell-brand-text">
-              <span className="app-shell-brand-title">HNC Spin-to-Win</span>
+              <span className="app-shell-brand-title">HNC Game Whack the Monkey</span>
               <span className="app-shell-brand-subtitle">
-                Rewards • Vendors • Lucky Draw
+                Rewards • Vendors • Lucky 
               </span>
             </div>
           </Link>
@@ -257,7 +257,7 @@ const Layout = ({ children }) => {
           <nav className="app-shell-nav">
             {role === 'user' && (
               <Link to="/spin" className="app-shell-link">
-                User Spin
+                User Session
               </Link>
             )}
 
