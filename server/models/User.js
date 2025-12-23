@@ -29,7 +29,10 @@ const userSchema = new mongoose.Schema(
   monkeyLocked: {
     type: Boolean,
     default: false,
-  }
+  },
+  
+lastMonkeySessionId: { type: String, default: null },
+
   },
   {
     timestamps: true

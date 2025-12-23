@@ -9,7 +9,10 @@ import axiosInstance from './axiosInstance';
 export const getWheelConfig = () => axiosInstance.get('/spin/wheel');
 export const spinOnce = () => axiosInstance.post('/spin/spin', {});
 export const getMonkeyStatus = () => axiosInstance.get('/spin/monkey-status');
-export const requestMonkeyAttempt = () => axiosInstance.post('/spin/monkey-attempt');
+// export const requestMonkeyAttempt = () => axiosInstance.post('/spin/monkey-attempt');
+export const requestMonkeyAttempt = (sessionId) =>
+  axiosInstance.post('/spin/monkey-attempt', { sessionId });
+
 // export const getMonkeyStatus = () => axiosInstance.get('/monkey-status');
 
 // export const requestMonkeyAttempt = () => axiosInstance.post('/monkey-attempt');

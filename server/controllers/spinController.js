@@ -13,16 +13,11 @@ exports.getMonkeyStatus = async (req, res) => {
     const user = await User.findById(userId).select('monkeyAttempts monkeyLocked hasSpun');
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const attempts = user.monkeyAttempts || 0;
+    const attempts = Number(user.monkeyAttempts || 0);
     const chancesLeft = Math.max(0, MONKEY_MAX_CHANCES - attempts);
-
     const locked = !!user.monkeyLocked || !!user.hasSpun || chancesLeft <= 0;
 
-    return res.json({
-      chancesLeft,
-      maxChances: MONKEY_MAX_CHANCES,
-      locked,
-    });
+    return res.json({ chancesLeft, maxChances: MONKEY_MAX_CHANCES, locked });
   } catch (err) {
     console.error('getMonkeyStatus error:', err);
     return res.status(500).json({ message: 'Server error' });
@@ -30,17 +25,40 @@ exports.getMonkeyStatus = async (req, res) => {
 };
 
 // POST /api/spin/monkey-attempt
+// POST /api/spin/monkey-attempt
 exports.monkeyAttempt = async (req, res) => {
   try {
     const userId = req.user?._id || req.user?.id;
     if (!userId) return res.status(401).json({ message: 'Not authorized' });
 
-    const user = await User.findById(userId).select('monkeyAttempts monkeyLocked hasSpun');
+    const sessionId = String(req.body?.sessionId || '').trim();
+    if (!sessionId) return res.status(400).json({ message: 'sessionId is required' });
+
+    // IMPORTANT: use the SAME field name as in your schema
+    const user = await User.findById(userId).select(
+      'monkeyAttempts monkeyLocked hasSpun lastMonkeySessionId'
+    );
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const attempts = user.monkeyAttempts || 0;
+    // Idempotency: same sessionId => do not consume again
+    if (user.lastMonkeySessionId && user.lastMonkeySessionId === sessionId) {
+      const attemptsNow = Number(user.monkeyAttempts || 0);
+      const chancesLeftNow = Math.max(0, MONKEY_MAX_CHANCES - attemptsNow);
 
-    // already locked
+      // locked means "no more attempts remaining"
+      const lockedNow = !!user.monkeyLocked || !!user.hasSpun || attemptsNow >= MONKEY_MAX_CHANCES;
+
+      return res.json({
+        allowed: !lockedNow,
+        chancesLeft: chancesLeftNow,
+        maxChances: MONKEY_MAX_CHANCES,
+        locked: lockedNow,
+        deduped: true,
+      });
+    }
+
+    // If already locked, deny
+    const attempts = Number(user.monkeyAttempts || 0);
     if (user.hasSpun || user.monkeyLocked || attempts >= MONKEY_MAX_CHANCES) {
       if (!user.monkeyLocked) {
         user.monkeyLocked = true;
@@ -54,29 +72,63 @@ exports.monkeyAttempt = async (req, res) => {
       });
     }
 
-    // consume an attempt
-    user.monkeyAttempts = attempts + 1;
+    // Atomic consume
+    const updated = await User.findOneAndUpdate(
+      {
+        _id: userId,
+        hasSpun: { $ne: true },
+        monkeyLocked: { $ne: true },
+        monkeyAttempts: { $lt: MONKEY_MAX_CHANCES },
+        lastMonkeySessionId: { $ne: sessionId },
+      },
+      {
+        $inc: { monkeyAttempts: 1 },
+        $set: { lastMonkeySessionId: sessionId },
+      },
+      { new: true }
+    ).select('monkeyAttempts monkeyLocked hasSpun lastMonkeySessionId');
 
-    if (user.monkeyAttempts >= MONKEY_MAX_CHANCES) {
-      user.monkeyLocked = true;
+    // If update failed, re-check current state
+    if (!updated) {
+      const finalUser = await User.findById(userId).select('monkeyAttempts monkeyLocked hasSpun');
+      const finalAttempts = Number(finalUser.monkeyAttempts || 0);
+      const chancesLeft = Math.max(0, MONKEY_MAX_CHANCES - finalAttempts);
+      const locked = !!finalUser.monkeyLocked || !!finalUser.hasSpun || finalAttempts >= MONKEY_MAX_CHANCES;
+
+      return res.status(400).json({
+        message: locked ? 'You have used all your chances.' : 'Try again.',
+        locked,
+        chancesLeft,
+        maxChances: MONKEY_MAX_CHANCES,
+      });
     }
 
-    await user.save();
+    const finalAttempts = Number(updated.monkeyAttempts || 0);
+    const chancesLeft = Math.max(0, MONKEY_MAX_CHANCES - finalAttempts);
 
-    const chancesLeft = Math.max(0, MONKEY_MAX_CHANCES - user.monkeyAttempts);
-    const locked = !!user.monkeyLocked || !!user.hasSpun || chancesLeft <= 0;
+    // ✅ Key change:
+    // This request is allowed because it SUCCESSFULLY consumed an attempt.
+    // locked is for NEXT attempt (when attempts reached max).
+    const lockedNext = !!updated.hasSpun || !!updated.monkeyLocked || finalAttempts >= MONKEY_MAX_CHANCES;
+
+    // optional: persist monkeyLocked once max reached
+    if (!updated.monkeyLocked && finalAttempts >= MONKEY_MAX_CHANCES) {
+      updated.monkeyLocked = true;
+      await updated.save();
+    }
 
     return res.json({
-      allowed: true,
+      allowed: true,              // ✅ allow the game you just started
       chancesLeft,
       maxChances: MONKEY_MAX_CHANCES,
-      locked,
+      locked: lockedNext,         // ✅ lock for next time
     });
   } catch (err) {
     console.error('monkeyAttempt error:', err);
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 // GET /api/spin/wheel
 exports.getWheelConfig = async (req, res, next) => {

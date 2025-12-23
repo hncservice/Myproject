@@ -26,12 +26,7 @@ import StarIcon from '@mui/icons-material/Star';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 import { useAuth } from '../../context/AuthContext';
-import {
-  spinOnce,
-  getWheelConfig,
-  getMonkeyStatus,
-  requestMonkeyAttempt,
-} from '../../api/spinApi';
+import { spinOnce, getWheelConfig, getMonkeyStatus, requestMonkeyAttempt } from '../../api/spinApi';
 
 // ======== SOUND IMPORTS ========
 import hitSfx from '../../assets/sounds/monkey-hit.mp3';
@@ -50,16 +45,21 @@ const HNC_BG = '#020617';
 const REQUIRED_HITS = 7;
 const MAX_ROUNDS = 20;
 const MONKEY_INTERVAL_MS = 800;
-const FALLBACK_MAX_CHANCES = 3; // used only if backend is not reachable
+const MONKEY_VISIBLE_MS = 420;
+const FALLBACK_MAX_CHANCES = 3; // match your server MONKEY_MAX_CHANCES
 
 // ============ Animations ============
 const pulse = keyframes`
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.08); }
 `;
+const floaty = keyframes`
+  0% { transform: translateY(0); opacity: .85; }
+  100% { transform: translateY(-18px); opacity: 0; }
+`;
 
 // ============ Styled Components ============
-const MobileContainer = styled(Box)({
+const MobileContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   background: HNC_BG,
   padding: 0,
@@ -67,15 +67,31 @@ const MobileContainer = styled(Box)({
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
-});
+  // subtle background decor
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    background:
+      'radial-gradient(900px 420px at 10% 0%, rgba(220,38,38,.18) 0%, rgba(2,6,23,0) 60%), radial-gradient(900px 420px at 90% 20%, rgba(124,45,18,.14) 0%, rgba(2,6,23,0) 60%)',
+    pointerEvents: 'none',
+  },
+  [theme.breakpoints.down('sm')]: {
+    '&::before': {
+      background:
+        'radial-gradient(700px 360px at 0% 0%, rgba(220,38,38,.18) 0%, rgba(2,6,23,0) 60%), radial-gradient(700px 360px at 100% 10%, rgba(124,45,18,.14) 0%, rgba(2,6,23,0) 60%)',
+    },
+  },
+}));
 
 const HeaderSection = styled(Box)(({ theme }) => ({
   background: 'rgba(15, 23, 42, 0.96)',
-  borderBottom: '1px solid rgba(148, 163, 184, 0.35)',
+  borderBottom: '1px solid rgba(148, 163, 184, 0.28)',
   padding: '14px 18px',
   position: 'sticky',
   top: 0,
   zIndex: 10,
+  backdropFilter: 'blur(10px)',
   [theme.breakpoints.down('sm')]: {
     padding: '10px 12px',
   },
@@ -85,7 +101,7 @@ const StatusBadge = styled(Chip)(({ locked }) => ({
   height: 30,
   borderRadius: 16,
   fontSize: '0.7rem',
-  fontWeight: 700,
+  fontWeight: 800,
   padding: '0 10px',
   background: locked
     ? 'linear-gradient(135deg, #4b5563 0%, #111827 100%)'
@@ -96,11 +112,11 @@ const StatusBadge = styled(Chip)(({ locked }) => ({
 
 const GameButton = styled(Button)(({ disabled, theme }) => ({
   width: '100%',
-  maxWidth: 320,
+  maxWidth: 360,
   height: 56,
   borderRadius: 32,
   fontSize: '0.95rem',
-  fontWeight: 800,
+  fontWeight: 900,
   textTransform: 'uppercase',
   letterSpacing: '0.08em',
   background: disabled
@@ -108,9 +124,7 @@ const GameButton = styled(Button)(({ disabled, theme }) => ({
     : `linear-gradient(135deg, ${HNC_RED} 0%, ${HNC_RED_DARK} 100%)`,
   color: '#fff',
   border: 'none',
-  boxShadow: disabled
-    ? '0 4px 10px rgba(15, 23, 42, 0.8)'
-    : '0 10px 25px rgba(220, 38, 38, 0.6)',
+  boxShadow: disabled ? '0 4px 10px rgba(15, 23, 42, 0.8)' : '0 10px 25px rgba(220, 38, 38, 0.6)',
   transition: 'all 0.2s ease',
   '&:hover': disabled
     ? {}
@@ -121,20 +135,21 @@ const GameButton = styled(Button)(({ disabled, theme }) => ({
   [theme.breakpoints.down('sm')]: {
     height: 52,
     fontSize: '0.9rem',
+    maxWidth: 340,
   },
 }));
 
-const InfoCard = styled(Paper)(({ theme }) => ({
+const InfoCard = styled(Paper)(() => ({
   background: 'rgba(15, 23, 42, 0.98)',
   borderRadius: 18,
-  border: '1px solid rgba(55, 65, 81, 0.9)',
+  border: '1px solid rgba(55, 65, 81, 0.85)',
   padding: '12px 14px',
 }));
 
 const GridWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  maxWidth: 360,
+  maxWidth: 380,
   margin: '0 auto',
   padding: '10px',
   borderRadius: 22,
@@ -142,13 +157,13 @@ const GridWrapper = styled(Box)(({ theme }) => ({
   border: '1px solid rgba(31, 41, 55, 0.9)',
   boxShadow: '0 16px 40px rgba(0, 0, 0, 0.9)',
   [theme.breakpoints.down('sm')]: {
-    maxWidth: 320,
+    maxWidth: 340,
     padding: '8px',
     borderRadius: 18,
   },
 }));
 
-const MonkeyGrid = styled(Box)(({ theme }) => ({
+const MonkeyGrid = styled(Box)(() => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
   gap: 8,
@@ -167,6 +182,8 @@ const Hole = styled(Box)(({ active, disabled }) => ({
   cursor: disabled ? 'default' : 'pointer',
   transform: active ? 'translateY(-4px)' : 'translateY(0)',
   transition: 'all 0.15s ease-out',
+  userSelect: 'none',
+  WebkitTapHighlightColor: 'transparent',
 }));
 
 const Monkey = styled(Box)(({ active }) => ({
@@ -175,9 +192,10 @@ const Monkey = styled(Box)(({ active }) => ({
   opacity: active ? 1 : 0,
   transition: 'all 0.15s ease-out',
   fontSize: '2.4rem',
+  userSelect: 'none',
 }));
 
-const ScoreBadge = styled(Box)(({ theme }) => ({
+const ScoreBadge = styled(Box)(() => ({
   display: 'inline-flex',
   alignItems: 'center',
   borderRadius: 999,
@@ -193,7 +211,7 @@ const ResultChip = styled(Chip)(({ iswin }) => ({
   height: 50,
   borderRadius: 26,
   fontSize: '0.9rem',
-  fontWeight: 800,
+  fontWeight: 900,
   padding: '0 18px',
   maxWidth: '100%',
   background: iswin
@@ -205,14 +223,21 @@ const ResultChip = styled(Chip)(({ iswin }) => ({
   overflow: 'hidden',
 }));
 
-const PrizeListCard = styled(Paper)(({ theme }) => ({
+const PrizeListCard = styled(Paper)(() => ({
   background: 'rgba(15, 23, 42, 0.98)',
   borderRadius: 18,
   border: '1px solid rgba(75, 85, 99, 0.9)',
   padding: '12px 14px',
 }));
 
-// ============ Component ============
+// ===== helper =====
+const makeSessionId = () => {
+  try {
+    if (typeof window !== 'undefined' && window.crypto?.randomUUID) return window.crypto.randomUUID();
+  } catch (e) {}
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
 const MonkeyGamePage = () => {
   const { profile } = useAuth();
 
@@ -228,9 +253,17 @@ const MonkeyGamePage = () => {
   const [roundCount, setRoundCount] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  // Chances (from backend)
+  // Chances
   const [chancesLeft, setChancesLeft] = useState(null);
   const [maxChances, setMaxChances] = useState(FALLBACK_MAX_CHANCES);
+
+  // Prevent double consuming attempt
+  const [isStarting, setIsStarting] = useState(false);
+  const startLockRef = useRef(false);
+  const sessionIdRef = useRef(null);
+
+  // 🔐 lock only AFTER last game ends
+  const lockAfterThisGameRef = useRef(false);
 
   // Locking / errors
   const [locked, setLocked] = useState(() => !!profile?.hasSpun);
@@ -244,7 +277,11 @@ const MonkeyGamePage = () => {
   const [wonPrizeText, setWonPrizeText] = useState('');
   const [wonPrize, setWonPrize] = useState(null);
 
-  const timerRef = useRef(null);
+  // Timers
+  const intervalRef = useRef(null);
+  const hideTimeoutRef = useRef(null);
+
+  // Round click protection
   const hasHitThisRoundRef = useRef(false);
 
   // SOUND REFS
@@ -305,7 +342,6 @@ const MonkeyGamePage = () => {
     } catch (e) {}
   };
 
-  // ===== Load prize config =====
   const loadPrizeConfig = async () => {
     setWheelError(null);
     setWheelLoading(true);
@@ -313,38 +349,28 @@ const MonkeyGamePage = () => {
       const res = await getWheelConfig();
       setPrizeItems(res?.data || []);
     } catch (err) {
-      const msg =
-        err?.response?.data?.message ||
-        err?.message ||
-        'Failed to load prize configuration';
+      const msg = err?.response?.data?.message || err?.message || 'Failed to load prize configuration';
       setWheelError(msg);
     } finally {
       setWheelLoading(false);
     }
   };
 
-  // ===== Load monkey status (chances + lock) from backend =====
   const loadMonkeyStatus = async () => {
     try {
       const res = await getMonkeyStatus();
       const { chancesLeft, maxChances, locked } = res?.data || {};
 
-      if (typeof chancesLeft === 'number') {
-        setChancesLeft(chancesLeft);
-      } else {
-        setChancesLeft(FALLBACK_MAX_CHANCES);
-      }
+      if (typeof chancesLeft === 'number') setChancesLeft(chancesLeft);
+      else setChancesLeft(FALLBACK_MAX_CHANCES);
 
-      if (typeof maxChances === 'number') {
-        setMaxChances(maxChances);
-      } else {
-        setMaxChances(FALLBACK_MAX_CHANCES);
-      }
+      if (typeof maxChances === 'number') setMaxChances(maxChances);
+      else setMaxChances(FALLBACK_MAX_CHANCES);
 
-      setLocked(!!locked);
+      // if game currently running, keep unlocked so taps work
+      setLocked((prev) => (isRunning ? false : !!locked));
     } catch (err) {
       console.error('getMonkeyStatus error:', err);
-      // fallback to local 3 chances if backend fails
       setChancesLeft(FALLBACK_MAX_CHANCES);
       setMaxChances(FALLBACK_MAX_CHANCES);
     }
@@ -356,7 +382,6 @@ const MonkeyGamePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ===== Game logic =====
   const resetGameState = () => {
     setHits(0);
     setMisses(0);
@@ -369,136 +394,163 @@ const MonkeyGamePage = () => {
     hasHitThisRoundRef.current = false;
   };
 
+  const clearTimers = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  };
+
+  useEffect(() => () => clearTimers(), []);
+
   const startGame = async () => {
-    if (locked || isRunning) return;
+    if (locked || isRunning || isStarting) return;
+    if (startLockRef.current) return;
+
+    setSpinError(null);
 
     if (wheelLoading) {
       setSpinError('Prizes are still loading. Please wait.');
       return;
     }
-
     if (!prizeItems || prizeItems.length === 0) {
       setSpinError('Prizes are not configured yet. Please try again later.');
       return;
     }
 
-    // If chancesLeft is known and zero → do not start
-    if (chancesLeft !== null && chancesLeft <= 0) {
+    // If UI says no chances AND locked, block; otherwise let server decide.
+    if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) {
       setSpinError('You have used all your chances.');
       return;
     }
 
-    // 🔒 Ask backend if this attempt is allowed (increments attempts on server)
+    startLockRef.current = true;
+    setIsStarting(true);
+
+    const sessionId = makeSessionId();
+    sessionIdRef.current = sessionId;
+
     try {
-      const res = await requestMonkeyAttempt();
+      const res = await requestMonkeyAttempt(sessionId);
+
       const {
         chancesLeft: serverChances,
         maxChances: serverMax,
         locked: serverLocked,
+        allowed,
       } = res?.data || {};
 
-      if (typeof serverChances === 'number') {
-        setChancesLeft(serverChances);
-      }
-      if (typeof serverMax === 'number') {
-        setMaxChances(serverMax);
-      }
+      // Debug (remove later)
+      // console.log('monkey-attempt response:', res?.data);
 
-      if (serverLocked) {
+      if (typeof serverChances === 'number') setChancesLeft(serverChances);
+      if (typeof serverMax === 'number') setMaxChances(serverMax);
+
+      // ✅ If server explicitly says not allowed
+      if (allowed === false) {
         setLocked(true);
         setSpinError('You have used all your chances.');
         return;
       }
 
+      // ✅ If server doesn't send "allowed", fallback:
+      // allow start even when serverLocked=true (last chance), but stop if it returns 0 chances and also says locked AND NOT running.
+      // (We still start this game; lock is applied after game ends)
+      lockAfterThisGameRef.current = !!serverLocked;
+
+      // While playing, keep unlocked so taps are enabled
       setLocked(false);
+
+      resetGameState();
+      setIsRunning(true);
+      playSound(startRef);
+      playSound(bgLoopRef, { loop: true });
     } catch (err) {
       const data = err?.response?.data;
-      const msg =
-        data?.message ||
-        err?.message ||
-        'Unable to start game. Please contact staff.';
+      const msg = data?.message || err?.message || 'Unable to start game. Please contact staff.';
       setSpinError(msg);
 
       if (data?.locked) {
         setLocked(true);
-        if (typeof data.chancesLeft === 'number') {
-          setChancesLeft(data.chancesLeft);
-        } else {
-          setChancesLeft(0);
-        }
+        if (typeof data.chancesLeft === 'number') setChancesLeft(data.chancesLeft);
+        else setChancesLeft(0);
       }
-
-      return;
+    } finally {
+      setIsStarting(false);
+      startLockRef.current = false;
     }
-
-    // Backend says OK → start
-    setSpinError(null);
-    resetGameState();
-    setIsRunning(true);
-    playSound(startRef);
-    playSound(bgLoopRef, { loop: true });
   };
 
   useEffect(() => {
     if (!isRunning) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
+      clearTimers();
+      setActiveIndex(null);
       stopSound(bgLoopRef);
       return;
     }
 
     const setRandomHole = () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+        hideTimeoutRef.current = null;
+      }
+
       const idx = Math.floor(Math.random() * 9);
       setActiveIndex(idx);
       hasHitThisRoundRef.current = false;
       setRoundCount((prev) => prev + 1);
+
+      hideTimeoutRef.current = setTimeout(() => {
+        setActiveIndex(null);
+      }, MONKEY_VISIBLE_MS);
     };
 
     setRandomHole();
-    timerRef.current = setInterval(setRandomHole, MONKEY_INTERVAL_MS);
+    intervalRef.current = setInterval(setRandomHole, MONKEY_INTERVAL_MS);
 
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    };
+    return () => clearTimers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRunning]);
 
   useEffect(() => {
     if (!isRunning) return;
-
-    if (hits >= REQUIRED_HITS) {
-      endGame(true);
-    } else if (roundCount >= MAX_ROUNDS) {
-      endGame(false);
-    }
+    if (hits >= REQUIRED_HITS) endGame(true);
+    else if (roundCount >= MAX_ROUNDS) endGame(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hits, roundCount, isRunning]);
 
   const handleHoleTap = (index) => {
-    if (!isRunning || locked) return;
+    if (!isRunning) return;
     if (hasHitThisRoundRef.current) return;
 
-    if (index === activeIndex) {
+    if (index === activeIndex && activeIndex !== null) {
       hasHitThisRoundRef.current = true;
       setHits((prev) => prev + 1);
       playSound(hitRef);
     } else {
       setMisses((prev) => prev + 1);
       playSound(missRef);
+      setHits((prev) => Math.max(0, prev - 1));
     }
   };
 
   const endGame = async (didWin) => {
     setIsRunning(false);
+    clearTimers();
     setActiveIndex(null);
     stopSound(bgLoopRef);
 
-    const noChancesLeft =
-      locked || (typeof chancesLeft === 'number' && chancesLeft <= 0);
+    // ✅ apply lock AFTER game ends if this was the last chance
+    if (lockAfterThisGameRef.current) {
+      setLocked(true);
+    }
+    lockAfterThisGameRef.current = false;
+
+    const noChancesLeft = locked || (typeof chancesLeft === 'number' && chancesLeft <= 0);
 
     if (!didWin) {
       setIsWin(false);
@@ -506,47 +558,32 @@ const MonkeyGamePage = () => {
         setLocked(true);
         setResultMessage('No more chances left. Better luck next time 🐒');
       } else {
-        const displayChances =
-          typeof chancesLeft === 'number' ? chancesLeft : maxChances;
+        const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
         setResultMessage(
-          `Round over. You still have ${displayChances} chance${
-            displayChances === 1 ? '' : 's'
-          } left.`
+          `Round over. You still have ${displayChances} chance${displayChances === 1 ? '' : 's'} left.`
         );
       }
       playSound(loseRef);
       return;
     }
 
-    // WIN: call existing spinOnce → same email/prize flow as old spin wheel
     try {
       const res = await spinOnce();
       const { status, prize } = res?.data || {};
 
-      const reallyWon =
-        status === 'won' ||
-        (!!prize && status !== 'lost' && status !== 'error');
+      const reallyWon = status === 'won' || (!!prize && status !== 'lost' && status !== 'error');
 
       if (reallyWon) {
-        setLocked(true); // user fully restricted after success
+        setLocked(true);
 
-        const prizeTitle =
-          typeof prize === 'string'
-            ? prize
-            : prize?.title || prize?.name || 'Special Prize';
+        const prizeTitle = typeof prize === 'string' ? prize : prize?.title || prize?.name || 'Special Prize';
 
         let prizeObj = null;
-
-        if (prize && typeof prize === 'object') {
-          prizeObj = prize;
-        } else if (typeof prize === 'string') {
+        if (prize && typeof prize === 'object') prizeObj = prize;
+        else if (typeof prize === 'string') {
           const normalized = prize.trim().toLowerCase();
           prizeObj =
-            prizeItems.find(
-              (item) =>
-                item?.title &&
-                item.title.trim().toLowerCase() === normalized
-            ) || null;
+            prizeItems.find((item) => item?.title && item.title.trim().toLowerCase() === normalized) || null;
         }
 
         setIsWin(true);
@@ -567,39 +604,55 @@ const MonkeyGamePage = () => {
       }
     } catch (err) {
       setIsWin(false);
-      const msg =
-        err?.response?.data?.message ||
-        err?.message ||
-        'Game result failed. Please contact staff.';
+      const msg = err?.response?.data?.message || err?.message || 'Game result failed. Please contact staff.';
       setSpinError(msg);
       setResultMessage('We could not confirm your prize. Please contact staff.');
       playSound(loseRef);
+    } finally {
+      // refresh status after finish
+      loadMonkeyStatus();
     }
   };
 
-  const displayChances =
-    typeof chancesLeft === 'number' ? chancesLeft : maxChances;
+  const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
 
   const gameDisabled =
-    locked ||
-    isRunning ||
-    wheelLoading ||
-    !!wheelError ||
-    (typeof chancesLeft === 'number' && chancesLeft <= 0);
+    locked || isRunning || isStarting || wheelLoading || !!wheelError || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked);
 
-  const progress =
-    MAX_ROUNDS > 0 ? Math.min(100, (roundCount / MAX_ROUNDS) * 100) : 0;
+  const progress = MAX_ROUNDS > 0 ? Math.min(100, (roundCount / MAX_ROUNDS) * 100) : 0;
 
   return (
     <MobileContainer>
+      {/* floating particles (lightweight) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 0,
+          opacity: 0.6,
+        }}
+      >
+        {Array.from({ length: 10 }).map((_, i) => (
+          <Box
+            key={i}
+            sx={{
+              position: 'absolute',
+              left: `${(i * 11) % 100}%`,
+              top: `${(i * 13) % 100}%`,
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: i % 2 === 0 ? 'rgba(220,38,38,.55)' : 'rgba(148,163,184,.28)',
+              animation: `${floaty} ${2.4 + (i % 5) * 0.4}s ease-in-out infinite`,
+            }}
+          />
+        ))}
+      </Box>
+
       {/* Header */}
       <HeaderSection>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={1.1}
-        >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.1}>
           <Stack direction="row" spacing={1.3} alignItems="center">
             <Box
               sx={{
@@ -611,10 +664,12 @@ const MonkeyGamePage = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 animation: `${pulse} 2.2s ease-in-out infinite`,
+                boxShadow: '0 10px 26px rgba(220,38,38,.35)',
               }}
             >
               <LocalFireDepartmentIcon sx={{ color: '#fff', fontSize: 22 }} />
             </Box>
+
             <Box>
               <Typography
                 variant="h6"
@@ -634,59 +689,32 @@ const MonkeyGamePage = () => {
                   fontSize: '0.7rem',
                 }}
               >
-                Hit the monkey head {REQUIRED_HITS} times in max {MAX_ROUNDS} rounds
+                Hit {REQUIRED_HITS} times in max {MAX_ROUNDS} rounds
               </Typography>
             </Box>
           </Stack>
+
           <StatusBadge
             locked={locked ? 1 : 0}
-            icon={
-              locked ? (
-                <LockIcon sx={{ fontSize: 16 }} />
-              ) : (
-                <StarIcon sx={{ fontSize: 16 }} />
-              )
-            }
+            icon={locked ? <LockIcon sx={{ fontSize: 16 }} /> : <StarIcon sx={{ fontSize: 16 }} />}
             label={locked ? 'Locked' : 'Ready'}
           />
         </Stack>
-        <Typography
-          variant="body2"
-          sx={{
-            color: 'rgba(203, 213, 225, 0.7)',
-            fontSize: '0.8rem',
-          }}
-        >
+
+        <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.75)', fontSize: '0.8rem' }}>
           Hey{' '}
-          <strong style={{ color: HNC_RED, fontWeight: 700 }}>
-            {profile?.name || 'Guest'}
-          </strong>
-          , you have{' '}
+          <strong style={{ color: HNC_RED, fontWeight: 800 }}>{profile?.name || 'Guest'}</strong>, you have{' '}
           <strong>
             {displayChances}/{maxChances}
           </strong>{' '}
-          chance{displayChances === 1 ? '' : 's'} left today.
+          chance{displayChances === 1 ? '' : 's'} left.
         </Typography>
       </HeaderSection>
 
       {/* Main Area */}
-      <Box
-        sx={{
-          position: 'relative',
-          zIndex: 1,
-          pb: 4,
-          flex: 1,
-        }}
-      >
-        {/* Hero text */}
-        <Box
-          sx={{
-            px: { xs: 2, sm: 3 },
-            pt: 3,
-            pb: 2,
-            textAlign: 'center',
-          }}
-        >
+      <Box sx={{ position: 'relative', zIndex: 1, pb: { xs: 3, sm: 4 }, flex: 1 }}>
+        {/* Hero */}
+        <Box sx={{ px: { xs: 2, sm: 3 }, pt: { xs: 2.6, sm: 3 }, pb: 2, textAlign: 'center' }}>
           <Fade in timeout={600}>
             <Typography
               variant="h4"
@@ -694,12 +722,11 @@ const MonkeyGamePage = () => {
               sx={{
                 color: '#fff',
                 mb: 1,
-                background:
-                  'linear-gradient(135deg, #ffffff 0%, #dc2626 40%, #991b1b 100%)',
+                background: 'linear-gradient(135deg, #ffffff 0%, #dc2626 40%, #991b1b 100%)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                fontSize: { xs: '1.4rem', sm: '1.7rem' },
+                fontSize: { xs: '1.35rem', sm: '1.7rem' },
               }}
             >
               Whack the Monkey 🐒
@@ -710,16 +737,14 @@ const MonkeyGamePage = () => {
               variant="body2"
               sx={{
                 color: 'rgba(203, 213, 225, 0.85)',
-                maxWidth: 360,
+                maxWidth: 420,
                 mx: 'auto',
                 lineHeight: 1.6,
-                fontSize: { xs: '0.85rem', sm: '0.9rem' },
+                fontSize: { xs: '0.85rem', sm: '0.92rem' },
               }}
             >
-              Tap only when the monkey pops up from a hole. Get{' '}
-              <strong>{REQUIRED_HITS}</strong> correct hits within{' '}
-              <strong>{MAX_ROUNDS}</strong> rounds. You have{' '}
-              <strong>{maxChances}</strong> chances in total.
+              Tap only when the monkey pops up. Get <strong>{REQUIRED_HITS}</strong> hits within{' '}
+              <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps reduce score by 1.
             </Typography>
           </Fade>
         </Box>
@@ -729,19 +754,11 @@ const MonkeyGamePage = () => {
           <Slide direction="down" in={!!wheelError}>
             <Box sx={{ px: { xs: 2, sm: 3 }, mb: 2 }}>
               <Alert variant="warning" style={{ borderRadius: 12 }}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <span>
                     <strong>Error:</strong> {wheelError}
                   </span>
-                  <IconButton
-                    size="small"
-                    onClick={loadPrizeConfig}
-                    sx={{ color: HNC_RED }}
-                  >
+                  <IconButton size="small" onClick={loadPrizeConfig} sx={{ color: HNC_RED }}>
                     <CasinoIcon fontSize="small" />
                   </IconButton>
                 </Stack>
@@ -760,24 +777,12 @@ const MonkeyGamePage = () => {
           </Slide>
         )}
 
-        {/* Game Grid + Timer */}
-        <Box
-          sx={{
-            px: { xs: 2, sm: 3 },
-            mb: 3,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
+        {/* Game Grid */}
+        <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3, display: 'flex', justifyContent: 'center' }}>
           <GridWrapper>
-            {/* Timer bar */}
+            {/* Timer */}
             <Box sx={{ mb: 1.5 }}>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ mb: 0.6 }}
-              >
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.6 }}>
                 <Typography
                   variant="caption"
                   sx={{
@@ -789,16 +794,11 @@ const MonkeyGamePage = () => {
                 >
                   Game Progress
                 </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: 'rgba(148, 163, 184, 0.9)',
-                    fontSize: '0.7rem',
-                  }}
-                >
+                <Typography variant="caption" sx={{ color: 'rgba(148, 163, 184, 0.9)', fontSize: '0.7rem' }}>
                   {roundCount}/{MAX_ROUNDS} rounds
                 </Typography>
               </Stack>
+
               <LinearProgress
                 variant="determinate"
                 value={progress}
@@ -814,25 +814,17 @@ const MonkeyGamePage = () => {
               />
             </Box>
 
-            {/* Score row */}
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              sx={{ mb: 1 }}
-            >
+            {/* Score */}
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
               <ScoreBadge>
-                Hits:&nbsp;
-                <strong style={{ color: '#4ade80' }}>{hits}</strong>/
-                {REQUIRED_HITS}
+                Hits:&nbsp;<strong style={{ color: '#4ade80' }}>{hits}</strong>/{REQUIRED_HITS}
               </ScoreBadge>
               <ScoreBadge>
-                Miss:&nbsp;
-                <strong style={{ color: '#f97373' }}>{misses}</strong>
+                Miss:&nbsp;<strong style={{ color: '#f97373' }}>{misses}</strong>
               </ScoreBadge>
             </Stack>
 
-            {/* 3x3 holes */}
+            {/* Holes */}
             <MonkeyGrid>
               {Array.from({ length: 9 }).map((_, index) => {
                 const isActive = index === activeIndex;
@@ -840,12 +832,10 @@ const MonkeyGamePage = () => {
                   <Hole
                     key={index}
                     active={isActive ? 1 : 0}
-                    disabled={!isRunning || locked}
+                    disabled={!isRunning}
                     onClick={() => handleHoleTap(index)}
                   >
-                    <Monkey active={isActive ? 1 : 0}>
-                      {isRunning || isActive ? '🐵' : '🕳️'}
-                    </Monkey>
+                    <Monkey active={isActive ? 1 : 0}>{isActive ? '🐵' : '🕳️'}</Monkey>
                   </Hole>
                 );
               })}
@@ -853,17 +843,10 @@ const MonkeyGamePage = () => {
           </GridWrapper>
         </Box>
 
-        {/* Result Message */}
+        {/* Result */}
         {resultMessage && (
           <Grow in={!!resultMessage} timeout={400}>
-            <Box
-              sx={{
-                px: { xs: 2, sm: 3 },
-                mb: 2.5,
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
+            <Box sx={{ px: { xs: 2, sm: 3 }, mb: 2.5, display: 'flex', justifyContent: 'center' }}>
               <ResultChip
                 iswin={isWin ? 1 : 0}
                 icon={isWin ? <EmojiEventsIcon sx={{ fontSize: 18 }} /> : undefined}
@@ -873,85 +856,51 @@ const MonkeyGamePage = () => {
           </Grow>
         )}
 
-        {/* Start Button */}
-        <Box
-          sx={{
-            px: { xs: 2, sm: 3 },
-            mb: 3,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
+        {/* Start */}
+        <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3, display: 'flex', justifyContent: 'center' }}>
           <GameButton
             disabled={gameDisabled}
             onClick={startGame}
             startIcon={
               locked ? (
                 <LockIcon />
-              ) : isRunning ? (
+              ) : isRunning || isStarting ? (
                 <CircularProgress size={18} sx={{ color: '#fff' }} />
               ) : (
                 <CasinoIcon />
               )
             }
           >
-            {locked || (typeof chancesLeft === 'number' && chancesLeft <= 0)
+            {locked || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked)
               ? 'No More Games'
               : isRunning
               ? 'Game in Progress'
+              : isStarting
+              ? 'Starting...'
               : 'Start Game'}
           </GameButton>
         </Box>
 
-        {/* Prize List Card */}
+        {/* Prize List */}
         {prizeItems && prizeItems.length > 0 && (
           <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
             <PrizeListCard elevation={0}>
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  color: '#e5e7eb',
-                  fontWeight: 700,
-                  mb: 0.8,
-                  fontSize: '0.85rem',
-                }}
-              >
+              <Typography variant="subtitle2" sx={{ color: '#e5e7eb', fontWeight: 800, mb: 0.8, fontSize: '0.85rem' }}>
                 Sample Prizes You Can Win
               </Typography>
               <Typography
                 variant="caption"
-                sx={{
-                  color: 'rgba(148, 163, 184, 0.9)',
-                  fontSize: '0.75rem',
-                  display: 'block',
-                  mb: 1,
-                }}
+                sx={{ color: 'rgba(148, 163, 184, 0.9)', fontSize: '0.75rem', display: 'block', mb: 1 }}
               >
-                Prizes are decided by the system after you get {REQUIRED_HITS} hits.
+                Prize is selected securely after you win.
               </Typography>
               <Stack spacing={0.6}>
                 {prizeItems.slice(0, 6).map((item, idx) => (
-                  <Stack
-                    key={item._id || idx}
-                    direction="row"
-                    spacing={1}
-                    alignItems="center"
-                  >
-                    <Box
-                      sx={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: '50%',
-                        background: HNC_RED,
-                        flexShrink: 0,
-                      }}
-                    />
+                  <Stack key={item._id || idx} direction="row" spacing={1} alignItems="center">
+                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', background: HNC_RED, flexShrink: 0 }} />
                     <Typography
                       variant="body2"
-                      sx={{
-                        color: 'rgba(209, 213, 219, 0.95)',
-                        fontSize: '0.8rem',
-                      }}
+                      sx={{ color: 'rgba(209, 213, 219, 0.95)', fontSize: '0.8rem' }}
                       noWrap
                     >
                       {item.title || item.label || item.name || `Prize ${idx + 1}`}
@@ -963,32 +912,18 @@ const MonkeyGamePage = () => {
           </Box>
         )}
 
-        {/* Short rules card */}
+        {/* Rules */}
         <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
           <InfoCard elevation={0}>
-            <Typography
-              variant="subtitle2"
-              sx={{
-                color: '#e5e7eb',
-                fontWeight: 700,
-                mb: 0.6,
-                fontSize: '0.85rem',
-              }}
-            >
+            <Typography variant="subtitle2" sx={{ color: '#e5e7eb', fontWeight: 800, mb: 0.6, fontSize: '0.85rem' }}>
               Game Rules
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'rgba(209, 213, 219, 0.9)',
-                fontSize: '0.8rem',
-                lineHeight: 1.6,
-              }}
-            >
-              • You get <strong>{maxChances}</strong> game chances in total. <br />
-              • Tap only when the monkey head appears in a hole. <br />
-              • Reach {REQUIRED_HITS} correct hits within {MAX_ROUNDS} rounds. <br />
-              • On a win, prize is selected securely on the server and sent to your email.
+            <Typography variant="body2" sx={{ color: 'rgba(209, 213, 219, 0.9)', fontSize: '0.8rem', lineHeight: 1.6 }}>
+              • You get <strong>{maxChances}</strong> chances total. <br />
+              • Tap only when the monkey appears. <br />
+              • Reach {REQUIRED_HITS} hits within {MAX_ROUNDS} rounds. <br />
+              • Wrong tap reduces score by 1. <br />
+              • If you win, prize is selected on server and emailed to you.
             </Typography>
           </InfoCard>
         </Box>
@@ -1003,8 +938,7 @@ const MonkeyGamePage = () => {
         PaperProps={{
           sx: {
             borderRadius: 5,
-            background:
-              'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(17, 24, 39, 0.98) 100%)',
+            background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(17, 24, 39, 0.98) 100%)',
             border: '2px solid rgba(220, 38, 38, 0.5)',
             m: { xs: 1.5, sm: 2 },
             maxWidth: 380,
@@ -1022,23 +956,12 @@ const MonkeyGamePage = () => {
         <Box sx={{ position: 'relative' }}>
           <IconButton
             onClick={() => setPrizePopupOpen(false)}
-            sx={{
-              position: 'absolute',
-              right: 10,
-              top: 10,
-              color: 'rgba(209, 213, 219, 0.9)',
-            }}
+            sx={{ position: 'absolute', right: 10, top: 10, color: 'rgba(209, 213, 219, 0.9)' }}
           >
             <CloseIcon />
           </IconButton>
 
-          <DialogContent
-            sx={{
-              textAlign: 'center',
-              py: { xs: 4, sm: 5 },
-              px: { xs: 3, sm: 4 },
-            }}
-          >
+          <DialogContent sx={{ textAlign: 'center', py: { xs: 4, sm: 5 }, px: { xs: 3, sm: 4 } }}>
             <Box sx={{ mb: 2.5 }}>
               <Box
                 sx={{
@@ -1052,46 +975,19 @@ const MonkeyGamePage = () => {
                   mx: 'auto',
                 }}
               >
-                <EmojiEventsIcon
-                  sx={{
-                    fontSize: 46,
-                    color: '#fff',
-                  }}
-                />
+                <EmojiEventsIcon sx={{ fontSize: 46, color: '#fff' }} />
               </Box>
             </Box>
 
-            <Typography
-              variant="h3"
-              fontWeight={900}
-              sx={{
-                color: '#f9fafb',
-                mb: 1,
-                fontSize: '1.6rem',
-              }}
-            >
+            <Typography variant="h3" fontWeight={900} sx={{ color: '#f9fafb', mb: 1, fontSize: '1.6rem' }}>
               🎉 You Won!
             </Typography>
 
-            <Typography
-              variant="body1"
-              sx={{
-                color: 'rgba(209, 213, 219, 0.9)',
-                mb: 3,
-                fontSize: '0.9rem',
-              }}
-            >
+            <Typography variant="body1" sx={{ color: 'rgba(209, 213, 219, 0.9)', mb: 3, fontSize: '0.9rem' }}>
               Your quick reflexes unlocked this HotnCool reward:
             </Typography>
 
-            <Box
-              sx={{
-                background: '#020617',
-                borderRadius: 16,
-                border: '1px solid rgba(55, 65, 81, 0.9)',
-                p: 2,
-              }}
-            >
+            <Box sx={{ background: '#020617', borderRadius: 16, border: '1px solid rgba(55, 65, 81, 0.9)', p: 2 }}>
               {wonPrize?.imageUrl && (
                 <Box
                   sx={{
@@ -1111,7 +1007,7 @@ const MonkeyGamePage = () => {
 
               <Typography
                 variant="h5"
-                fontWeight={800}
+                fontWeight={900}
                 sx={{
                   color: '#fecaca',
                   mb: wonPrize?.description ? 0.5 : 0,
@@ -1122,14 +1018,7 @@ const MonkeyGamePage = () => {
               </Typography>
 
               {wonPrize?.description && (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: 'rgba(209, 213, 219, 0.9)',
-                    fontSize: '0.82rem',
-                    lineHeight: 1.6,
-                  }}
-                >
+                <Typography variant="body2" sx={{ color: 'rgba(209, 213, 219, 0.9)', fontSize: '0.82rem', lineHeight: 1.6 }}>
                   {wonPrize.description}
                 </Typography>
               )}
@@ -1144,7 +1033,7 @@ const MonkeyGamePage = () => {
                 height: 50,
                 borderRadius: 4,
                 fontSize: '0.95rem',
-                fontWeight: 800,
+                fontWeight: 900,
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 background: `linear-gradient(135deg, ${HNC_RED} 0%, ${HNC_RED_DARK} 100%)`,
