@@ -28,6 +28,8 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { useAuth } from '../../context/AuthContext';
 import { spinOnce, getWheelConfig, getMonkeyStatus, requestMonkeyAttempt } from '../../api/spinApi';
 
+import NewYearPopup from '../../components/NewYearPopup';
+
 // ======== SOUND IMPORTS ========
 import hitSfx from '../../assets/sounds/monkey-hit.mp3';
 import missSfx from '../../assets/sounds/monkey-miss.mp3';
@@ -41,12 +43,16 @@ const HNC_RED = '#dc2626';
 const HNC_RED_DARK = '#7c2d12';
 const HNC_BG = '#020617';
 
+// ============ NEW YEAR ============
+const NY_KEY = 'hnc_newyear_popup_2026_shown';
+const HNC_APP_DOWNLOAD_URL = 'https://onelink.to/c8p8b8';
+
 // ============ GAME CONSTANTS ============
 const REQUIRED_HITS = 7;
 const MAX_ROUNDS = 20;
 const MONKEY_INTERVAL_MS = 800;
 const MONKEY_VISIBLE_MS = 420;
-const FALLBACK_MAX_CHANCES = 3; // match your server MONKEY_MAX_CHANCES
+const FALLBACK_MAX_CHANCES = 3; // must match your server MONKEY_MAX_CHANCES
 
 // ============ Animations ============
 const pulse = keyframes`
@@ -168,7 +174,7 @@ const MonkeyGrid = styled(Box)(() => ({
   gap: 8,
 }));
 
-// ✅ FIX: mobile tap reliability
+// ✅ Mobile tap-safe Hole
 const Hole = styled(Box)(({ active, disabled }) => ({
   position: 'relative',
   aspectRatio: '1 / 1',
@@ -185,9 +191,10 @@ const Hole = styled(Box)(({ active, disabled }) => ({
   userSelect: 'none',
   WebkitTapHighlightColor: 'transparent',
 
-  // IMPORTANT for iOS/Android fast tapping:
-  touchAction: 'manipulation',
+  // important for mobile
+  touchAction: 'none',
   WebkitUserSelect: 'none',
+  pointerEvents: disabled ? 'none' : 'auto',
 }));
 
 const Monkey = styled(Box)(({ active }) => ({
@@ -197,6 +204,7 @@ const Monkey = styled(Box)(({ active }) => ({
   transition: 'all 0.15s ease-out',
   fontSize: '2.4rem',
   userSelect: 'none',
+  pointerEvents: 'none', // ✅ prevent emoji catching taps
 }));
 
 const ScoreBadge = styled(Box)(() => ({
@@ -227,13 +235,6 @@ const ResultChip = styled(Chip)(({ iswin }) => ({
   overflow: 'hidden',
 }));
 
-const PrizeListCard = styled(Paper)(() => ({
-  background: 'rgba(15, 23, 42, 0.98)',
-  borderRadius: 18,
-  border: '1px solid rgba(75, 85, 99, 0.9)',
-  padding: '12px 14px',
-}));
-
 // ===== helper =====
 const makeSessionId = () => {
   try {
@@ -244,6 +245,9 @@ const makeSessionId = () => {
 
 const MonkeyGamePage = () => {
   const { profile } = useAuth();
+
+  // ✅ New Year popup state (must be inside component)
+  const [openNY, setOpenNY] = useState(false);
 
   // Prize config
   const [prizeItems, setPrizeItems] = useState([]);
@@ -270,13 +274,14 @@ const MonkeyGamePage = () => {
   const lockAfterThisGameRef = useRef(false);
 
   // Locking / errors
-  const [locked, setLocked] = useState(() => !!profile?.hasSpun);
+  const [locked, setLocked] = useState(false);
   const [spinError, setSpinError] = useState(null);
 
   // Result
   const [resultMessage, setResultMessage] = useState('');
   const [isWin, setIsWin] = useState(false);
 
+  // Prize dialog
   const [prizePopupOpen, setPrizePopupOpen] = useState(false);
   const [wonPrizeText, setWonPrizeText] = useState('');
   const [wonPrize, setWonPrize] = useState(null);
@@ -295,6 +300,15 @@ const MonkeyGamePage = () => {
   const missRef = useRef(null);
   const winRef = useRef(null);
   const loseRef = useRef(null);
+
+  // ✅ Show New Year popup once after login/profile loaded
+  useEffect(() => {
+    if (!profile) return;
+    const already = localStorage.getItem(NY_KEY);
+    if (already) return;
+    setOpenNY(true);
+    localStorage.setItem(NY_KEY, '1');
+  }, [profile]);
 
   // Preload sounds
   useEffect(() => {
@@ -346,6 +360,19 @@ const MonkeyGamePage = () => {
     } catch (e) {}
   };
 
+  const clearTimers = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  };
+
+  useEffect(() => () => clearTimers(), []);
+
   const loadPrizeConfig = async () => {
     setWheelError(null);
     setWheelLoading(true);
@@ -365,13 +392,11 @@ const MonkeyGamePage = () => {
       const res = await getMonkeyStatus();
       const { chancesLeft, maxChances, locked } = res?.data || {};
 
-      if (typeof chancesLeft === 'number') setChancesLeft(chancesLeft);
-      else setChancesLeft(FALLBACK_MAX_CHANCES);
+      setChancesLeft(typeof chancesLeft === 'number' ? chancesLeft : FALLBACK_MAX_CHANCES);
+      setMaxChances(typeof maxChances === 'number' ? maxChances : FALLBACK_MAX_CHANCES);
 
-      if (typeof maxChances === 'number') setMaxChances(maxChances);
-      else setMaxChances(FALLBACK_MAX_CHANCES);
-
-      setLocked((prev) => (isRunning ? false : !!locked));
+      // keep unlocked while playing
+      setLocked(isRunning ? false : !!locked);
     } catch (err) {
       console.error('getMonkeyStatus error:', err);
       setChancesLeft(FALLBACK_MAX_CHANCES);
@@ -391,24 +416,11 @@ const MonkeyGamePage = () => {
     setRoundCount(0);
     setResultMessage('');
     setIsWin(false);
-    setPrizePopupOpen(false);
     setWonPrize(null);
     setWonPrizeText('');
+    setPrizePopupOpen(false);
     hasHitThisRoundRef.current = false;
   };
-
-  const clearTimers = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current);
-      hideTimeoutRef.current = null;
-    }
-  };
-
-  useEffect(() => () => clearTimers(), []);
 
   const startGame = async () => {
     if (locked || isRunning || isStarting) return;
@@ -416,19 +428,9 @@ const MonkeyGamePage = () => {
 
     setSpinError(null);
 
-    if (wheelLoading) {
-      setSpinError('Prizes are still loading. Please wait.');
-      return;
-    }
-    if (!prizeItems || prizeItems.length === 0) {
-      setSpinError('Prizes are not configured yet. Please try again later.');
-      return;
-    }
-
-    if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) {
-      setSpinError('You have used all your chances.');
-      return;
-    }
+    if (wheelLoading) return setSpinError('Prizes are still loading. Please wait.');
+    if (!prizeItems || prizeItems.length === 0) return setSpinError('Prizes are not configured yet. Please try again later.');
+    if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) return setSpinError('You have used all your chances.');
 
     startLockRef.current = true;
     setIsStarting(true);
@@ -438,7 +440,6 @@ const MonkeyGamePage = () => {
 
     try {
       const res = await requestMonkeyAttempt(sessionId);
-
       const { chancesLeft: serverChances, maxChances: serverMax, locked: serverLocked, allowed } = res?.data || {};
 
       if (typeof serverChances === 'number') setChancesLeft(serverChances);
@@ -452,6 +453,7 @@ const MonkeyGamePage = () => {
 
       lockAfterThisGameRef.current = !!serverLocked;
 
+      // unlock while playing so taps work
       setLocked(false);
 
       resetGameState();
@@ -465,8 +467,7 @@ const MonkeyGamePage = () => {
 
       if (data?.locked) {
         setLocked(true);
-        if (typeof data.chancesLeft === 'number') setChancesLeft(data.chancesLeft);
-        else setChancesLeft(0);
+        setChancesLeft(typeof data.chancesLeft === 'number' ? data.chancesLeft : 0);
       }
     } finally {
       setIsStarting(false);
@@ -474,6 +475,7 @@ const MonkeyGamePage = () => {
     }
   };
 
+  // game loop
   useEffect(() => {
     if (!isRunning) {
       clearTimers();
@@ -493,9 +495,7 @@ const MonkeyGamePage = () => {
       hasHitThisRoundRef.current = false;
       setRoundCount((prev) => prev + 1);
 
-      hideTimeoutRef.current = setTimeout(() => {
-        setActiveIndex(null);
-      }, MONKEY_VISIBLE_MS);
+      hideTimeoutRef.current = setTimeout(() => setActiveIndex(null), MONKEY_VISIBLE_MS);
     };
 
     setRandomHole();
@@ -505,6 +505,7 @@ const MonkeyGamePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRunning]);
 
+  // win/lose
   useEffect(() => {
     if (!isRunning) return;
     if (hits >= REQUIRED_HITS) endGame(true);
@@ -533,30 +534,26 @@ const MonkeyGamePage = () => {
     setActiveIndex(null);
     stopSound(bgLoopRef);
 
-    if (lockAfterThisGameRef.current) {
-      setLocked(true);
-    }
+    if (lockAfterThisGameRef.current) setLocked(true);
     lockAfterThisGameRef.current = false;
 
     const noChancesLeft = locked || (typeof chancesLeft === 'number' && chancesLeft <= 0);
 
     if (!didWin) {
       setIsWin(false);
-      if (noChancesLeft) {
-        setLocked(true);
-        setResultMessage('No more chances left. Better luck next time 🐒');
-      } else {
-        const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
-        setResultMessage(`Round over. You still have ${displayChances} chance${displayChances === 1 ? '' : 's'} left.`);
-      }
+      setResultMessage(
+        noChancesLeft
+          ? 'No more chances left. Better luck next time 🐒'
+          : `Round over. You still have ${typeof chancesLeft === 'number' ? chancesLeft : maxChances} chance(s) left.`
+      );
       playSound(loseRef);
+      await loadMonkeyStatus();
       return;
     }
 
     try {
       const res = await spinOnce();
       const { status, prize } = res?.data || {};
-
       const reallyWon = status === 'won' || (!!prize && status !== 'lost' && status !== 'error');
 
       if (reallyWon) {
@@ -578,13 +575,9 @@ const MonkeyGamePage = () => {
         setPrizePopupOpen(true);
 
         playSound(winRef);
-      } else if (status === 'lost') {
-        setIsWin(false);
-        setResultMessage('Great tapping, but no prize this time.');
-        playSound(loseRef);
       } else {
         setIsWin(false);
-        setResultMessage('Unexpected result from server.');
+        setResultMessage('Great tapping, but no prize this time.');
         playSound(loseRef);
       }
     } catch (err) {
@@ -594,25 +587,28 @@ const MonkeyGamePage = () => {
       setResultMessage('We could not confirm your prize. Please contact staff.');
       playSound(loseRef);
     } finally {
-      loadMonkeyStatus();
+      await loadMonkeyStatus();
     }
   };
 
   const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
 
   const gameDisabled =
-    locked ||
-    isRunning ||
-    isStarting ||
-    wheelLoading ||
-    !!wheelError ||
-    (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked);
+    locked || isRunning || isStarting || wheelLoading || !!wheelError || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked);
 
   const progress = MAX_ROUNDS > 0 ? Math.min(100, (roundCount / MAX_ROUNDS) * 100) : 0;
 
   return (
     <MobileContainer>
-      {/* floating particles (lightweight) */}
+      {/* ✅ Happy New Year popup */}
+      <NewYearPopup
+        open={openNY}
+        onClose={() => setOpenNY(false)}
+        name={profile?.name || 'Guest'}
+        downloadUrl={HNC_APP_DOWNLOAD_URL}
+      />
+
+      {/* floating particles */}
       <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.6 }}>
         {Array.from({ length: 10 }).map((_, i) => (
           <Box
@@ -661,7 +657,11 @@ const MonkeyGamePage = () => {
             </Box>
           </Stack>
 
-          <StatusBadge locked={locked ? 1 : 0} icon={locked ? <LockIcon sx={{ fontSize: 16 }} /> : <StarIcon sx={{ fontSize: 16 }} />} label={locked ? 'Locked' : 'Ready'} />
+          <StatusBadge
+            locked={locked ? 1 : 0}
+            icon={locked ? <LockIcon sx={{ fontSize: 16 }} /> : <StarIcon sx={{ fontSize: 16 }} />}
+            label={locked ? 'Locked' : 'Ready'}
+          />
         </Stack>
 
         <Typography variant="body2" sx={{ color: 'rgba(203, 213, 225, 0.75)', fontSize: '0.8rem' }}>
@@ -673,7 +673,7 @@ const MonkeyGamePage = () => {
         </Typography>
       </HeaderSection>
 
-      {/* Main Area */}
+      {/* Main */}
       <Box sx={{ position: 'relative', zIndex: 1, pb: { xs: 3, sm: 4 }, flex: 1 }}>
         {/* Hero */}
         <Box sx={{ px: { xs: 2, sm: 3 }, pt: { xs: 2.6, sm: 3 }, pb: 2, textAlign: 'center' }}>
@@ -785,14 +785,14 @@ const MonkeyGamePage = () => {
               </ScoreBadge>
             </Stack>
 
-            {/* Holes */}
+            {/* Holes ✅ mobile-safe tap */}
             <MonkeyGrid>
               {Array.from({ length: 9 }).map((_, index) => {
                 const isActive = index === activeIndex;
 
-                // ✅ FIX: use pointer/touch (click sometimes fails on mobile)
                 const tap = (e) => {
-                  e.preventDefault();
+                  e.preventDefault?.();
+                  e.stopPropagation?.();
                   handleHoleTap(index);
                 };
 
@@ -805,6 +805,7 @@ const MonkeyGamePage = () => {
                     tabIndex={0}
                     onPointerDown={tap}
                     onTouchStart={tap}
+                    onContextMenu={(e) => e.preventDefault()}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') tap(e);
                     }}
@@ -831,9 +832,7 @@ const MonkeyGamePage = () => {
           <GameButton
             disabled={gameDisabled}
             onClick={startGame}
-            startIcon={
-              locked ? <LockIcon /> : isRunning || isStarting ? <CircularProgress size={18} sx={{ color: '#fff' }} /> : <CasinoIcon />
-            }
+            startIcon={locked ? <LockIcon /> : isRunning || isStarting ? <CircularProgress size={18} sx={{ color: '#fff' }} /> : <CasinoIcon />}
           >
             {locked || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked)
               ? 'No More Games'
@@ -845,7 +844,7 @@ const MonkeyGamePage = () => {
           </GameButton>
         </Box>
 
-        {/* Rules (fixed text) */}
+        {/* Rules */}
         <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
           <InfoCard elevation={0}>
             <Typography variant="subtitle2" sx={{ color: '#e5e7eb', fontWeight: 800, mb: 0.6, fontSize: '0.85rem' }}>
@@ -855,7 +854,7 @@ const MonkeyGamePage = () => {
               • You get <strong>{maxChances}</strong> chances total. <br />
               • Tap only when the monkey appears. <br />
               • Reach {REQUIRED_HITS} hits within {MAX_ROUNDS} rounds. <br />
-              • Wrong tap counts as a miss. <br />
+              • Wrong tap counts as a miss (no minus points). <br />
               • If you win, prize is selected on server and emailed to you.
             </Typography>
           </InfoCard>
