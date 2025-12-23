@@ -532,10 +532,10 @@ const MonkeyGamePage = () => {
       setHits((prev) => prev + 1);
       playSound(hitRef);
     } else {
-      setMisses((prev) => prev + 1);
-      playSound(missRef);
-      setHits((prev) => Math.max(0, prev - 1));
-    }
+  setMisses((prev) => prev + 1);
+  playSound(missRef);
+  // ✅ no hit reduction
+}
   };
 
   const endGame = async (didWin) => {
@@ -744,7 +744,7 @@ const MonkeyGamePage = () => {
               }}
             >
               Tap only when the monkey pops up. Get <strong>{REQUIRED_HITS}</strong> hits within{' '}
-              <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps reduce score by 1.
+              <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps count as a miss.
             </Typography>
           </Fade>
         </Box>
