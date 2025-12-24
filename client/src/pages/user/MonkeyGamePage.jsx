@@ -1,5 +1,5 @@
 // client/src/pages/user/MonkeyGamePage.jsx
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import {
   Box,
@@ -27,6 +27,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 import { useAuth } from '../../context/AuthContext';
 import { spinOnce, getWheelConfig, getMonkeyStatus, requestMonkeyAttempt } from '../../api/spinApi';
+
 import NewYearPopup from '../../components/NewYearPopup';
 
 // ======== SOUND IMPORTS ========
@@ -48,9 +49,9 @@ const HNC_APP_DOWNLOAD_URL = 'https://onelink.to/c8p8b8';
 // ============ GAME CONSTANTS ============
 const REQUIRED_HITS = 7;
 const MAX_ROUNDS = 20;
-const MONKEY_INTERVAL_MS = 800;
-const MONKEY_VISIBLE_MS = 420;
-const FALLBACK_MAX_CHANCES = 3; // must match server MONKEY_MAX_CHANCES
+const MONKEY_INTERVAL_MS = 1100;
+const MONKEY_VISIBLE_MS = 500;
+const FALLBACK_MAX_CHANCES = 3; // must match your server MONKEY_MAX_CHANCES
 
 // ============ Animations ============
 const pulse = keyframes`
@@ -95,7 +96,9 @@ const HeaderSection = styled(Box)(({ theme }) => ({
   top: 0,
   zIndex: 10,
   backdropFilter: 'blur(10px)',
-  [theme.breakpoints.down('sm')]: { padding: '10px 12px' },
+  [theme.breakpoints.down('sm')]: {
+    padding: '10px 12px',
+  },
 }));
 
 const StatusBadge = styled(Chip)(({ locked }) => ({
@@ -129,8 +132,15 @@ const GameButton = styled(Button)(({ disabled, theme }) => ({
   transition: 'all 0.2s ease',
   '&:hover': disabled
     ? {}
-    : { transform: 'translateY(-2px)', boxShadow: '0 14px 32px rgba(220, 38, 38, 0.75)' },
-  [theme.breakpoints.down('sm')]: { height: 52, fontSize: '0.9rem', maxWidth: 340 },
+    : {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 14px 32px rgba(220, 38, 38, 0.75)',
+      },
+  [theme.breakpoints.down('sm')]: {
+    height: 52,
+    fontSize: '0.9rem',
+    maxWidth: 340,
+  },
 }));
 
 const InfoCard = styled(Paper)(() => ({
@@ -150,19 +160,20 @@ const GridWrapper = styled(Box)(({ theme }) => ({
   background: 'radial-gradient(circle at top, #020617, #020617)',
   border: '1px solid rgba(31, 41, 55, 0.9)',
   boxShadow: '0 16px 40px rgba(0, 0, 0, 0.9)',
-  [theme.breakpoints.down('sm')]: { maxWidth: 340, padding: '8px', borderRadius: 18 },
-  '@media (max-width:360px)': { maxWidth: 320, padding: '7px' },
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: 340,
+    padding: '8px',
+    borderRadius: 18,
+  },
 }));
 
-const MonkeyGrid = styled(Box)(({ theme }) => ({
+const MonkeyGrid = styled(Box)(() => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
   gap: 8,
-  [theme.breakpoints.down('sm')]: { gap: 7 },
-  '@media (max-width:360px)': { gap: 6 },
 }));
 
-// ✅ Mobile tap-safe Hole (pointer events only; prevents double fire)
+// ✅ Mobile tap-safe Hole (iOS/Android)
 const Hole = styled(Box)(({ active, disabled }) => ({
   position: 'relative',
   aspectRatio: '1 / 1',
@@ -179,11 +190,11 @@ const Hole = styled(Box)(({ active, disabled }) => ({
   userSelect: 'none',
   WebkitTapHighlightColor: 'transparent',
 
-  // ✅ key for mobile tapping reliability
-  touchAction: 'manipulation', // allow taps, prevent delay/zoom
+  // IMPORTANT: helps iOS/Android tapping
+  touchAction: 'none',
   WebkitUserSelect: 'none',
 
-  // block clicks when disabled
+  // Don’t allow taps when disabled
   pointerEvents: disabled ? 'none' : 'auto',
 }));
 
@@ -194,7 +205,7 @@ const Monkey = styled(Box)(({ active }) => ({
   transition: 'all 0.15s ease-out',
   fontSize: '2.4rem',
   userSelect: 'none',
-  pointerEvents: 'none', // ✅ emoji never steals touch/click
+  pointerEvents: 'none', // ✅ prevent emoji catching taps
 }));
 
 const ScoreBadge = styled(Box)(() => ({
@@ -223,13 +234,6 @@ const ResultChip = styled(Chip)(({ iswin }) => ({
   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7)',
   textOverflow: 'ellipsis',
   overflow: 'hidden',
-}));
-
-const PrizeListCard = styled(Paper)(() => ({
-  background: 'rgba(15, 23, 42, 0.98)',
-  borderRadius: 18,
-  border: '1px solid rgba(75, 85, 99, 0.9)',
-  padding: '12px 14px',
 }));
 
 // ===== helper =====
@@ -299,7 +303,7 @@ const MonkeyGamePage = () => {
   const winRef = useRef(null);
   const loseRef = useRef(null);
 
-  // ✅ show NY popup once per session after profile loads
+  // ✅ Show New Year popup once per page-load (no storage)
   useEffect(() => {
     if (!profile) return;
     if (nyShownRef.current) return;
@@ -357,7 +361,7 @@ const MonkeyGamePage = () => {
     } catch (e) {}
   };
 
-  const clearTimers = useCallback(() => {
+  const clearTimers = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -366,11 +370,11 @@ const MonkeyGamePage = () => {
       clearTimeout(hideTimeoutRef.current);
       hideTimeoutRef.current = null;
     }
-  }, []);
+  };
 
-  useEffect(() => () => clearTimers(), [clearTimers]);
+  useEffect(() => () => clearTimers(), []);
 
-  const loadPrizeConfig = useCallback(async () => {
+  const loadPrizeConfig = async () => {
     setWheelError(null);
     setWheelLoading(true);
     try {
@@ -382,9 +386,9 @@ const MonkeyGamePage = () => {
     } finally {
       setWheelLoading(false);
     }
-  }, []);
+  };
 
-  const loadMonkeyStatus = useCallback(async () => {
+  const loadMonkeyStatus = async () => {
     try {
       const res = await getMonkeyStatus();
       const { chancesLeft, maxChances, locked } = res?.data || {};
@@ -399,7 +403,7 @@ const MonkeyGamePage = () => {
       setChancesLeft(FALLBACK_MAX_CHANCES);
       setMaxChances(FALLBACK_MAX_CHANCES);
     }
-  }, [isRunning]);
+  };
 
   useEffect(() => {
     loadPrizeConfig();
@@ -425,17 +429,14 @@ const MonkeyGamePage = () => {
 
     setSpinError(null);
 
-    if (wheelLoading) {
-      setSpinError('Prizes are still loading. Please wait.');
-      return;
-    }
+    if (wheelLoading) return setSpinError('Prizes are still loading. Please wait.');
     if (!prizeItems || prizeItems.length === 0) {
-      setSpinError('Prizes are not configured yet. Please try again later.');
-      return;
+      return setSpinError('Prizes are not configured yet. Please try again later.');
     }
+
+    // If UI says no chances AND already locked, block; otherwise let server decide.
     if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) {
-      setSpinError('You have used all your chances.');
-      return;
+      return setSpinError('You have used all your chances.');
     }
 
     startLockRef.current = true;
@@ -481,90 +482,6 @@ const MonkeyGamePage = () => {
     }
   };
 
-  // ✅ No minus points
-  const handleHoleTap = useCallback(
-    (index) => {
-      if (!isRunning) return;
-      if (hasHitThisRoundRef.current) return;
-
-      if (index === activeIndex && activeIndex !== null) {
-        hasHitThisRoundRef.current = true;
-        setHits((prev) => prev + 1);
-        playSound(hitRef);
-      } else {
-        setMisses((prev) => prev + 1);
-        playSound(missRef);
-      }
-    },
-    [activeIndex, isRunning]
-  );
-
-  const endGame = useCallback(
-    async (didWin) => {
-      setIsRunning(false);
-      clearTimers();
-      setActiveIndex(null);
-      stopSound(bgLoopRef);
-
-      if (lockAfterThisGameRef.current) setLocked(true);
-      lockAfterThisGameRef.current = false;
-
-      const noChancesLeft = locked || (typeof chancesLeft === 'number' && chancesLeft <= 0);
-
-      if (!didWin) {
-        setIsWin(false);
-        setResultMessage(
-          noChancesLeft
-            ? 'No more chances left. Better luck next time 🐒'
-            : `Round over. You still have ${typeof chancesLeft === 'number' ? chancesLeft : maxChances} chance(s) left.`
-        );
-        playSound(loseRef);
-        await loadMonkeyStatus();
-        return;
-      }
-
-      try {
-        const res = await spinOnce();
-        const { status, prize } = res?.data || {};
-        const reallyWon = status === 'won' || (!!prize && status !== 'lost' && status !== 'error');
-
-        if (reallyWon) {
-          setLocked(true);
-
-          const prizeTitle = typeof prize === 'string' ? prize : prize?.title || prize?.name || 'Special Prize';
-
-          let prizeObj = null;
-          if (prize && typeof prize === 'object') prizeObj = prize;
-          else if (typeof prize === 'string') {
-            const normalized = prize.trim().toLowerCase();
-            prizeObj = prizeItems.find((item) => item?.title && item.title.trim().toLowerCase() === normalized) || null;
-          }
-
-          setIsWin(true);
-          setResultMessage(`You won: ${prizeTitle}`);
-          setWonPrizeText(prizeTitle);
-          setWonPrize(prizeObj);
-          setPrizePopupOpen(true);
-
-          playSound(winRef);
-        } else {
-          setIsWin(false);
-          setResultMessage('Great tapping, but no prize this time.');
-          playSound(loseRef);
-        }
-      } catch (err) {
-        setIsWin(false);
-        const msg = err?.response?.data?.message || err?.message || 'Game result failed. Please contact staff.';
-        setSpinError(msg);
-        setResultMessage('We could not confirm your prize. Please contact staff.');
-        playSound(loseRef);
-      } finally {
-        await loadMonkeyStatus();
-      }
-    },
-    [clearTimers, locked, chancesLeft, maxChances, prizeItems, loadMonkeyStatus]
-  );
-
   // game loop
   useEffect(() => {
     if (!isRunning) {
@@ -592,14 +509,94 @@ const MonkeyGamePage = () => {
     intervalRef.current = setInterval(setRandomHole, MONKEY_INTERVAL_MS);
 
     return () => clearTimers();
-  }, [isRunning, clearTimers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRunning]);
 
   // win/lose
   useEffect(() => {
     if (!isRunning) return;
     if (hits >= REQUIRED_HITS) endGame(true);
     else if (roundCount >= MAX_ROUNDS) endGame(false);
-  }, [hits, roundCount, isRunning, endGame]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hits, roundCount, isRunning]);
+
+  // ✅ No minus points
+  const handleHoleTap = (index) => {
+    if (!isRunning) return;
+    if (hasHitThisRoundRef.current) return;
+
+    if (index === activeIndex && activeIndex !== null) {
+      hasHitThisRoundRef.current = true;
+      setHits((prev) => prev + 1);
+      playSound(hitRef);
+    } else {
+      setMisses((prev) => prev + 1);
+      playSound(missRef);
+    }
+  };
+
+  const endGame = async (didWin) => {
+    setIsRunning(false);
+    clearTimers();
+    setActiveIndex(null);
+    stopSound(bgLoopRef);
+
+    if (lockAfterThisGameRef.current) setLocked(true);
+    lockAfterThisGameRef.current = false;
+
+    const noChancesLeft = locked || (typeof chancesLeft === 'number' && chancesLeft <= 0);
+
+    if (!didWin) {
+      setIsWin(false);
+      setResultMessage(
+        noChancesLeft
+          ? 'No more chances left. Better luck next time 🐒'
+          : `Round over. You still have ${typeof chancesLeft === 'number' ? chancesLeft : maxChances} chance(s) left.`
+      );
+      playSound(loseRef);
+      await loadMonkeyStatus();
+      return;
+    }
+
+    try {
+      const res = await spinOnce();
+      const { status, prize } = res?.data || {};
+      const reallyWon = status === 'won' || (!!prize && status !== 'lost' && status !== 'error');
+
+      if (reallyWon) {
+        setLocked(true);
+
+        const prizeTitle = typeof prize === 'string' ? prize : prize?.title || prize?.name || 'Special Prize';
+
+        let prizeObj = null;
+        if (prize && typeof prize === 'object') prizeObj = prize;
+        else if (typeof prize === 'string') {
+          const normalized = prize.trim().toLowerCase();
+          prizeObj = prizeItems.find((item) => item?.title && item.title.trim().toLowerCase() === normalized) || null;
+        }
+
+        setIsWin(true);
+        setResultMessage(`You won: ${prizeTitle}`);
+        setWonPrizeText(prizeTitle);
+        setWonPrize(prizeObj);
+        setPrizePopupOpen(true);
+
+        playSound(winRef);
+      } else {
+        setIsWin(false);
+        setResultMessage('Great tapping, but no prize this time.');
+        playSound(loseRef);
+      }
+    } catch (err) {
+      setIsWin(false);
+      const msg = err?.response?.data?.message || err?.message || 'Game result failed. Please contact staff.';
+      setSpinError(msg);
+      setResultMessage('We could not confirm your prize. Please contact staff.');
+      playSound(loseRef);
+    } finally {
+      await loadMonkeyStatus();
+    }
+  };
 
   const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
 
@@ -805,15 +802,15 @@ const MonkeyGamePage = () => {
               </ScoreBadge>
             </Stack>
 
-            {/* Holes ✅ PERFECT mobile tap (Pointer Events ONLY) */}
+            {/* Holes ✅ mobile-safe tap (touch + pointer + mouse) */}
             <MonkeyGrid>
               {Array.from({ length: 9 }).map((_, index) => {
                 const isActive = index === activeIndex;
 
-                const onPointerDown = (e) => {
-                  // prevent ghost-click & scroll
-                  e.preventDefault();
-                  e.stopPropagation();
+                const tap = (e) => {
+                  // iOS Safari: only preventDefault when cancelable
+                  if (e?.cancelable) e.preventDefault();
+                  e?.stopPropagation?.();
                   handleHoleTap(index);
                 };
 
@@ -824,12 +821,12 @@ const MonkeyGamePage = () => {
                     disabled={!isRunning}
                     role="button"
                     tabIndex={0}
-                    onPointerDown={onPointerDown}
-                    onPointerUp={(e) => e.preventDefault()}
-                    onPointerCancel={(e) => e.preventDefault()}
+                    onTouchStart={tap}
+                    onPointerDown={tap}
+                    onMouseDown={tap}
                     onContextMenu={(e) => e.preventDefault()}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') onPointerDown(e);
+                      if (e.key === 'Enter' || e.key === ' ') tap(e);
                     }}
                   >
                     <Monkey active={isActive ? 1 : 0}>{isActive ? '🐵' : '🕳️'}</Monkey>
@@ -878,37 +875,6 @@ const MonkeyGamePage = () => {
           </GameButton>
         </Box>
 
-        {/* Prize List (optional but nice) */}
-        {prizeItems?.length > 0 && (
-          <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
-            <PrizeListCard elevation={0}>
-              <Typography variant="subtitle2" sx={{ color: '#e5e7eb', fontWeight: 800, mb: 0.8, fontSize: '0.85rem' }}>
-                Sample Prizes You Can Win
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{ color: 'rgba(148, 163, 184, 0.9)', fontSize: '0.75rem', display: 'block', mb: 1 }}
-              >
-                Prize is selected securely after you win.
-              </Typography>
-              <Stack spacing={0.6}>
-                {prizeItems.slice(0, 6).map((item, idx) => (
-                  <Stack key={item._id || idx} direction="row" spacing={1} alignItems="center">
-                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', background: HNC_RED, flexShrink: 0 }} />
-                    <Typography
-                      variant="body2"
-                      sx={{ color: 'rgba(209, 213, 219, 0.95)', fontSize: '0.8rem' }}
-                      noWrap
-                    >
-                      {item.title || item.label || item.name || `Prize ${idx + 1}`}
-                    </Typography>
-                  </Stack>
-                ))}
-              </Stack>
-            </PrizeListCard>
-          </Box>
-        )}
-
         {/* Rules */}
         <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
           <InfoCard elevation={0}>
@@ -939,7 +905,12 @@ const MonkeyGamePage = () => {
             border: '2px solid rgba(220, 38, 38, 0.5)',
             m: { xs: 1.5, sm: 2 },
             maxWidth: 380,
-            '@media (max-width:400px)': { m: 0, width: '100%', maxWidth: '100%', borderRadius: 0 },
+            '@media (max-width:400px)': {
+              m: 0,
+              width: '100%',
+              maxWidth: '100%',
+              borderRadius: 0,
+            },
           },
         }}
         TransitionComponent={Grow}
@@ -981,7 +952,14 @@ const MonkeyGamePage = () => {
 
             <Box sx={{ background: '#020617', borderRadius: 16, border: '1px solid rgba(55, 65, 81, 0.9)', p: 2 }}>
               {wonPrize?.imageUrl && (
-                <Box sx={{ mb: 1.4, borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(243, 244, 246, 0.8)' }}>
+                <Box
+                  sx={{
+                    mb: 1.4,
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    border: '1px solid rgba(243, 244, 246, 0.8)',
+                  }}
+                >
                   <img
                     src={wonPrize.imageUrl}
                     alt={wonPrize.title || wonPrizeText || 'Prize'}
@@ -990,7 +968,11 @@ const MonkeyGamePage = () => {
                 </Box>
               )}
 
-              <Typography variant="h5" fontWeight={900} sx={{ color: '#fecaca', mb: wonPrize?.description ? 0.5 : 0, fontSize: '1.1rem' }}>
+              <Typography
+                variant="h5"
+                fontWeight={900}
+                sx={{ color: '#fecaca', mb: wonPrize?.description ? 0.5 : 0, fontSize: '1.1rem' }}
+              >
                 {wonPrize?.title || wonPrizeText || 'Mystery Prize'}
               </Typography>
 
