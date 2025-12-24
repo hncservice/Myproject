@@ -93,14 +93,8 @@ function randomBetween(a, b) {
   return Math.floor(a + Math.random() * (b - a + 1));
 }
 
-export default function NewYearPopup({
-  open,
-  onClose,
-  name = 'Friend',
-  downloadUrl = 'https://onelink.to/c8p8b8',
-}) {
+export default function NewYearPopup({ open, onClose, name = 'Friend', downloadUrl = 'https://onelink.to/c8p8b8' }) {
   const particles = useMemo(() => {
-    // sparkles
     const sparkles = Array.from({ length: 16 }).map((_, i) => ({
       id: `s-${i}`,
       left: `${randomBetween(6, 94)}%`,
@@ -116,7 +110,6 @@ export default function NewYearPopup({
           : `rgba(124,45,18,.35)`,
     }));
 
-    // confetti strips
     const confetti = Array.from({ length: 14 }).map((_, i) => ({
       id: `c-${i}`,
       left: `${randomBetween(5, 95)}%`,
@@ -155,7 +148,6 @@ export default function NewYearPopup({
     >
       <DialogContent sx={{ p: 0 }}>
         <Card>
-          {/* background glow */}
           <Box
             sx={{
               position: 'absolute',
@@ -167,7 +159,6 @@ export default function NewYearPopup({
             }}
           />
 
-          {/* shine sweep */}
           <Box
             sx={{
               position: 'absolute',
@@ -175,7 +166,8 @@ export default function NewYearPopup({
               left: 0,
               bottom: 0,
               width: '55%',
-              background: 'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.16) 50%, rgba(255,255,255,0) 100%)',
+              background:
+                'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.16) 50%, rgba(255,255,255,0) 100%)',
               transform: 'translateX(-120%) skewX(-20deg)',
               animation: `${shine} 5.2s ease-in-out infinite`,
               pointerEvents: 'none',
@@ -183,7 +175,6 @@ export default function NewYearPopup({
             }}
           />
 
-          {/* firework rings */}
           <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
             {[
               { left: '22%', top: '30%', c: 'rgba(220,38,38,.6)', d: '0ms' },
@@ -209,7 +200,6 @@ export default function NewYearPopup({
             ))}
           </Box>
 
-          {/* close */}
           <IconButton
             onClick={onClose}
             sx={{
@@ -226,7 +216,6 @@ export default function NewYearPopup({
             <CloseIcon />
           </IconButton>
 
-          {/* confetti */}
           <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2 }}>
             {particles.confetti.map((c) => (
               <Box
@@ -247,7 +236,6 @@ export default function NewYearPopup({
             ))}
           </Box>
 
-          {/* sparkles */}
           <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3 }}>
             {particles.sparkles.map((p) => (
               <Box
@@ -290,13 +278,7 @@ export default function NewYearPopup({
 
               <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 1.2 }}>
                 {['🎉', '🥳', '🔥', '🍔', '🎁'].map((t, i) => (
-                  <Box
-                    key={i}
-                    sx={{
-                      fontSize: 18,
-                      animation: `${twinkle} ${1200 + i * 250}ms ease-in-out infinite`,
-                    }}
-                  >
+                  <Box key={i} sx={{ fontSize: 18, animation: `${twinkle} ${1200 + i * 250}ms ease-in-out infinite` }}>
                     {t}
                   </Box>
                 ))}
@@ -320,11 +302,7 @@ export default function NewYearPopup({
             </Box>
 
             <Stack spacing={1.1} sx={{ pt: 0.4 }}>
-              <PrimaryBtn
-                fullWidth
-                startIcon={<DownloadIcon />}
-                onClick={() => window.open(downloadUrl, '_blank', 'noopener,noreferrer')}
-              >
+              <PrimaryBtn fullWidth startIcon={<DownloadIcon />} onClick={() => window.open(downloadUrl, '_blank', 'noopener,noreferrer')}>
                 Download HNC App
               </PrimaryBtn>
 
@@ -334,7 +312,7 @@ export default function NewYearPopup({
             </Stack>
 
             <Typography sx={{ textAlign: 'center', color: 'rgba(148,163,184,.8)', fontSize: '0.72rem', pt: 0.4 }}>
-              You can close this anytime. It won’t show again on this device.
+              Enjoy the celebration 🎆
             </Typography>
           </Stack>
         </Card>

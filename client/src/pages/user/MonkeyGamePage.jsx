@@ -1,5 +1,5 @@
 // client/src/pages/user/MonkeyGamePage.jsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Alert } from 'react-bootstrap';
 import {
   Box,
@@ -27,7 +27,6 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 import { useAuth } from '../../context/AuthContext';
 import { spinOnce, getWheelConfig, getMonkeyStatus, requestMonkeyAttempt } from '../../api/spinApi';
-
 import NewYearPopup from '../../components/NewYearPopup';
 
 // ======== SOUND IMPORTS ========
@@ -44,7 +43,6 @@ const HNC_RED_DARK = '#7c2d12';
 const HNC_BG = '#020617';
 
 // ============ NEW YEAR ============
-const NY_KEY = 'hnc_newyear_popup_2026_shown';
 const HNC_APP_DOWNLOAD_URL = 'https://onelink.to/c8p8b8';
 
 // ============ GAME CONSTANTS ============
@@ -52,7 +50,7 @@ const REQUIRED_HITS = 7;
 const MAX_ROUNDS = 20;
 const MONKEY_INTERVAL_MS = 800;
 const MONKEY_VISIBLE_MS = 420;
-const FALLBACK_MAX_CHANCES = 3; // must match your server MONKEY_MAX_CHANCES
+const FALLBACK_MAX_CHANCES = 3; // must match server MONKEY_MAX_CHANCES
 
 // ============ Animations ============
 const pulse = keyframes`
@@ -97,9 +95,7 @@ const HeaderSection = styled(Box)(({ theme }) => ({
   top: 0,
   zIndex: 10,
   backdropFilter: 'blur(10px)',
-  [theme.breakpoints.down('sm')]: {
-    padding: '10px 12px',
-  },
+  [theme.breakpoints.down('sm')]: { padding: '10px 12px' },
 }));
 
 const StatusBadge = styled(Chip)(({ locked }) => ({
@@ -133,15 +129,8 @@ const GameButton = styled(Button)(({ disabled, theme }) => ({
   transition: 'all 0.2s ease',
   '&:hover': disabled
     ? {}
-    : {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 14px 32px rgba(220, 38, 38, 0.75)',
-      },
-  [theme.breakpoints.down('sm')]: {
-    height: 52,
-    fontSize: '0.9rem',
-    maxWidth: 340,
-  },
+    : { transform: 'translateY(-2px)', boxShadow: '0 14px 32px rgba(220, 38, 38, 0.75)' },
+  [theme.breakpoints.down('sm')]: { height: 52, fontSize: '0.9rem', maxWidth: 340 },
 }));
 
 const InfoCard = styled(Paper)(() => ({
@@ -161,20 +150,19 @@ const GridWrapper = styled(Box)(({ theme }) => ({
   background: 'radial-gradient(circle at top, #020617, #020617)',
   border: '1px solid rgba(31, 41, 55, 0.9)',
   boxShadow: '0 16px 40px rgba(0, 0, 0, 0.9)',
-  [theme.breakpoints.down('sm')]: {
-    maxWidth: 340,
-    padding: '8px',
-    borderRadius: 18,
-  },
+  [theme.breakpoints.down('sm')]: { maxWidth: 340, padding: '8px', borderRadius: 18 },
+  '@media (max-width:360px)': { maxWidth: 320, padding: '7px' },
 }));
 
-const MonkeyGrid = styled(Box)(() => ({
+const MonkeyGrid = styled(Box)(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
   gap: 8,
+  [theme.breakpoints.down('sm')]: { gap: 7 },
+  '@media (max-width:360px)': { gap: 6 },
 }));
 
-// ✅ Mobile tap-safe Hole
+// ✅ Mobile tap-safe Hole (pointer events only; prevents double fire)
 const Hole = styled(Box)(({ active, disabled }) => ({
   position: 'relative',
   aspectRatio: '1 / 1',
@@ -191,9 +179,11 @@ const Hole = styled(Box)(({ active, disabled }) => ({
   userSelect: 'none',
   WebkitTapHighlightColor: 'transparent',
 
-  // important for mobile
-  touchAction: 'none',
+  // ✅ key for mobile tapping reliability
+  touchAction: 'manipulation', // allow taps, prevent delay/zoom
   WebkitUserSelect: 'none',
+
+  // block clicks when disabled
   pointerEvents: disabled ? 'none' : 'auto',
 }));
 
@@ -204,7 +194,7 @@ const Monkey = styled(Box)(({ active }) => ({
   transition: 'all 0.15s ease-out',
   fontSize: '2.4rem',
   userSelect: 'none',
-  pointerEvents: 'none', // ✅ prevent emoji catching taps
+  pointerEvents: 'none', // ✅ emoji never steals touch/click
 }));
 
 const ScoreBadge = styled(Box)(() => ({
@@ -235,6 +225,13 @@ const ResultChip = styled(Chip)(({ iswin }) => ({
   overflow: 'hidden',
 }));
 
+const PrizeListCard = styled(Paper)(() => ({
+  background: 'rgba(15, 23, 42, 0.98)',
+  borderRadius: 18,
+  border: '1px solid rgba(75, 85, 99, 0.9)',
+  padding: '12px 14px',
+}));
+
 // ===== helper =====
 const makeSessionId = () => {
   try {
@@ -246,8 +243,9 @@ const makeSessionId = () => {
 const MonkeyGamePage = () => {
   const { profile } = useAuth();
 
-  // ✅ New Year popup state (must be inside component)
+  // ✅ New Year popup state (NO localStorage)
   const [openNY, setOpenNY] = useState(false);
+  const nyShownRef = useRef(false);
 
   // Prize config
   const [prizeItems, setPrizeItems] = useState([]);
@@ -301,13 +299,12 @@ const MonkeyGamePage = () => {
   const winRef = useRef(null);
   const loseRef = useRef(null);
 
-  // ✅ Show New Year popup once after login/profile loaded
+  // ✅ show NY popup once per session after profile loads
   useEffect(() => {
     if (!profile) return;
-    const already = localStorage.getItem(NY_KEY);
-    if (already) return;
+    if (nyShownRef.current) return;
+    nyShownRef.current = true;
     setOpenNY(true);
-    localStorage.setItem(NY_KEY, '1');
   }, [profile]);
 
   // Preload sounds
@@ -360,7 +357,7 @@ const MonkeyGamePage = () => {
     } catch (e) {}
   };
 
-  const clearTimers = () => {
+  const clearTimers = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -369,11 +366,11 @@ const MonkeyGamePage = () => {
       clearTimeout(hideTimeoutRef.current);
       hideTimeoutRef.current = null;
     }
-  };
+  }, []);
 
-  useEffect(() => () => clearTimers(), []);
+  useEffect(() => () => clearTimers(), [clearTimers]);
 
-  const loadPrizeConfig = async () => {
+  const loadPrizeConfig = useCallback(async () => {
     setWheelError(null);
     setWheelLoading(true);
     try {
@@ -385,9 +382,9 @@ const MonkeyGamePage = () => {
     } finally {
       setWheelLoading(false);
     }
-  };
+  }, []);
 
-  const loadMonkeyStatus = async () => {
+  const loadMonkeyStatus = useCallback(async () => {
     try {
       const res = await getMonkeyStatus();
       const { chancesLeft, maxChances, locked } = res?.data || {};
@@ -402,7 +399,7 @@ const MonkeyGamePage = () => {
       setChancesLeft(FALLBACK_MAX_CHANCES);
       setMaxChances(FALLBACK_MAX_CHANCES);
     }
-  };
+  }, [isRunning]);
 
   useEffect(() => {
     loadPrizeConfig();
@@ -428,9 +425,18 @@ const MonkeyGamePage = () => {
 
     setSpinError(null);
 
-    if (wheelLoading) return setSpinError('Prizes are still loading. Please wait.');
-    if (!prizeItems || prizeItems.length === 0) return setSpinError('Prizes are not configured yet. Please try again later.');
-    if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) return setSpinError('You have used all your chances.');
+    if (wheelLoading) {
+      setSpinError('Prizes are still loading. Please wait.');
+      return;
+    }
+    if (!prizeItems || prizeItems.length === 0) {
+      setSpinError('Prizes are not configured yet. Please try again later.');
+      return;
+    }
+    if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) {
+      setSpinError('You have used all your chances.');
+      return;
+    }
 
     startLockRef.current = true;
     setIsStarting(true);
@@ -475,6 +481,90 @@ const MonkeyGamePage = () => {
     }
   };
 
+  // ✅ No minus points
+  const handleHoleTap = useCallback(
+    (index) => {
+      if (!isRunning) return;
+      if (hasHitThisRoundRef.current) return;
+
+      if (index === activeIndex && activeIndex !== null) {
+        hasHitThisRoundRef.current = true;
+        setHits((prev) => prev + 1);
+        playSound(hitRef);
+      } else {
+        setMisses((prev) => prev + 1);
+        playSound(missRef);
+      }
+    },
+    [activeIndex, isRunning]
+  );
+
+  const endGame = useCallback(
+    async (didWin) => {
+      setIsRunning(false);
+      clearTimers();
+      setActiveIndex(null);
+      stopSound(bgLoopRef);
+
+      if (lockAfterThisGameRef.current) setLocked(true);
+      lockAfterThisGameRef.current = false;
+
+      const noChancesLeft = locked || (typeof chancesLeft === 'number' && chancesLeft <= 0);
+
+      if (!didWin) {
+        setIsWin(false);
+        setResultMessage(
+          noChancesLeft
+            ? 'No more chances left. Better luck next time 🐒'
+            : `Round over. You still have ${typeof chancesLeft === 'number' ? chancesLeft : maxChances} chance(s) left.`
+        );
+        playSound(loseRef);
+        await loadMonkeyStatus();
+        return;
+      }
+
+      try {
+        const res = await spinOnce();
+        const { status, prize } = res?.data || {};
+        const reallyWon = status === 'won' || (!!prize && status !== 'lost' && status !== 'error');
+
+        if (reallyWon) {
+          setLocked(true);
+
+          const prizeTitle = typeof prize === 'string' ? prize : prize?.title || prize?.name || 'Special Prize';
+
+          let prizeObj = null;
+          if (prize && typeof prize === 'object') prizeObj = prize;
+          else if (typeof prize === 'string') {
+            const normalized = prize.trim().toLowerCase();
+            prizeObj = prizeItems.find((item) => item?.title && item.title.trim().toLowerCase() === normalized) || null;
+          }
+
+          setIsWin(true);
+          setResultMessage(`You won: ${prizeTitle}`);
+          setWonPrizeText(prizeTitle);
+          setWonPrize(prizeObj);
+          setPrizePopupOpen(true);
+
+          playSound(winRef);
+        } else {
+          setIsWin(false);
+          setResultMessage('Great tapping, but no prize this time.');
+          playSound(loseRef);
+        }
+      } catch (err) {
+        setIsWin(false);
+        const msg = err?.response?.data?.message || err?.message || 'Game result failed. Please contact staff.';
+        setSpinError(msg);
+        setResultMessage('We could not confirm your prize. Please contact staff.');
+        playSound(loseRef);
+      } finally {
+        await loadMonkeyStatus();
+      }
+    },
+    [clearTimers, locked, chancesLeft, maxChances, prizeItems, loadMonkeyStatus]
+  );
+
   // game loop
   useEffect(() => {
     if (!isRunning) {
@@ -502,99 +592,24 @@ const MonkeyGamePage = () => {
     intervalRef.current = setInterval(setRandomHole, MONKEY_INTERVAL_MS);
 
     return () => clearTimers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRunning]);
+  }, [isRunning, clearTimers]);
 
   // win/lose
   useEffect(() => {
     if (!isRunning) return;
     if (hits >= REQUIRED_HITS) endGame(true);
     else if (roundCount >= MAX_ROUNDS) endGame(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hits, roundCount, isRunning]);
-
-  // ✅ No minus points
-  const handleHoleTap = (index) => {
-    if (!isRunning) return;
-    if (hasHitThisRoundRef.current) return;
-
-    if (index === activeIndex && activeIndex !== null) {
-      hasHitThisRoundRef.current = true;
-      setHits((prev) => prev + 1);
-      playSound(hitRef);
-    } else {
-      setMisses((prev) => prev + 1);
-      playSound(missRef);
-    }
-  };
-
-  const endGame = async (didWin) => {
-    setIsRunning(false);
-    clearTimers();
-    setActiveIndex(null);
-    stopSound(bgLoopRef);
-
-    if (lockAfterThisGameRef.current) setLocked(true);
-    lockAfterThisGameRef.current = false;
-
-    const noChancesLeft = locked || (typeof chancesLeft === 'number' && chancesLeft <= 0);
-
-    if (!didWin) {
-      setIsWin(false);
-      setResultMessage(
-        noChancesLeft
-          ? 'No more chances left. Better luck next time 🐒'
-          : `Round over. You still have ${typeof chancesLeft === 'number' ? chancesLeft : maxChances} chance(s) left.`
-      );
-      playSound(loseRef);
-      await loadMonkeyStatus();
-      return;
-    }
-
-    try {
-      const res = await spinOnce();
-      const { status, prize } = res?.data || {};
-      const reallyWon = status === 'won' || (!!prize && status !== 'lost' && status !== 'error');
-
-      if (reallyWon) {
-        setLocked(true);
-
-        const prizeTitle = typeof prize === 'string' ? prize : prize?.title || prize?.name || 'Special Prize';
-
-        let prizeObj = null;
-        if (prize && typeof prize === 'object') prizeObj = prize;
-        else if (typeof prize === 'string') {
-          const normalized = prize.trim().toLowerCase();
-          prizeObj = prizeItems.find((item) => item?.title && item.title.trim().toLowerCase() === normalized) || null;
-        }
-
-        setIsWin(true);
-        setResultMessage(`You won: ${prizeTitle}`);
-        setWonPrizeText(prizeTitle);
-        setWonPrize(prizeObj);
-        setPrizePopupOpen(true);
-
-        playSound(winRef);
-      } else {
-        setIsWin(false);
-        setResultMessage('Great tapping, but no prize this time.');
-        playSound(loseRef);
-      }
-    } catch (err) {
-      setIsWin(false);
-      const msg = err?.response?.data?.message || err?.message || 'Game result failed. Please contact staff.';
-      setSpinError(msg);
-      setResultMessage('We could not confirm your prize. Please contact staff.');
-      playSound(loseRef);
-    } finally {
-      await loadMonkeyStatus();
-    }
-  };
+  }, [hits, roundCount, isRunning, endGame]);
 
   const displayChances = typeof chancesLeft === 'number' ? chancesLeft : maxChances;
 
   const gameDisabled =
-    locked || isRunning || isStarting || wheelLoading || !!wheelError || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked);
+    locked ||
+    isRunning ||
+    isStarting ||
+    wheelLoading ||
+    !!wheelError ||
+    (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked);
 
   const progress = MAX_ROUNDS > 0 ? Math.min(100, (roundCount / MAX_ROUNDS) * 100) : 0;
 
@@ -648,7 +663,11 @@ const MonkeyGamePage = () => {
             </Box>
 
             <Box>
-              <Typography variant="h6" fontWeight={900} sx={{ color: '#fff', letterSpacing: 0.5, fontSize: { xs: '0.95rem', sm: '1.1rem' } }}>
+              <Typography
+                variant="h6"
+                fontWeight={900}
+                sx={{ color: '#fff', letterSpacing: 0.5, fontSize: { xs: '0.95rem', sm: '1.1rem' } }}
+              >
                 Tap The Monkey
               </Typography>
               <Typography variant="caption" sx={{ color: 'rgba(148, 163, 184, 0.9)', fontSize: '0.7rem' }}>
@@ -705,7 +724,8 @@ const MonkeyGamePage = () => {
                 fontSize: { xs: '0.85rem', sm: '0.92rem' },
               }}
             >
-              Tap only when the monkey pops up. Get <strong>{REQUIRED_HITS}</strong> hits within <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps count as a miss.
+              Tap only when the monkey pops up. Get <strong>{REQUIRED_HITS}</strong> hits within{' '}
+              <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps count as a miss.
             </Typography>
           </Fade>
         </Box>
@@ -785,14 +805,15 @@ const MonkeyGamePage = () => {
               </ScoreBadge>
             </Stack>
 
-            {/* Holes ✅ mobile-safe tap */}
+            {/* Holes ✅ PERFECT mobile tap (Pointer Events ONLY) */}
             <MonkeyGrid>
               {Array.from({ length: 9 }).map((_, index) => {
                 const isActive = index === activeIndex;
 
-                const tap = (e) => {
-                  e.preventDefault?.();
-                  e.stopPropagation?.();
+                const onPointerDown = (e) => {
+                  // prevent ghost-click & scroll
+                  e.preventDefault();
+                  e.stopPropagation();
                   handleHoleTap(index);
                 };
 
@@ -803,11 +824,12 @@ const MonkeyGamePage = () => {
                     disabled={!isRunning}
                     role="button"
                     tabIndex={0}
-                    onPointerDown={tap}
-                    onTouchStart={tap}
+                    onPointerDown={onPointerDown}
+                    onPointerUp={(e) => e.preventDefault()}
+                    onPointerCancel={(e) => e.preventDefault()}
                     onContextMenu={(e) => e.preventDefault()}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') tap(e);
+                      if (e.key === 'Enter' || e.key === ' ') onPointerDown(e);
                     }}
                   >
                     <Monkey active={isActive ? 1 : 0}>{isActive ? '🐵' : '🕳️'}</Monkey>
@@ -822,7 +844,11 @@ const MonkeyGamePage = () => {
         {resultMessage && (
           <Grow in={!!resultMessage} timeout={400}>
             <Box sx={{ px: { xs: 2, sm: 3 }, mb: 2.5, display: 'flex', justifyContent: 'center' }}>
-              <ResultChip iswin={isWin ? 1 : 0} icon={isWin ? <EmojiEventsIcon sx={{ fontSize: 18 }} /> : undefined} label={resultMessage} />
+              <ResultChip
+                iswin={isWin ? 1 : 0}
+                icon={isWin ? <EmojiEventsIcon sx={{ fontSize: 18 }} /> : undefined}
+                label={resultMessage}
+              />
             </Box>
           </Grow>
         )}
@@ -832,7 +858,15 @@ const MonkeyGamePage = () => {
           <GameButton
             disabled={gameDisabled}
             onClick={startGame}
-            startIcon={locked ? <LockIcon /> : isRunning || isStarting ? <CircularProgress size={18} sx={{ color: '#fff' }} /> : <CasinoIcon />}
+            startIcon={
+              locked ? (
+                <LockIcon />
+              ) : isRunning || isStarting ? (
+                <CircularProgress size={18} sx={{ color: '#fff' }} />
+              ) : (
+                <CasinoIcon />
+              )
+            }
           >
             {locked || (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked)
               ? 'No More Games'
@@ -843,6 +877,37 @@ const MonkeyGamePage = () => {
               : 'Start Game'}
           </GameButton>
         </Box>
+
+        {/* Prize List (optional but nice) */}
+        {prizeItems?.length > 0 && (
+          <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
+            <PrizeListCard elevation={0}>
+              <Typography variant="subtitle2" sx={{ color: '#e5e7eb', fontWeight: 800, mb: 0.8, fontSize: '0.85rem' }}>
+                Sample Prizes You Can Win
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ color: 'rgba(148, 163, 184, 0.9)', fontSize: '0.75rem', display: 'block', mb: 1 }}
+              >
+                Prize is selected securely after you win.
+              </Typography>
+              <Stack spacing={0.6}>
+                {prizeItems.slice(0, 6).map((item, idx) => (
+                  <Stack key={item._id || idx} direction="row" spacing={1} alignItems="center">
+                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', background: HNC_RED, flexShrink: 0 }} />
+                    <Typography
+                      variant="body2"
+                      sx={{ color: 'rgba(209, 213, 219, 0.95)', fontSize: '0.8rem' }}
+                      noWrap
+                    >
+                      {item.title || item.label || item.name || `Prize ${idx + 1}`}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </PrizeListCard>
+          </Box>
+        )}
 
         {/* Rules */}
         <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
@@ -874,19 +939,17 @@ const MonkeyGamePage = () => {
             border: '2px solid rgba(220, 38, 38, 0.5)',
             m: { xs: 1.5, sm: 2 },
             maxWidth: 380,
-            '@media (max-width:400px)': {
-              m: 0,
-              width: '100%',
-              maxWidth: '100%',
-              borderRadius: 0,
-            },
+            '@media (max-width:400px)': { m: 0, width: '100%', maxWidth: '100%', borderRadius: 0 },
           },
         }}
         TransitionComponent={Grow}
         transitionDuration={400}
       >
         <Box sx={{ position: 'relative' }}>
-          <IconButton onClick={() => setPrizePopupOpen(false)} sx={{ position: 'absolute', right: 10, top: 10, color: 'rgba(209, 213, 219, 0.9)' }}>
+          <IconButton
+            onClick={() => setPrizePopupOpen(false)}
+            sx={{ position: 'absolute', right: 10, top: 10, color: 'rgba(209, 213, 219, 0.9)' }}
+          >
             <CloseIcon />
           </IconButton>
 
@@ -919,7 +982,11 @@ const MonkeyGamePage = () => {
             <Box sx={{ background: '#020617', borderRadius: 16, border: '1px solid rgba(55, 65, 81, 0.9)', p: 2 }}>
               {wonPrize?.imageUrl && (
                 <Box sx={{ mb: 1.4, borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(243, 244, 246, 0.8)' }}>
-                  <img src={wonPrize.imageUrl} alt={wonPrize.title || wonPrizeText || 'Prize'} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                  <img
+                    src={wonPrize.imageUrl}
+                    alt={wonPrize.title || wonPrizeText || 'Prize'}
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
                 </Box>
               )}
 
