@@ -10,9 +10,13 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY) || null);
   const [role, setRole] = useState(localStorage.getItem(ROLE_KEY) || null);
-  const [profile, setProfile] = useState(
-    JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null')
-  );
+  const [profile, setProfile] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null');
+    } catch {
+      return null;
+    }
+  });
 
   useEffect(() => {
     if (token) localStorage.setItem(TOKEN_KEY, token);
@@ -36,13 +40,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setRole(null);
+    // ✅ clear localStorage using your real keys
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(ROLE_KEY);
+    localStorage.removeItem(PROFILE_KEY);
+
+    // ✅ clear state
     setToken(null);
+    setRole(null);
     setProfile(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, role, profile, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        role,
+        profile,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

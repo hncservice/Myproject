@@ -12,3 +12,6 @@ export const loginVendor = (payload) =>
 
 export const loginAdmin = (payload) =>
   axiosInstance.post('/auth/admin/login', payload);
+
+export const loginUser = (payload) =>
+  axiosInstance.post('/auth/user/login', payload);

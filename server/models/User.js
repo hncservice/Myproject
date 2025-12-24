@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
     },
     phone: { type: String, trim: true, unique: true,
       sparse: true },
+      passwordHash: { type: String, required: true,default: null },
 
     emailVerified: { type: Boolean, default: false },
 
@@ -26,12 +27,20 @@ const userSchema = new mongoose.Schema(
     type: Number,
     default: 0,
   },
-  monkeyLocked: {
-    type: Boolean,
-    default: false,
-  },
   
+monkeyAttempts: { type: Number, default: 0 },  
 lastMonkeySessionId: { type: String, default: null },
+monkeyChancesLeft: { type: Number, default: 3 },
+monkeyMaxChances: { type: Number, default: 3 },
+monkeyLocked: { type: Boolean, default: false },
+
+monkeyActiveSession: {
+  sessionId: { type: String, default: null },
+  status: { type: String, enum: ['active', 'completed', 'expired'], default: 'expired' },
+  startedAt: { type: Date, default: null },
+  expiresAt: { type: Date, default: null },
+}
+
 
   },
   {

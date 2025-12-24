@@ -46,12 +46,12 @@ const HNC_BG = '#020617';
 // ============ NEW YEAR ============
 const HNC_APP_DOWNLOAD_URL = 'https://onelink.to/c8p8b8';
 
-// ============ GAME CONSTANTS ============
-const REQUIRED_HITS = 7;
-const MAX_ROUNDS = 20;
-const MONKEY_INTERVAL_MS = 1100;
-const MONKEY_VISIBLE_MS = 500;
-const FALLBACK_MAX_CHANCES = 3; // must match your server MONKEY_MAX_CHANCES
+// ============ GAME CONSTANTS (✅ easier) ============
+const REQUIRED_HITS = 5;        // was 7 (easier)
+const MAX_ROUNDS = 24;          // was 20 (more time)
+const MONKEY_INTERVAL_MS = 950; // was 800 (slower)
+const MONKEY_VISIBLE_MS = 520;  // was 420 (monkey stays longer)
+const FALLBACK_MAX_CHANCES = 3; // must match server MONKEY_MAX_CHANCES
 
 // ============ Animations ============
 const pulse = keyframes`
@@ -173,7 +173,7 @@ const MonkeyGrid = styled(Box)(() => ({
   gap: 8,
 }));
 
-// ✅ Mobile tap-safe Hole (iOS/Android)
+// ✅ Mobile tap-safe Hole (Pointer capture)
 const Hole = styled(Box)(({ active, disabled }) => ({
   position: 'relative',
   aspectRatio: '1 / 1',
@@ -189,10 +189,11 @@ const Hole = styled(Box)(({ active, disabled }) => ({
   transition: 'all 0.15s ease-out',
   userSelect: 'none',
   WebkitTapHighlightColor: 'transparent',
-
-  // IMPORTANT: helps iOS/Android tapping
-  touchAction: 'none',
   WebkitUserSelect: 'none',
+  WebkitTouchCallout: 'none',
+
+  // ✅ best for mobile taps (no double-fire, no scroll delay)
+  touchAction: 'manipulation',
 
   // Don’t allow taps when disabled
   pointerEvents: disabled ? 'none' : 'auto',
@@ -205,7 +206,7 @@ const Monkey = styled(Box)(({ active }) => ({
   transition: 'all 0.15s ease-out',
   fontSize: '2.4rem',
   userSelect: 'none',
-  pointerEvents: 'none', // ✅ prevent emoji catching taps
+  pointerEvents: 'none', // ✅ emoji never steals the tap
 }));
 
 const ScoreBadge = styled(Box)(() => ({
@@ -247,7 +248,7 @@ const makeSessionId = () => {
 const MonkeyGamePage = () => {
   const { profile } = useAuth();
 
-  // ✅ New Year popup state (NO localStorage)
+  // ✅ New Year popup (no localStorage, shows once per page/session)
   const [openNY, setOpenNY] = useState(false);
   const nyShownRef = useRef(false);
 
@@ -303,7 +304,7 @@ const MonkeyGamePage = () => {
   const winRef = useRef(null);
   const loseRef = useRef(null);
 
-  // ✅ Show New Year popup once per page-load (no storage)
+  // ✅ show popup once after profile loads (no storage)
   useEffect(() => {
     if (!profile) return;
     if (nyShownRef.current) return;
@@ -430,14 +431,10 @@ const MonkeyGamePage = () => {
     setSpinError(null);
 
     if (wheelLoading) return setSpinError('Prizes are still loading. Please wait.');
-    if (!prizeItems || prizeItems.length === 0) {
+    if (!prizeItems || prizeItems.length === 0)
       return setSpinError('Prizes are not configured yet. Please try again later.');
-    }
-
-    // If UI says no chances AND already locked, block; otherwise let server decide.
-    if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked) {
+    if (typeof chancesLeft === 'number' && chancesLeft <= 0 && locked)
       return setSpinError('You have used all your chances.');
-    }
 
     startLockRef.current = true;
     setIsStarting(true);
@@ -721,8 +718,7 @@ const MonkeyGamePage = () => {
                 fontSize: { xs: '0.85rem', sm: '0.92rem' },
               }}
             >
-              Tap only when the monkey pops up. Get <strong>{REQUIRED_HITS}</strong> hits within{' '}
-              <strong>{MAX_ROUNDS}</strong> rounds. Wrong taps count as a miss.
+              Tap only when the monkey pops up. Wrong taps count as a miss (no minus points).
             </Typography>
           </Fade>
         </Box>
@@ -802,15 +798,22 @@ const MonkeyGamePage = () => {
               </ScoreBadge>
             </Stack>
 
-            {/* Holes ✅ mobile-safe tap (touch + pointer + mouse) */}
+            {/* Holes ✅ MOBILE FIX: Pointer capture */}
             <MonkeyGrid>
               {Array.from({ length: 9 }).map((_, index) => {
                 const isActive = index === activeIndex;
 
-                const tap = (e) => {
-                  // iOS Safari: only preventDefault when cancelable
-                  if (e?.cancelable) e.preventDefault();
-                  e?.stopPropagation?.();
+                const onPointerDown = (e) => {
+                  // allow only primary pointer
+                  if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+                  // ✅ stop any scroll/click delay + capture pointer for fast tapping
+                  e.preventDefault?.();
+                  e.stopPropagation?.();
+                  try {
+                    e.currentTarget.setPointerCapture?.(e.pointerId);
+                  } catch (_) {}
+
                   handleHoleTap(index);
                 };
 
@@ -821,12 +824,13 @@ const MonkeyGamePage = () => {
                     disabled={!isRunning}
                     role="button"
                     tabIndex={0}
-                    onTouchStart={tap}
-                    onPointerDown={tap}
-                    onMouseDown={tap}
+                    onPointerDown={onPointerDown}
                     onContextMenu={(e) => e.preventDefault()}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') tap(e);
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault?.();
+                        handleHoleTap(index);
+                      }
                     }}
                   >
                     <Monkey active={isActive ? 1 : 0}>{isActive ? '🐵' : '🕳️'}</Monkey>
@@ -952,14 +956,7 @@ const MonkeyGamePage = () => {
 
             <Box sx={{ background: '#020617', borderRadius: 16, border: '1px solid rgba(55, 65, 81, 0.9)', p: 2 }}>
               {wonPrize?.imageUrl && (
-                <Box
-                  sx={{
-                    mb: 1.4,
-                    borderRadius: 3,
-                    overflow: 'hidden',
-                    border: '1px solid rgba(243, 244, 246, 0.8)',
-                  }}
-                >
+                <Box sx={{ mb: 1.4, borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(243, 244, 246, 0.8)' }}>
                   <img
                     src={wonPrize.imageUrl}
                     alt={wonPrize.title || wonPrizeText || 'Prize'}
@@ -968,11 +965,7 @@ const MonkeyGamePage = () => {
                 </Box>
               )}
 
-              <Typography
-                variant="h5"
-                fontWeight={900}
-                sx={{ color: '#fecaca', mb: wonPrize?.description ? 0.5 : 0, fontSize: '1.1rem' }}
-              >
+              <Typography variant="h5" fontWeight={900} sx={{ color: '#fecaca', mb: wonPrize?.description ? 0.5 : 0, fontSize: '1.1rem' }}>
                 {wonPrize?.title || wonPrizeText || 'Mystery Prize'}
               </Typography>
 

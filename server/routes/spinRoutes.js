@@ -14,5 +14,8 @@ router.post('/spin', authUser, spinController.spinOnce);
 
 router.get('/monkey-status', authUser, spinController.getMonkeyStatus);
 router.post('/monkey-attempt', authUser, spinController.monkeyAttempt);
+router.post('/monkey-complete', authUser, spinController.monkeyComplete);
+router.get('/my-latest-win', authUser, spinController.getMyLatestWin);
+
 
 module.exports = router;

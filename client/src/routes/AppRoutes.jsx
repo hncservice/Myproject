@@ -16,6 +16,9 @@ import AdminVendorsPage from '../pages/admin/AdminVendorsPage';
 import AdminWheelItemsPage from '../pages/admin/AdminWheelItemsPage';
 import AdminReportPage from '../pages/admin/AdminReportPage';
 
+import UserLoginPage from '../pages/user/UserLoginPage';
+
+
 const ProtectedRoute = ({ children, allowedRole, redirectTo }) => {
   const { role, token } = useAuth();
 
@@ -55,6 +58,8 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+<Route path="/user/login" element={<UserLoginPage />} />
+
 
       {/* Admin */}
       <Route path="/admin/login" element={<AdminLoginPage />} />

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+// client/src/pages/user/RegisterPage.jsx
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/authApi';
 import logo from '../../assets/logos.png';
 
 const RegisterPage = () => {
-  const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
+  const [showPwd, setShowPwd] = useState(false);
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,6 +15,7 @@ const RegisterPage = () => {
   // Inject page-specific styles once
   useEffect(() => {
     if (document.getElementById('register-page-styles')) return;
+
     const styleEl = document.createElement('style');
     styleEl.id = 'register-page-styles';
     styleEl.textContent = `
@@ -192,28 +195,25 @@ const RegisterPage = () => {
         margin-top: 2px;
       }
 
-      .register-form-group {
-        margin-bottom: 16px;
-      }
+      .register-form-group { margin-bottom: 16px; }
 
       .register-label {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
         color: rgba(226, 232, 240, 0.92);
         font-size: 12px;
         font-weight: 600;
         margin-bottom: 6px;
       }
 
-      .register-label-optional {
+      .register-label-hint {
         color: rgba(148, 163, 184, 0.8);
-        font-weight: 400;
+        font-weight: 500;
+        font-size: 11px;
       }
 
-      .register-input-wrapper {
-        position: relative;
-      }
+      .register-input-wrapper { position: relative; }
 
       .register-input-icon {
         position: absolute;
@@ -239,15 +239,49 @@ const RegisterPage = () => {
         transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.1s ease;
       }
 
-      .register-input::placeholder {
-        color: rgba(148, 163, 184, 0.85);
-      }
+      /* password field has right button */
+      .register-input--pwd { padding-right: 46px; }
+
+      .register-input::placeholder { color: rgba(148, 163, 184, 0.85); }
 
       .register-input:focus {
         border-color: rgba(248, 113, 113, 0.95);
         box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.8), 0 0 0 6px rgba(248, 113, 113, 0.22);
         background: rgba(15, 23, 42, 1);
         transform: translateY(-1px);
+      }
+
+      .register-input-action {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(248, 250, 252, 0.06);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+
+      .register-input-action:hover {
+        transform: translateY(-50%) scale(1.03);
+        background: rgba(248, 250, 252, 0.10);
+        border-color: rgba(248, 113, 113, 0.45);
+      }
+
+      .register-input-action:active {
+        transform: translateY(-50%) scale(0.98);
+      }
+
+      .register-input-action svg {
+        width: 18px;
+        height: 18px;
+        color: rgba(226, 232, 240, 0.85);
       }
 
       .register-button {
@@ -277,10 +311,7 @@ const RegisterPage = () => {
       }
 
       .register-button span,
-      .register-button svg {
-        position: relative;
-        z-index: 1;
-      }
+      .register-button svg { position: relative; z-index: 1; }
 
       .register-button::before {
         content: '';
@@ -299,9 +330,7 @@ const RegisterPage = () => {
         filter: brightness(1.02);
       }
 
-      .register-button:hover::before {
-        opacity: 1;
-      }
+      .register-button:hover::before { opacity: 1; }
 
       .register-button:active:not(:disabled) {
         transform: translateY(0) scale(0.99);
@@ -315,10 +344,7 @@ const RegisterPage = () => {
         filter: grayscale(0.1);
       }
 
-      .register-button-icon {
-        width: 18px;
-        height: 18px;
-      }
+      .register-button-icon { width: 18px; height: 18px; }
 
       .register-spinner {
         width: 16px;
@@ -338,9 +364,7 @@ const RegisterPage = () => {
         color: rgba(148, 163, 184, 0.95);
       }
 
-      .register-footer span {
-        opacity: 0.9;
-      }
+      .register-footer span { opacity: 0.9; }
 
       .register-footer-link {
         color: #fca5a5;
@@ -363,70 +387,72 @@ const RegisterPage = () => {
         transition: transform 0.2s ease;
       }
 
-      .register-footer-link:hover::after {
-        transform: scaleX(1);
+      .register-footer-link:hover::after { transform: scaleX(1); }
+      .register-footer-link:hover { color: #fecaca; }
+
+      /* ---- Already registered login link (heartbeat) ---- */
+      .register-login-cta {
+        margin-top: 14px;
+        text-align: center;
+        font-size: 13px;
+        color: rgba(148, 163, 184, 0.95);
       }
 
-      .register-footer-link:hover {
+      .register-login-cta a {
         color: #fecaca;
+        font-weight: 900;
+        text-decoration: none;
+        margin-left: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        position: relative;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 113, 113, 0.35);
+        background: rgba(248, 113, 113, 0.08);
+        box-shadow: 0 10px 22px rgba(248, 113, 113, 0.18);
+        animation: heartbeat 1.3s ease-in-out infinite;
+        transform-origin: center;
+      }
+
+      .register-login-cta a:hover {
+        background: rgba(248, 113, 113, 0.12);
+        border-color: rgba(248, 113, 113, 0.55);
+      }
+
+      .register-login-heart {
+        display: inline-block;
+        font-size: 14px;
+        filter: drop-shadow(0 8px 16px rgba(248, 113, 113, 0.35));
       }
 
       /* Animations */
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 18px, 0);} to { opacity: 1; transform: translate3d(0, 0, 0);} }
+      @keyframes fadeInDown { from { opacity: 0; transform: translate3d(0, -16px, 0);} to { opacity: 1; transform: translate3d(0, 0, 0);} }
+      @keyframes float { from { transform: translate3d(0, 0, 0);} to { transform: translate3d(0, -18px, 0);} }
 
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translate3d(0, 18px, 0);
-        }
-        to {
-          opacity: 1;
-          transform: translate3d(0, 0, 0);
-        }
-      }
-
-      @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translate3d(0, -16px, 0);
-        }
-        to {
-          opacity: 1;
-          transform: translate3d(0, 0, 0);
-        }
-      }
-
-      @keyframes float {
-        from { transform: translate3d(0, 0, 0); }
-        to { transform: translate3d(0, -18px, 0); }
+      @keyframes heartbeat {
+        0%   { transform: scale(1); }
+        14%  { transform: scale(1.08); }
+        28%  { transform: scale(1); }
+        42%  { transform: scale(1.10); }
+        70%  { transform: scale(1); }
+        100% { transform: scale(1); }
       }
 
       /* Mobile tweaks */
       @media (max-width: 480px) {
-        .register-page {
-          padding: 12px 12px 20px;
-        }
-        .register-card {
-          padding: 22px 18px 18px;
-          border-radius: 20px;
-        }
-        .register-title {
-          font-size: 21px;
-        }
-        .register-header-title {
-          font-size: 18px;
-        }
-        .register-logo {
-          height: 38px;
-        }
+        .register-page { padding: 12px 12px 20px; }
+        .register-card { padding: 22px 18px 18px; border-radius: 20px; }
+        .register-title { font-size: 21px; }
+        .register-header-title { font-size: 18px; }
+        .register-logo { height: 38px; }
       }
 
       @media (min-height: 720px) and (max-width: 480px) {
-        .register-wrapper {
-          transform: translateY(-10px);
-        }
+        .register-wrapper { transform: translateY(-10px); }
       }
     `;
     document.head.appendChild(styleEl);
@@ -438,68 +464,64 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (loading) return;
+    e.preventDefault();
+    if (loading) return;
 
-  setMsg(null);
-  setError(null);
+    setMsg(null);
+    setError(null);
 
-  const payload = {
-    name: form.name.trim(),
-    email: form.email.trim().toLowerCase(),
-    phone: form.phone.trim(),
+    const payload = {
+      name: form.name.trim(),
+      email: form.email.trim().toLowerCase(),
+      phone: form.phone.trim(),
+      password: form.password, // ✅ add password
+    };
+
+    // Simple email regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Qatar phone: +974 12345678 or 12345678
+    const qatarPhoneRegex = /^(\+974)?\s?\d{8}$/;
+
+    if (!payload.name || payload.name.length < 2) {
+      setError('Please enter your full name (at least 2 characters).');
+      return;
+    }
+    if (!payload.email || !emailRegex.test(payload.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (!payload.phone || !qatarPhoneRegex.test(payload.phone)) {
+      setError('Please enter a valid Qatar phone number (e.g. +974 12345678).');
+      return;
+    }
+    if (!payload.password || payload.password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await registerUser(payload);
+      setMsg('OTP sent to your email successfully!');
+
+      setTimeout(() => {
+        navigate('/verify-otp', { state: { email: payload.email } });
+      }, 900);
+    } catch (err) {
+      const m = err?.response?.data?.message || err?.message || 'Registration failed';
+      setError(m);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  // Simple email regex
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // Qatar phone: +974 12345678 or 12345678
-  const qatarPhoneRegex = /^(\+974)?\s?\d{8}$/;
-
-  // ✅ Frontend validations
-  if (!payload.name || payload.name.length < 2) {
-    setError('Please enter your full name (at least 2 characters).');
-    return;
-  }
-
-  if (!payload.email || !emailRegex.test(payload.email)) {
-    setError('Please enter a valid email address.');
-    return;
-  }
-
-  if (!payload.phone || !qatarPhoneRegex.test(payload.phone)) {
-    setError('Please enter a valid Qatar phone number (e.g. +974 12345678).');
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    await registerUser(payload);
-    setMsg('OTP sent to your email successfully!');
-
-    setTimeout(() => {
-      navigate('/verify-otp', { state: { email: payload.email } });
-    }, 1000);
-  } catch (err) {
-    const m =
-      err?.response?.data?.message ||
-      err?.message ||
-      'Registration failed';
-    setError(m);
-  } finally {
-    setLoading(false);
-  }
-};
-
 
   return (
     <div className="register-page">
-      {/* Floating background blobs */}
       <div className="register-bg-blob register-bg-blob--red" />
       <div className="register-bg-blob register-bg-blob--blue" />
 
       <div className="register-wrapper">
-        {/* Top logo + brand */}
         <header className="register-header">
           <div className="register-logo-container">
             <img src={logo} alt="HNC Logo" className="register-logo" />
@@ -513,7 +535,6 @@ const RegisterPage = () => {
         </header>
 
         <div className="register-card">
-          {/* Card header */}
           <div className="register-card-header">
             <div className="register-card-pill">
               <span className="register-card-pill-dot" />
@@ -525,14 +546,9 @@ const RegisterPage = () => {
             </p>
           </div>
 
-          {/* Alerts */}
           {msg && (
             <div className="register-alert register-alert--success">
-              <svg
-                className="register-alert-icon"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="register-alert-icon" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
               </svg>
               <span>{msg}</span>
@@ -541,29 +557,21 @@ const RegisterPage = () => {
 
           {error && (
             <div className="register-alert register-alert--error">
-              <svg
-                className="register-alert-icon"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="register-alert-icon" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
               </svg>
               <span>{error}</span>
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit}>
+            {/* Full Name */}
             <div className="register-form-group">
               <label className="register-label">
                 <span>Full Name</span>
               </label>
               <div className="register-input-wrapper">
-                <svg
-                  className="register-input-icon"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="register-input-icon" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
                 <input
@@ -578,16 +586,13 @@ const RegisterPage = () => {
               </div>
             </div>
 
+            {/* Email */}
             <div className="register-form-group">
               <label className="register-label">
                 <span>Email Address</span>
               </label>
               <div className="register-input-wrapper">
-                <svg
-                  className="register-input-icon"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="register-input-icon" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
                 </svg>
                 <input
@@ -603,17 +608,13 @@ const RegisterPage = () => {
               </div>
             </div>
 
+            {/* Phone */}
             <div className="register-form-group">
               <label className="register-label">
                 <span>Phone Number</span>
-                <span className="register-label-optional"></span>
               </label>
               <div className="register-input-wrapper">
-                <svg
-                  className="register-input-icon"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="register-input-icon" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
                 </svg>
                 <input
@@ -628,11 +629,50 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="register-button"
-            >
+            {/* Password */}
+            <div className="register-form-group">
+              <label className="register-label">
+                <span>Password</span>
+                <span className="register-label-hint">(min 6 chars)</span>
+              </label>
+              <div className="register-input-wrapper">
+                <svg className="register-input-icon" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 17a2 2 0 0 0 2-2v-2a2 2 0 0 0-4 0v2a2 2 0 0 0 2 2zm6-7h-1V8a5 5 0 0 0-10 0v2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zm-3 0H9V8a3 3 0 0 1 6 0v2z" />
+                </svg>
+
+                <input
+                  name="password"
+                  type={showPwd ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                  autoComplete="new-password"
+                  placeholder="Create a password"
+                  className="register-input register-input--pwd"
+                />
+
+                <button
+                  type="button"
+                  className="register-input-action"
+                  aria-label={showPwd ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowPwd((s) => !s)}
+                >
+                  {showPwd ? (
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 6c-4.41 0-8.2 2.72-10 6.5C3.8 16.28 7.59 19 12 19s8.2-2.72 10-6.5C20.2 8.72 16.41 6 12 6zm0 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z" />
+                      <path d="M12 9.5A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5z" />
+                    </svg>
+                  ) : (
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 6c-4.41 0-8.2 2.72-10 6.5C3.8 16.28 7.59 19 12 19s8.2-2.72 10-6.5C20.2 8.72 16.41 6 12 6zm0 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z" />
+                      <path d="M3 3l18 18-1.4 1.4L17.7 20.5A11.1 11.1 0 0 1 12 22C6.72 22 2.18 18.79.5 14c.6-1.73 1.6-3.27 2.9-4.56L1.6 4.4 3 3zm6.2 6.2 1.6 1.6A2.5 2.5 0 0 0 12 14.5c.4 0 .78-.1 1.1-.26l1.6 1.6A4.5 4.5 0 0 1 9.2 9.2zM12 8a4.5 4.5 0 0 1 4.46 3.9l-1.64-1.64A2.5 2.5 0 0 0 12 9.5c-.2 0-.4.02-.58.06L9.6 7.74C10.33 7.26 11.14 8 12 8z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading} className="register-button">
               {loading ? (
                 <>
                   <span className="register-spinner" />
@@ -641,11 +681,7 @@ const RegisterPage = () => {
               ) : (
                 <>
                   <span>Register &amp; Get OTP</span>
-                  <svg
-                    className="register-button-icon"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="register-button-icon" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
                   </svg>
                 </>
@@ -663,6 +699,21 @@ const RegisterPage = () => {
               rel="noreferrer"
             >
               Click here
+            </a>
+          </div>
+
+          {/* Already registered login link (last) */}
+          <div className="register-login-cta">
+            <span>Already registered?</span>
+            <a
+              href="/user/login"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/user/login');
+              }}
+            >
+              <span className="register-login-heart">❤️</span>
+              <span>Login</span>
             </a>
           </div>
         </div>

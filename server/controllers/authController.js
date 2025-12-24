@@ -21,7 +21,8 @@ const registerSchema = Joi.object({
       'string.pattern.base':
         'Please enter a valid Qatar phone number (e.g. +974 12345678).',
       'string.empty': 'Phone number is required.'
-    })
+    }),
+    password: Joi.string().min(6).required() // ✅ NEW
 })
 
 const otpVerifySchema = Joi.object({
@@ -41,18 +42,19 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    let { name, email, phone } = req.body;
+    let { name, email, phone, password } = req.body;
+
     email = normalizeEmail(email);
     name = trimString(name);
     phone = trimString(phone);
 
     // 1️⃣ Check if email already belongs to a verified user
-    let userByEmail = await User.findOne({ email });
+    const userByEmail = await User.findOne({ email });
 
     if (userByEmail && userByEmail.emailVerified) {
-      return res
-        .status(400)
-        .json({ message: 'This email is already registered. Please log in or use another email.' });
+      return res.status(400).json({
+        message: 'This email is already registered. Please log in.',
+      });
     }
 
     // 2️⃣ Check if phone is already used by another user
@@ -62,26 +64,35 @@ exports.registerUser = async (req, res) => {
       userByPhone &&
       (!userByEmail || userByPhone._id.toString() !== userByEmail._id.toString())
     ) {
-      return res
-        .status(400)
-        .json({ message: 'This phone number is already registered with another account.' });
+      return res.status(400).json({
+        message: 'This phone number is already registered with another account.',
+      });
     }
+
+    // ✅ Hash password (required)
+    const passwordHash = await bcrypt.hash(String(password), 10);
 
     // 3️⃣ Create or update user (unverified)
     let user = userByEmail;
 
     if (!user) {
-      user = await User.create({ name, email, phone });
+      // ✅ IMPORTANT: include passwordHash here
+      user = await User.create({
+        name,
+        email,
+        phone,
+        passwordHash,
+        emailVerified: false, // optional, if you want explicit
+      });
     } else {
       user.name = name;
       user.phone = phone;
+      user.passwordHash = passwordHash; // ✅ ensure existing unverified user can reset password
     }
 
     // 4️⃣ Generate and save OTP
     const otp = generateOtp();
-    const otpHash = await hashOtp(otp);
-
-    user.otpHash = otpHash;
+    user.otpHash = await hashOtp(otp);
     user.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
@@ -92,7 +103,6 @@ exports.registerUser = async (req, res) => {
   } catch (err) {
     console.error('registerUser error:', err);
 
-    // Handle unique index error (email/phone)
     if (err.code === 11000 && err.keyPattern) {
       if (err.keyPattern.email) {
         return res.status(400).json({ message: 'This email is already registered.' });
@@ -102,6 +112,55 @@ exports.registerUser = async (req, res) => {
       }
     }
 
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+exports.loginUser = async (req, res) => {
+  try {
+    const schema = Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).required(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
+    const email = normalizeEmail(req.body.email);
+    const password = req.body.password;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Email not registered' });
+    }
+
+    if (!user.passwordHash) {
+      return res.status(400).json({ message: 'Password not set for this user. Please register again.' });
+    }
+
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
+
+    // Send OTP after password success
+    const otp = generateOtp();
+    const otpHash = await hashOtp(otp);
+
+    user.otpHash = otpHash;
+    user.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    await sendOtpEmail(email, otp);
+
+    return res.json({
+      message: 'OTP sent to email',
+      email,
+      requiresOtp: true,
+    });
+  } catch (err) {
+    console.error('loginUser error:', err);
     return res.status(500).json({ message: 'Server error' });
   }
 };

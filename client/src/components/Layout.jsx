@@ -1,12 +1,21 @@
 // client/src/components/Layout.jsx
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logos.png'; // ✅ update this path if your assets folder is different
 
 const Layout = ({ children }) => {
   const { role, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();                     // clear token, role, user
+    navigate('/user/login', {     // redirect to login
+      replace: true,              // prevents back navigation
+    });
+  };
+
 
   // Inject global theme styles for layout once
   useEffect(() => {
@@ -287,7 +296,7 @@ const Layout = ({ children }) => {
                 <button
                   type="button"
                   className="app-shell-logout"
-                  onClick={logout}
+                  onClick={handleLogout} 
                 >
                   Logout
                 </button>
