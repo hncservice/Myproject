@@ -13,6 +13,9 @@ export const getMonkeyStatus = () => axiosInstance.get('/spin/monkey-status');
 export const requestMonkeyAttempt = (sessionId) =>
   axiosInstance.post('/spin/monkey-attempt', { sessionId });
 
+export const getMyLatestWin = () =>
+  axiosInstance.get('/spin/my-latest-win');
+
 // export const getMonkeyStatus = () => axiosInstance.get('/monkey-status');
 
 // export const requestMonkeyAttempt = () => axiosInstance.post('/monkey-attempt');

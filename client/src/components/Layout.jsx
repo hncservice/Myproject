@@ -10,8 +10,11 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();                     // clear token, role, user
-    navigate('/user/login', {     // redirect to login
+    const r = role; // store before logout clears it
+    logout();
+    if (r === 'admin') navigate('/admin/login');
+    else if (r === 'vendor') navigate('/vendor/login');
+    else navigate('/user/login', {     // redirect to login
       replace: true,              // prevents back navigation
     });
   };
@@ -265,7 +268,7 @@ const Layout = ({ children }) => {
           {/* Role-based nav */}
           <nav className="app-shell-nav">
             {role === 'user' && (
-              <Link to="/spin" className="app-shell-link">
+              <Link to="/user/home" className="app-shell-link">
                 User Session
               </Link>
             )}

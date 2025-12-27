@@ -17,6 +17,7 @@ import AdminWheelItemsPage from '../pages/admin/AdminWheelItemsPage';
 import AdminReportPage from '../pages/admin/AdminReportPage';
 
 import UserLoginPage from '../pages/user/UserLoginPage';
+import UserHomePage from '../pages/user/UserHomePage';
 
 
 const ProtectedRoute = ({ children, allowedRole, redirectTo }) => {
@@ -44,6 +45,15 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+  path="/user/home"
+  element={
+    <ProtectedRoute allowedRole="user" redirectTo="/user/login">
+      <UserHomePage />
+    </ProtectedRoute>
+  }
+/>
 
       {/* Vendor */}
       <Route path="/vendor/login" element={<VendorLoginPage />} />
