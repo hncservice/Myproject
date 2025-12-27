@@ -47,10 +47,10 @@ const HNC_BG = '#020617';
 const HNC_APP_DOWNLOAD_URL = 'https://onelink.to/c8p8b8';
 
 // ============ GAME CONSTANTS (✅ easier) ============
-const REQUIRED_HITS = 5;        // was 7 (easier)
+const REQUIRED_HITS = 10;        // was 7 (easier)
 const MAX_ROUNDS = 24;          // was 20 (more time)
 const MONKEY_INTERVAL_MS = 950; // was 800 (slower)
-const MONKEY_VISIBLE_MS = 520;  // was 420 (monkey stays longer)
+const MONKEY_VISIBLE_MS = 480;  // was 420 (monkey stays longer)
 const FALLBACK_MAX_CHANCES = 3; // must match server MONKEY_MAX_CHANCES
 
 // ============ Animations ============
