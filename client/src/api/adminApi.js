@@ -32,3 +32,8 @@ export const downloadReport = () =>
     responseType: 'blob',
   });
 
+export const adminListUsers = (params) => axiosInstance.get('/admin/users', { params });
+export const adminGetUser = (id) => axiosInstance.get(`/admin/users/${id}`);
+export const adminCreateUser = (payload) => axiosInstance.post('/admin/users', payload);
+export const adminUpdateUser = (id, payload) => axiosInstance.put(`/admin/users/${id}`, payload);
+export const adminDeleteUser = (id) => axiosInstance.delete(`/admin/users/${id}`);

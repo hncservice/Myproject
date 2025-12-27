@@ -290,6 +290,9 @@ const Layout = ({ children }) => {
                 <Link to="/admin/report" className="app-shell-link">
                   Reports
                 </Link>
+                <Link to="/admin/users" className="app-shell-link">
+                  Users
+                </Link>
               </>
             )}
 

@@ -11,13 +11,25 @@ const {
   deleteWheelItem,
   exportReport,
   updateVendor,
-  getReportStats
+  getReportStats,
+  listUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser
 } = require('../controllers/adminController');
 
 // vendor management
 router.post('/vendors', authAdmin, createVendor);
 router.get('/vendors', authAdmin, listVendors);
 router.put('/vendors/:id', authAdmin, updateVendor);
+
+
+router.get('/users',authAdmin, listUsers);          // READ (list + search + pagination)
+router.get('/users/:id',authAdmin, getUser);        // READ (single)
+router.post('/users',authAdmin, createUser);        // CREATE
+router.put('/users/:id',authAdmin, updateUser);     // UPDATE
+router.delete('/users/:id',authAdmin, deleteUser);  // DELETE
 
 // wheel items
 router.post('/wheel-items', authAdmin, createWheelItem);

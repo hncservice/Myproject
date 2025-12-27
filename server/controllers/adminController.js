@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const ExcelJS = require('exceljs');
 
+const mongoose = require('mongoose');
+
 const Vendor = require('../models/Vendor');
 const WheelItem = require('../models/WheelItem');
 const Spin = require('../models/Spin');
@@ -237,7 +239,7 @@ exports.exportReport = async (req, res) => {
   }
 };
 
-// STATS / DASHBOARD DATA
+
 // STATS / DASHBOARD DATA
 exports.getReportStats = async (req, res) => {
   try {
@@ -283,9 +285,7 @@ exports.getReportStats = async (req, res) => {
       count: d.count
     }));
 
-    // If you want to limit chart to recent days (e.g. last 14 days) on FE:
-    // you can slice in FE instead of filtering in Mongo.
-    // dailySpins = dailySpins.slice(-14);
+    
 
     // TOP PRIZES BY WINS
     const topAgg = await Spin.aggregate([
@@ -326,5 +326,164 @@ exports.getReportStats = async (req, res) => {
   } catch (err) {
     console.error('getReportStats error:', err);
     return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+const pick = (obj, keys) =>
+  keys.reduce((acc, k) => (obj?.[k] !== undefined ? (acc[k] = obj[k], acc) : acc), {});
+
+exports.listUsers = async (req, res) => {
+  try {
+    const page = Math.max(1, Number(req.query.page || 1));
+    const limit = Math.min(100, Math.max(5, Number(req.query.limit || 20)));
+    const q = String(req.query.q || '').trim();
+    const emailVerified = req.query.emailVerified;
+
+    const filter = {};
+    if (q) {
+      filter.$or = [
+        { name: { $regex: q, $options: 'i' } },
+        { email: { $regex: q, $options: 'i' } },
+        { phone: { $regex: q, $options: 'i' } },
+      ];
+    }
+    if (emailVerified === 'true') filter.emailVerified = true;
+    if (emailVerified === 'false') filter.emailVerified = false;
+
+    const [items, total] = await Promise.all([
+      User.find(filter)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .select('name email phone emailVerified monkeyAttempts monkeyLocked hasSpun createdAt updatedAt'),
+      User.countDocuments(filter),
+    ]);
+
+    res.json({
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+      items,
+    });
+  } catch (err) {
+    console.error('admin listUsers error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) return res.status(400).json({ message: 'Invalid user id' });
+
+    const user = await User.findById(id).select(
+      'name email phone emailVerified monkeyAttempts monkeyLocked hasSpun monkeyActiveSession createdAt updatedAt'
+    );
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json(user);
+  } catch (err) {
+    console.error('admin getUser error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.createUser = async (req, res) => {
+  try {
+    const data = pick(req.body, ['name', 'email', 'phone', 'password', 'emailVerified']);
+    if (!data.name || data.name.trim().length < 2) return res.status(400).json({ message: 'Name is required' });
+    if (!data.email) return res.status(400).json({ message: 'Email is required' });
+    if (!data.phone) return res.status(400).json({ message: 'Phone is required' });
+    if (!data.password || String(data.password).length < 6) return res.status(400).json({ message: 'Password min 6 chars' });
+
+    const email = String(data.email).trim().toLowerCase();
+    const phone = String(data.phone).trim();
+    const name = String(data.name).trim();
+
+    const exists = await User.findOne({ email });
+    if (exists) return res.status(400).json({ message: 'Email already exists' });
+
+    const passwordHash = await bcrypt.hash(String(data.password), 10);
+
+    const user = await User.create({
+      name,
+      email,
+      phone,
+      passwordHash,
+      emailVerified: data.emailVerified === true,
+    });
+
+    res.status(201).json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      emailVerified: user.emailVerified,
+      createdAt: user.createdAt,
+    });
+  } catch (err) {
+    console.error('admin createUser error:', err);
+    if (err.code === 11000) return res.status(400).json({ message: 'Duplicate key (email/phone)' });
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) return res.status(400).json({ message: 'Invalid user id' });
+
+    const updates = pick(req.body, [
+      'name',
+      'phone',
+      'emailVerified',
+      'monkeyAttempts',
+      'monkeyLocked',
+      'hasSpun',
+      'password', // optional reset
+    ]);
+
+    // Optional password reset
+    if (updates.password !== undefined) {
+      if (String(updates.password).length < 6) {
+        return res.status(400).json({ message: 'Password min 6 chars' });
+      }
+      updates.passwordHash = await bcrypt.hash(String(updates.password), 10);
+      delete updates.password;
+    }
+
+    if (updates.name !== undefined) updates.name = String(updates.name).trim();
+    if (updates.phone !== undefined) updates.phone = String(updates.phone).trim();
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { $set: updates },
+      { new: true }
+    ).select('name email phone emailVerified monkeyAttempts monkeyLocked hasSpun updatedAt');
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json(user);
+  } catch (err) {
+    console.error('admin updateUser error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) return res.status(400).json({ message: 'Invalid user id' });
+
+    const user = await User.findByIdAndDelete(id).select('email');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ ok: true, deletedEmail: user.email });
+  } catch (err) {
+    console.error('admin deleteUser error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };

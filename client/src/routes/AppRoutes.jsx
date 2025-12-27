@@ -15,6 +15,7 @@ import AdminLoginPage from '../pages/admin/AdminLoginPage';
 import AdminVendorsPage from '../pages/admin/AdminVendorsPage';
 import AdminWheelItemsPage from '../pages/admin/AdminWheelItemsPage';
 import AdminReportPage from '../pages/admin/AdminReportPage';
+import AdminUsersPage from '../pages/admin/AdminUsersPage';
 
 import UserLoginPage from '../pages/user/UserLoginPage';
 import UserHomePage from '../pages/user/UserHomePage';
@@ -106,6 +107,14 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+  path="/admin/users"
+  element={
+    <ProtectedRoute allowedRole="admin" redirectTo="/admin/login">
+      <AdminUsersPage />
+    </ProtectedRoute>
+  }
+/>
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
