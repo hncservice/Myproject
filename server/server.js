@@ -1,4 +1,5 @@
 // server/server.js
+
 require('dotenv').config();
 
 const express = require('express');
@@ -18,18 +19,14 @@ const errorMiddleware = require('./middleware/errorMiddleware');
 const app = express();
 
 // ======================================================
-// 1. MongoDB
+// 1. TRUST PROXY
 // ======================================================
-connectDB();
 
-// ======================================================
-// 2. Trust proxy
-// ======================================================
 app.set('trust proxy', 1);
 
 // ======================================================
-// 3. CORS
-// MUST COME BEFORE ROUTES
+// 2. CORS
+// MUST BE BEFORE ROUTES
 // ======================================================
 
 const allowedOrigins = [
@@ -45,12 +42,14 @@ const allowedOrigins = [
   'https://myproject-4ewda3rak-hncservices-projects.vercel.app',
 
   process.env.CLIENT_URL
-].filter(Boolean);
+]
+  .filter(Boolean)
+  .filter((value, index, array) => array.indexOf(value) === index);
 
 const corsOptions = {
   origin: function (origin, callback) {
 
-    // Allow Postman, curl, server-to-server requests
+    // Allow Postman, curl, server-to-server, etc.
     if (!origin) {
       return callback(null, true);
     }
@@ -59,7 +58,7 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    console.log('❌ CORS BLOCKED:', origin);
+    console.log(`❌ CORS BLOCKED: ${origin}`);
 
     return callback(
       new Error(`CORS blocked origin: ${origin}`)
@@ -91,7 +90,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // ======================================================
-// 4. Security
+// 3. SECURITY
 // ======================================================
 
 app.use(
@@ -103,7 +102,7 @@ app.use(
 );
 
 // ======================================================
-// 5. Logging
+// 4. LOGGING
 // ======================================================
 
 if (process.env.NODE_ENV !== 'test') {
@@ -111,7 +110,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 // ======================================================
-// 6. Body parsing
+// 5. BODY PARSING
 // ======================================================
 
 app.use(
@@ -127,7 +126,8 @@ app.use(
 );
 
 // ======================================================
-// 7. Basic test route
+// 6. TEST ROUTES
+// THESE DO NOT REQUIRE MONGODB
 // ======================================================
 
 app.get('/', (req, res) => {
@@ -140,12 +140,83 @@ app.get('/', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'API healthy'
+    message: 'API healthy',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString()
   });
 });
 
 // ======================================================
-// 8. API Routes
+// 7. MONGODB CONNECTION
+// ======================================================
+
+// Cache the MongoDB connection promise.
+// Important for Vercel / serverless environments.
+
+let dbConnectionPromise = null;
+
+const ensureDatabaseConnection = async () => {
+
+  if (!dbConnectionPromise) {
+
+    console.log('🔄 Connecting to MongoDB...');
+
+    dbConnectionPromise = connectDB()
+      .then(() => {
+        console.log('✅ MongoDB connection ready');
+        return true;
+      })
+      .catch((error) => {
+
+        console.error(
+          '❌ MongoDB connection failed:',
+          error.message
+        );
+
+        // Reset so another request can retry
+        dbConnectionPromise = null;
+
+        throw error;
+      });
+  }
+
+  return dbConnectionPromise;
+};
+
+// ======================================================
+// 8. DATABASE MIDDLEWARE
+// ======================================================
+
+// Any request reaching this point under /api
+// requires MongoDB.
+//
+// /api/health is above this middleware,
+// so health checking still works even if MongoDB fails.
+
+app.use('/api', async (req, res, next) => {
+
+  try {
+
+    await ensureDatabaseConnection();
+
+    next();
+
+  } catch (error) {
+
+    console.error(
+      '❌ Database unavailable:',
+      error.message
+    );
+
+    return res.status(503).json({
+      success: false,
+      message: 'Database connection unavailable'
+    });
+  }
+});
+
+// ======================================================
+// 9. API ROUTES
 // ======================================================
 
 app.use('/api/auth', authRoutes);
@@ -157,33 +228,60 @@ app.use('/api/vendor', vendorRoutes);
 app.use('/api/admin', adminRoutes);
 
 // ======================================================
-// 9. 404
+// 10. 404 HANDLER
 // ======================================================
 
 app.use((req, res) => {
+
   res.status(404).json({
     success: false,
     message: `Route not found: ${req.method} ${req.originalUrl}`
   });
+
 });
 
 // ======================================================
-// 10. Error handler
+// 11. ERROR HANDLER
+// MUST BE LAST
 // ======================================================
 
 app.use(errorMiddleware);
 
 // ======================================================
-// 11. Start server
+// 12. LOCAL SERVER
 // ======================================================
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+// Start listening ONLY when running directly locally.
+//
+// When Vercel loads this file,
+// Vercel handles the HTTP server itself.
 
-  console.log('✅ Allowed origins:');
-  allowedOrigins.forEach((origin) => {
-    console.log(`   ${origin}`);
+if (require.main === module) {
+
+  app.listen(PORT, () => {
+
+    console.log('');
+    console.log('====================================');
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log('====================================');
+
+    console.log('Allowed origins:');
+
+    allowedOrigins.forEach((origin) => {
+      console.log(`✅ ${origin}`);
+    });
+
+    console.log('====================================');
+    console.log('');
+
   });
-});
+
+}
+
+// ======================================================
+// 13. EXPORT FOR VERCEL
+// ======================================================
+
+module.exports = app;
