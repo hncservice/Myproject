@@ -35,7 +35,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 // 5) CORS
 const allowedOrigins = [
-  'http://localhost:5173',
+  'http://localhost:5173','https://spin.hotncool.qa',
   process.env.CLIENT_URL,
   'https://myproject-three-ecru.vercel.app',
   'https://myproject-spin.vercel.app/api',
