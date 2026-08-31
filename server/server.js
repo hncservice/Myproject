@@ -35,6 +35,7 @@ const allowedOrigins = [
 
   'https://spin.hotncool.qa',
   'http://spin.hotncool.qa',
+  "https://spin.hotncool.qa/api",
 
   'https://myproject-three-ecru.vercel.app',
   'https://myproject-spin.vercel.app',
