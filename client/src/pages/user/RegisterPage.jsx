@@ -693,7 +693,7 @@ const RegisterPage = () => {
           <div className="register-footer">
             <span>DOWNLOAD HNC APP?</span>
             <a
-              href="https://onelink.to/c8p8b8"
+              href="https://app.hotncool.qa"
               className="register-footer-link"
               target="_blank"
               rel="noreferrer"

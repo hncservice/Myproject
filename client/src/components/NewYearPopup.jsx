@@ -267,13 +267,13 @@ export default function NewYearPopup({ open, onClose, name = 'Friend', downloadU
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                ✨ Happy New Year 2026 ✨
+                ✨ Back to School ✨
               </Typography>
 
               <Typography sx={{ color: 'rgba(226,232,240,.88)', mt: 0.8, fontSize: '0.9rem' }}>
                 Welcome back, <strong style={{ color: HNC_RED }}>{name}</strong>!
                 <br />
-                Let’s make this year delicious & lucky 🎁
+                Let’s make this Celebration delicious & lucky 🎁
               </Typography>
 
               <Stack direction="row" justifyContent="center" spacing={1} sx={{ mt: 1.2 }}>
