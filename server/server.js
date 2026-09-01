@@ -21,48 +21,54 @@ const app = express();
 // ======================================================
 // 1. TRUST PROXY
 // ======================================================
+// Required when deployed behind Vercel / reverse proxy.
 
 app.set('trust proxy', 1);
 
 // ======================================================
 // 2. CORS
-// MUST BE BEFORE ROUTES
 // ======================================================
 
 const allowedOrigins = [
+  // Local frontend
   'http://localhost:5173',
   'http://localhost:3000',
 
+  // Production frontend
   'https://spin.hotncool.qa',
-  'http://spin.hotncool.qa',
-  "https://spin.hotncool.qa/api",
 
+  // Vercel frontend
   'https://myproject-three-ecru.vercel.app',
-  'https://myproject-spin.vercel.app',
 
-  'https://myproject-4ewda3rak-hncservices-projects.vercel.app',
+  // Optional HTTP version
+  // Remove later after HTTPS is fully enforced
+  'http://spin.hotncool.qa',
 
+  // Environment variable
   process.env.CLIENT_URL
 ]
   .filter(Boolean)
-  .filter((value, index, array) => array.indexOf(value) === index);
+  .map((origin) => origin.trim().replace(/\/+$/, ''))
+  .filter((origin, index, array) => array.indexOf(origin) === index);
 
 const corsOptions = {
   origin: function (origin, callback) {
-
-    // Allow Postman, curl, server-to-server, etc.
+    // Requests from Postman, curl, mobile apps,
+    // server-to-server etc. may not have Origin header.
     if (!origin) {
       return callback(null, true);
     }
 
-    if (allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin.replace(/\/+$/, '');
+
+    if (allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);
     }
 
-    console.log(`❌ CORS BLOCKED: ${origin}`);
+    console.error(`❌ CORS blocked origin: ${origin}`);
 
     return callback(
-      new Error(`CORS blocked origin: ${origin}`)
+      new Error(`Origin not allowed by CORS: ${origin}`)
     );
   },
 
@@ -85,9 +91,14 @@ const corsOptions = {
     'Authorization'
   ],
 
+  exposedHeaders: [
+    'Content-Length'
+  ],
+
   optionsSuccessStatus: 204
 };
 
+// CORS must be before routes
 app.use(cors(corsOptions));
 
 // ======================================================
@@ -122,24 +133,25 @@ app.use(
 
 app.use(
   express.urlencoded({
-    extended: true
+    extended: true,
+    limit: '1mb'
   })
 );
 
 // ======================================================
-// 6. TEST ROUTES
-// THESE DO NOT REQUIRE MONGODB
+// 6. ROOT / HEALTH ROUTES
 // ======================================================
+// These routes intentionally DO NOT require MongoDB.
 
 app.get('/', (req, res) => {
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: 'HNC Spin API is running'
   });
 });
 
 app.get('/api/health', (req, res) => {
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: 'API healthy',
     environment: process.env.NODE_ENV || 'development',
@@ -150,36 +162,34 @@ app.get('/api/health', (req, res) => {
 // ======================================================
 // 7. MONGODB CONNECTION
 // ======================================================
-
-// Cache the MongoDB connection promise.
-// Important for Vercel / serverless environments.
+// Vercel may reuse the same serverless instance.
+// We therefore cache the connection promise.
 
 let dbConnectionPromise = null;
 
 const ensureDatabaseConnection = async () => {
-
-  if (!dbConnectionPromise) {
-
-    console.log('🔄 Connecting to MongoDB...');
-
-    dbConnectionPromise = connectDB()
-      .then(() => {
-        console.log('✅ MongoDB connection ready');
-        return true;
-      })
-      .catch((error) => {
-
-        console.error(
-          '❌ MongoDB connection failed:',
-          error.message
-        );
-
-        // Reset so another request can retry
-        dbConnectionPromise = null;
-
-        throw error;
-      });
+  if (dbConnectionPromise) {
+    return dbConnectionPromise;
   }
+
+  console.log('🔄 Checking MongoDB connection...');
+
+  dbConnectionPromise = connectDB()
+    .then((connection) => {
+      console.log('✅ MongoDB connection ready');
+      return connection;
+    })
+    .catch((error) => {
+      console.error(
+        '❌ MongoDB connection failed:',
+        error.message
+      );
+
+      // Reset so the next request can retry
+      dbConnectionPromise = null;
+
+      throw error;
+    });
 
   return dbConnectionPromise;
 };
@@ -187,23 +197,16 @@ const ensureDatabaseConnection = async () => {
 // ======================================================
 // 8. DATABASE MIDDLEWARE
 // ======================================================
-
-// Any request reaching this point under /api
-// requires MongoDB.
-//
-// /api/health is above this middleware,
-// so health checking still works even if MongoDB fails.
+// Everything below /api requires MongoDB,
+// except /api/health because it was already handled above.
 
 app.use('/api', async (req, res, next) => {
-
   try {
-
     await ensureDatabaseConnection();
 
-    next();
+    return next();
 
   } catch (error) {
-
     console.error(
       '❌ Database unavailable:',
       error.message
@@ -233,18 +236,16 @@ app.use('/api/admin', adminRoutes);
 // ======================================================
 
 app.use((req, res) => {
-
-  res.status(404).json({
+  return res.status(404).json({
     success: false,
     message: `Route not found: ${req.method} ${req.originalUrl}`
   });
-
 });
 
 // ======================================================
-// 11. ERROR HANDLER
-// MUST BE LAST
+// 11. GLOBAL ERROR HANDLER
 // ======================================================
+// Must always be after all routes.
 
 app.use(errorMiddleware);
 
@@ -254,31 +255,31 @@ app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 5000;
 
-// Start listening ONLY when running directly locally.
+// When running:
+// node server.js
 //
-// When Vercel loads this file,
-// Vercel handles the HTTP server itself.
+// start the HTTP server normally.
+//
+// When Vercel imports this file,
+// it will NOT call app.listen().
 
 if (require.main === module) {
-
   app.listen(PORT, () => {
-
     console.log('');
-    console.log('====================================');
-    console.log(`✅ Server running on port ${PORT}`);
-    console.log('====================================');
+    console.log('========================================');
+    console.log(`✅ HNC Spin API running on port ${PORT}`);
+    console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log('========================================');
 
-    console.log('Allowed origins:');
+    console.log('✅ Allowed CORS origins:');
 
     allowedOrigins.forEach((origin) => {
-      console.log(`✅ ${origin}`);
+      console.log(`   ${origin}`);
     });
 
-    console.log('====================================');
+    console.log('========================================');
     console.log('');
-
   });
-
 }
 
 // ======================================================
