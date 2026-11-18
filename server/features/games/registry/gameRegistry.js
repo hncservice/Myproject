@@ -84,7 +84,7 @@ const registry = createGameRegistry({
       config: {
         id: 'perfect-shot',
         label: 'Perfect Shot',
-        maxAttempts: 3,
+        maxAttempts: 5,
         sessionTtlMs: 120000,
         totalShots: 5,
         perShotTimeMs: 3500,

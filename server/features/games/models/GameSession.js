@@ -28,7 +28,7 @@ const gameSessionSchema = new mongoose.Schema({
     required: true,
     immutable: true,
     min: 1,
-    max: 3,
+    max: 5,
   },
   campaignAttemptNumber: {
   type: Number,

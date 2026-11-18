@@ -179,7 +179,7 @@ function createGameRegistry({ approvedGameIds, definitions } = {}) {
       config.label.length > 100 ||
       !Number.isSafeInteger(config.maxAttempts) ||
       config.maxAttempts < 1 ||
-      config.maxAttempts > 3 ||
+      config.maxAttempts > (id === 'perfect-shot' ? 5 : 3) ||
       !Number.isSafeInteger(config.sessionTtlMs) ||
       config.sessionTtlMs < 1 ||
       config.sessionTtlMs > 86400000

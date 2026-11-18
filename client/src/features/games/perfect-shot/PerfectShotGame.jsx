@@ -552,28 +552,30 @@ export default function PerfectShotGame({ playerName, onFinish }) {
   );
 
   const calibrateClock = useCallback((serverNow, sentAt, receivedAt) => {
-    if (!Number.isFinite(serverNow)) return;
+  if (
+    !Number.isFinite(serverNow) ||
+    !Number.isFinite(sentAt) ||
+    !Number.isFinite(receivedAt) ||
+    receivedAt < sentAt
+  ) {
+    return;
+  }
 
-    const rtt = Math.max(0, receivedAt - sentAt);
-    const measuredOffset = serverNow - receivedAt;
+  const rtt = receivedAt - sentAt;
 
-    if (
-      !clockSyncedRef.current ||
-      rtt < recentLatencyRef.current ||
-      recentLatencyRef.current === 0
-    ) {
-      serverClockOffsetRef.current = measuredOffset;
-      recentLatencyRef.current = rtt;
-      clockSyncedRef.current = true;
-    }
+  // Estimate clock offset using the request/response midpoint.
+  const measuredOffset = serverNow - (sentAt + receivedAt) / 2;
 
-    if (import.meta.env.DEV) {
-      console.debug('PERFECT SHOT CLOCK', {
-        offsetMs: Math.round(serverClockOffsetRef.current),
-        rttMs: rtt,
-      });
-    }
-  }, []);
+  // Prefer the lowest-latency sample to reduce processing-delay bias.
+  if (
+    !clockSyncedRef.current ||
+    rtt < recentLatencyRef.current
+  ) {
+    serverClockOffsetRef.current = measuredOffset;
+    recentLatencyRef.current = rtt;
+    clockSyncedRef.current = true;
+  }
+}, []);
 
   useEffect(() => {
     if (!practiceMode) return undefined;
@@ -932,11 +934,23 @@ function toggleSounds() {
     if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) return undefined;
 
     const tick = () => {
-      const now = serverNowMs();
-      const elapsed = Math.min(game.shotTimeMs, Math.max(0, now - startMs));
+     const now = serverNowMs();
 
-      setTarget(targetAt(elapsed, shotIndex, game.motion));
-      setTimeLeft(Math.max(0, (endMs - now) / 1000));
+// Predict where the server will score an immediately submitted tap.
+// This changes the displayed target only.
+const predictionMs = clockSyncedRef.current
+  ? Math.min(250, recentLatencyRef.current / 2)
+  : 0;
+
+const elapsed = Math.min(
+  game.shotTimeMs,
+  Math.max(0, now + predictionMs - startMs)
+);
+
+setTarget(targetAt(elapsed, shotIndex, game.motion));
+
+// The countdown still uses the estimated current server time.
+setTimeLeft(Math.max(0, (endMs - now) / 1000));
 
       if (now < endMs && liveRef.current) {
         frameRef.current = requestAnimationFrame(tick);
@@ -1149,10 +1163,20 @@ useEffect(() => {
   else if (hasActive) startLabel = 'RESUME GAME';
 
   const handlePointerDown = (event) => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    if (practiceMode) practiceClick(event);
-    else void shoot(event);
-  };
+  if (!event.isPrimary) return;
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+  if (practiceMode) {
+    event.preventDefault();
+    practiceClick(event);
+    return;
+  }
+
+  if (latestRef.current.phase !== 'aiming') return;
+
+  event.preventDefault();
+  void shoot(event);
+};
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
