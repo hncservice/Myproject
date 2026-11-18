@@ -210,6 +210,7 @@ function toggleHomeMusic() {
   type="button"
   className="hnc-home-music"
   onClick={toggleHomeMusic}
+  aria-pressed={musicPlaying}
 >
   {musicPlaying ? 'Pause music' : 'Play music'}
 </button>
