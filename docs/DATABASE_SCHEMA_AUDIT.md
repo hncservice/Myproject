@@ -1,0 +1,71 @@
+# Database schema audit — Phase F
+
+Scope: static source only, 28 October 2026. No database connection, record, deployed index, collection, credential or production data was inspected. PASS means source/offline evidence; WARNING means unresolved design/data assumptions; BLOCKED means a separately authorized integration step. DATABASE_SCHEMA.md inventories fields and explicit schema.index calls; field-level index/unique declarations must also be considered.
+
+## Models, relationships and integration risks
+
+| Model/source under server/features | Status and declared relationships/indexes | Migration / acceptance risk |
+|---|---|---|
+| authentication/models/User.js | WARNING. Unique email; sparse unique phone. OTP hash/purpose/expiry/pending credentials, cooldown/send/attempt counters, active/tokenVersion and legacy game/prize locks | Lowercase/phone canonicalization is application policy, not verified legacy data. Duplicate aliases, explicit null/empty sparse keys, missing/null/unsafe counters require review. Defaults on hydration are not a persisted migration. passwordHash required with default null is a state-consistency concern for historic pending accounts. No OTP TTL declared |
+| vendors/models/Vendor.js | WARNING. Unique email, sparse unique vendorKey; createdByAdminId→AdminUser. tokenVersion, isActive, disabledAt, redemptionFence | Current guards use isActive/version; contradictory disabledAt/isActive data needs a consistent migration policy. Numeric fields do not all enforce safe integers at schema level; Phase F redemption fence post-check fails closed. Inspect null/unsafe counters before runtime |
+| administration/models/AdminUser.js | WARNING. Unique email; role admin/superadmin; active/disabledAt/version/prizeReviewFence | Middleware checks typed JWT/admin record/active/version; mutation fence additionally checks stored role. Read authorization relies on schema role consistency. Legacy defaults/explicit null and fence overflow require audit; no index/backfill verified |
+| games/models/GameSession.js | WARNING. User reference; immutable campaign/game/attempt. Unique {userId,campaignId,gameId,attemptNumber}; unique partial active {userId,campaignId,gameId}; user/status field indexes | Registry GAMES supplies enum, but attemptNumber max is hardcoded 3. Future games with larger limits need schema alignment; no automatic future-game activation. gameState/events Mixed hold revision/version/evidence; no DB-level JSON contract. Original validator-version resolution is not implemented |
+| games/models/MonkeySession.js | PASS (inactive source). Entire model commented out | Not an active collection declaration. Do not revive legacy duplicate state during migration |
+| campaigns/models/CampaignDefinition.js | WARNING. Unique immutable campaignId; prizeItemIds→WheelItem; revision/private last-request fingerprint; typed restrictions, dates stored ISO strings | Registry/dates/integer/cross-field rules are enforced by service, not all by model. Writes must use that service. No campaign collection/index created. Desired availability cannot open hardcoded participation gate. Association snapshot does not guarantee future inventory availability |
+| prizes/models/WheelItem.js | WARNING. title/isActive indexes; nullable total and allocated/redeemed counters; available virtual | Service validates nonnegative safe counters and total>=allocated>=redeemed. Model alone does not enforce all integer/cross-counter constraints. null total means unlimited; undefined/corrupt historic values need reconciliation, never silent coercion |
+| games/models/Spin.js | WARNING. User/WheelItem/Vendor refs; sparse unique qrToken; user/status/vendor/redemptionStatus field indexes | QR expiry is logical, not TTL. Explicit null duplicate tokens can defeat sparse-index rollout. Legacy spins have no campaignId. Do not infer campaign ownership from this model or expose tokens in admin/vendor reports |
+| prizes/models/PrizeAward.js | WARNING. User/GameSession/Spin/WheelItem refs; unique {userId,campaignId}; partial unique objectId spinId and gameSessionId; document pre-validation requires exactly one source | Historical string IDs fall outside ObjectId partial filters. Both/missing source and duplicate awards require manual quarantine/reconciliation. Actual foreign-key integrity is not enforced by Mongo references |
+| prizes/models/PrizeDecision.js | WARNING. User/GameSession/AdminUser/PrizeAward refs; unique gameSessionId; {campaignId,status,createdAt:-1}; {userId,campaignId}; status/user field indexes | Game enum comes from GAME_IDS, not the registry GAMES object: both must evolve together. Document pre-validation enforces status/review/final-decision combinations; query updates do not automatically run document hooks. riskReasons maxlength100 is narrower than registered assessor's allowed200; current constants fit, future plugins need compatibility review. ready_for_draw exists but is intentionally absent from human-review list filters |
+| prizes/models/PrizeDecisionRecovery.js | WARNING. GameSession/User refs; unique gameSessionId; {campaignId,status,nextRetryAt,createdAt}; {status,leaseUntil} | Status/attempt<=5/claim hash/lease/retry/completion consistency hooks are declarations, not proof for every query update. Claim tokens hidden by default. No worker/recovery execution authorized; production recovery remains sandbox-restricted |
+| administration/models/AdminAuditLog.js | WARNING. AdminUser ref and typed target ID; {adminId,createdAt:-1}; {targetType,targetId,createdAt:-1}; immutable fields/Mixed details, strict throw | Model immutability is not append-only database permission. No deletion endpoint is not proof DB users cannot rewrite logs. Verify least-privilege audit role, update paths and retention separately; snapshots must remain bounded/private |
+
+There are **11 active model declarations plus one commented-out model**. No TTL indexes are declared in these models. Existing field indexes and explicit compound indexes are not proof they are installed or valid on any server.
+
+## TTL and retention safety
+
+- Never put a TTL on User.otpExpiresAt: TTL removes the whole customer document, not just the OTP fields.
+- Never add a GameSession.expiresAt TTL casually: it removes fraud evidence and consumed attempts. Current attempt limits count all sessions; deleting them can grant new attempts.
+- Spin.qrExpiry invalidates redemption in service predicates; deleting the Spin can orphan awards/history. Recovery.leaseUntil is worker ownership, not retention expiry.
+- Design an explicit archival/tombstone/consumed-attempt ledger and audit retention policy first. Held recovery/decision/audit records need investigation retention. No cleanup or TTL creation ran.
+
+## Candidate query indexes — proposals only
+
+Actual explain plans/collection size/write overhead must justify each candidate in an approved sandbox. No index was added to models or a database.
+
+| Query/source | Candidate / consideration |
+|---|---|
+| Admin users, listUsers | {createdAt:-1,_id:-1}, optionally {emailVerified:1,createdAt:-1,_id:-1} for frequent filter; substring case-insensitive regex over name/email/phone is not solved by ordinary B-tree indexes |
+| Vendor list, listVendors | {createdAt:-1,_id:-1} and measured status/name sort variants. $ne:false includes legacy missing states and can be poorly selective; normalize only via reviewed migration |
+| Campaign list | {updatedAt:-1,_id:-1}, optionally {enabled:1,updatedAt:-1,_id:-1}; name substring search needs separate bounded search design |
+| Admin sessions/activity | {campaignId:1,createdAt:-1,_id:-1} and measured {campaignId:1,status:1}; existing user-first attempt index cannot serve every campaign-wide report |
+| Session history/store | Existing unique attempt index supports scoped attempt ordering; future startedAt history may need {userId:1,campaignId:1,gameId:1,startedAt:-1,_id:-1}. A future expiry scanner may need {status:1,expiresAt:1}; do not turn it into TTL |
+| Vendor recent/redemption export | {redeemedByVendorId:1,redemptionStatus:1,redeemedAt:-1,_id:-1}; admin all-vendor reporting may need {redemptionStatus:1,createdAt:-1,_id:-1} and date-sort variant |
+| Latest customer win | {userId:1,status:1,createdAt:-1,_id:-1}; privacy remains owner-scoped |
+| Review queue | Existing campaign/status/createdAt compound lacks deterministic _id tie-breaker; evaluate adding _id:-1 as a new named index before dropping old one |
+| Audit activity/list | Existing target/admin compounds; consider trailing _id and {createdAt:-1,_id:-1} for global chronological pages; unanchored action/type search remains scan-prone |
+| Recovery discovery | GameSession {campaignId:1,status:1,outcome:1,completedAt:1,_id:1}; lookup uses unique decision/recovery gameSessionId; existing due/lease indexes still need explain validation |
+
+Bounded result limits do not bound countDocuments, deep skip, aggregate, substring search or full export scan cost. Legacy no-query vendor and wheel lists remain unbounded for contract compatibility; report stats aggregate all-time data. Large offsets (up to 100000 pages) require a measured cursor/keyset/versioned API plan, not silent contract changes.
+
+## Transaction and validator requirements
+
+Admin mutations, campaign writes, manual reviews and QR redemption require a transaction-capable replica set/sharded topology, primary reads, snapshot read concern and majority writes as declared. Standalone MongoDB is insufficient. Account write fences must participate in the same transaction as domain mutation/audit/inventory. Do not call mail/QR transports inside a retried transaction. Real write conflicts, retry callbacks and unknown commit outcomes remain BLOCKED.
+
+Local installed source server/node_modules/mongoose/lib/helpers/updateValidators.js was inspected as text: updated-value validation enumerates $set/$setOnInsert/$pull/$pullAll/$unset; it does not treat $inc as ordinary field validation. runValidators:true is not a sufficient bound for incremented counters. Phase F adds a returned vendor-fence safe-integer check and rejects token revocation at MAX_SAFE_INTEGER before increment. Admin fence already checks the returned counter within transaction. Document pre('validate') consistency hooks in decision/award/recovery models cannot substitute for predicates and explicit checks on query updates. Actual casting/hooks/index behavior needs real sandbox tests; none ran here.
+
+## Ordered migration proposal and rollback (NOT EXECUTED)
+
+1. Obtain separate approval for an ephemeral local replica set and database **hnc_step15q_sandbox only**. Never connect to test or use production credentials/data. Record approved target tuple, versions, synthetic seed and source hashes; validate target before loading application modules. Prevent dotenv fallback and all non-loopback egress. See INTEGRATION_READINESS.md.
+2. In the approved synthetic DB, inventory installed index names/options and count missing/null/type/duplicate/orphan cases. Reports contain counts and synthetic IDs only. Do not normalize/merge users, winners, QR claims or audits automatically.
+3. Prepare reversible per-document CAS migration batches with prior values, revision, batch ID and count/hash receipt. Canonical email/phone collision policy, explicit-null sparse key policy, verified/active flags and safe integer versions/counters require approval. Missing version0 compatibility is different from explicit null. Preserve pending OTP binding and invalidate legacy OTPs only under reviewed user-recovery policy.
+4. Resolve/quarantine duplicate synthetic records before building unique indexes. Stage new named indexes; verify options and actual explains on representative seed. autoIndex is enabled outside production in config/db.js, so the harness must prevent uncontrolled index rollout. Do not run syncIndexes or blind drops.
+5. Verify replica-set transaction rollback/retry/majority/unknown-commit cases and document-hook/query-update differences; validate all references and one-award/source invariants without activating allocation. Seed synthetic historical prizes explicitly if redemption testing is authorized.
+6. Rollback: stop isolated writers/workers; retain evidence; restore only CAS-matching batch changes from synthetic snapshot/receipts. Drop only the specifically approved newly created nonessential index if justified. Never remove uniqueness protecting active writes. Preserve audits and tombstones; roll forward/quarantine when dependent writes have advanced. Never reset tokenVersion to a smaller value (can resurrect tokens), restore consumed OTPs, decrement attempt counts or re-pend redeemed prizes to simulate rollback.
+7. Old application versions that ignore new revocation/OTP/campaign fields are not a safe rollback target. Freeze writers or use a compatibility build. Full reset/drop of even the sandbox needs separate scoped cleanup authorization; no cleanup command is supplied or executed.
+
+Production schema inspection/migration/backup/rollback is outside this phase and requires its own authorized procedure. Source backups/hash manifests are code recovery only, not database backup or restoration evidence.
+
+Revalidated during the 29 October 2026 Phase F resume. No database, HTTP or concurrency execution occurred. Current evidence, module status and separate Phase G authorization gates: INTEGRATION_READINESS.md. Prior audit recommendations remain proposals; no schema/index/migration/transaction rollout applied.
+
+## Final unresolved-issue classification
+See PHASE_F_ISSUE_REGISTER.md F03–F11, F14–F15 for severity, exact affected files, recommended corrections, required cases and sandbox authorization. These entries cover identity/null/sparse migration, role/version/counter state, game enum/attempt/version alignment, decision/recovery gap, transaction/audit/inventory/campaign invariants and query/retention indexes. High-priority schema/atomicity/retention acceptance is BLOCKED on actual isolated DB verification; no index or model was changed. Reversible seed/index/CAS migration and stop/rollback procedures are in PHASE_G_SANDBOX_PLAN.md G1/G1b/G3. Count-based attempt retention and no token-version rollback remain mandatory.

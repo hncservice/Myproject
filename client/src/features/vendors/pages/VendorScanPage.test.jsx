@@ -1,0 +1,16 @@
+import React from 'react';
+import { beforeEach, afterEach, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import VendorScanPage from './VendorScanPage';
+const api=vi.hoisted(()=>({scanQrToken:vi.fn(),getVendorDashboard:vi.fn(),exportVendorRedemptionsExcel:vi.fn(),scan:null}));
+vi.mock('../api/vendorApi',()=>api);
+vi.mock('../../authentication/context/AuthContext',()=>({useAuth:()=>({profile:{name:'Synthetic Vendor'}})}));
+vi.mock('@yudiel/react-qr-scanner',()=>({Scanner:props=>{api.scan=props.onScan;return <p>Mock camera</p>;}}));
+beforeEach(()=>{vi.resetAllMocks();api.scan=null;api.getVendorDashboard.mockResolvedValue({data:{totals:{},recentRedemptions:[],topPrizes:[]}});api.scanQrToken.mockResolvedValue({data:{message:'Synthetic success',prize:'Synthetic prize',user:{name:'Synthetic Customer'}}});for(const n of ['fetch','XMLHttpRequest','WebSocket'])vi.stubGlobal(n,()=>{throw new Error('NETWORK_FORBIDDEN');});});
+afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals();});
+const input=()=>screen.getByLabelText('QR Token / Code');
+it('starts in manual mode without accessing the camera',async()=>{render(<VendorScanPage/>);await waitFor(()=>expect(api.getVendorDashboard).toHaveBeenCalledTimes(1));expect(screen.queryByText('Mock camera')).toBeNull();expect(api.scanQrToken).not.toHaveBeenCalled();});
+it('invalid manual QR cannot invoke redemption',async()=>{const {container}=render(<VendorScanPage/>);fireEvent.change(input(),{target:{value:'not-a-token'}});fireEvent.submit(container.querySelector('form'));await screen.findByText('Invalid QR code format');expect(api.scanQrToken).not.toHaveBeenCalled();});
+it('valid synthetic URL extracts token and refreshes history',async()=>{const {container}=render(<VendorScanPage/>);fireEvent.change(input(),{target:{value:'https://synthetic.invalid/redeem/'+'a'.repeat(32)}});fireEvent.submit(container.querySelector('form'));await waitFor(()=>expect(api.scanQrToken).toHaveBeenCalledExactlyOnceWith('a'.repeat(32)));await waitFor(()=>expect(api.getVendorDashboard).toHaveBeenCalledTimes(2));});
+it('simultaneous scan submissions cannot create concurrent calls',async()=>{api.scanQrToken.mockReturnValue(new Promise(()=>{}));const {container}=render(<VendorScanPage/>);fireEvent.change(input(),{target:{value:'a'.repeat(32)}});act(()=>{fireEvent.submit(container.querySelector('form'));fireEvent.submit(container.querySelector('form'));});expect(api.scanQrToken).toHaveBeenCalledTimes(1);});
+it('rejected redemption shows server message and permits retry',async()=>{api.scanQrToken.mockRejectedValue({response:{data:{message:'Prize already redeemed'}}});const {container}=render(<VendorScanPage/>);fireEvent.change(input(),{target:{value:'a'.repeat(32)}});fireEvent.submit(container.querySelector('form'));await screen.findByText('Prize already redeemed');fireEvent.submit(container.querySelector('form'));await waitFor(()=>expect(api.scanQrToken).toHaveBeenCalledTimes(2));});

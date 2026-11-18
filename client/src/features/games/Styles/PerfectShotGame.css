@@ -1,0 +1,291 @@
+.ps-page.ps-page {
+  --ps-bg: #160b11;
+  --ps-text: #fff7f6;
+  --ps-muted: #e4cdd3;
+  --ps-border: #875061;
+  --ps-surface: rgba(27, 14, 21, 0.72);
+  --ps-accent: #b9253d;
+  --ps-focus: #ffc5cb;
+
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
+  padding: clamp(18px, 4vw, 48px) clamp(12px, 4vw, 36px) 32px;
+  padding-block-end: max(32px, env(safe-area-inset-bottom));
+  background: var(--ps-bg);
+  color: var(--ps-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ps-page.ps-page::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(22, 11, 17, 0.38), rgba(22, 11, 17, 0.72)),
+    url('../../../assets/bg/HNC_Games_Full_Frame_1920x1080.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.ps-page .ps-shell {
+  min-width: 0;
+}
+
+.ps-page .ps-header {
+  gap: 12px;
+}
+
+.ps-page .ps-brand {
+  min-width: 0;
+}
+
+.ps-page .ps-brand-emblem,
+.ps-page .ps-sound {
+  flex: 0 0 auto;
+  box-shadow: none;
+}
+
+.ps-page .ps-brand-emblem {
+  border: 1px solid var(--ps-border);
+  background: var(--ps-surface);
+}
+
+.ps-page .ps-brand-title {
+  font-size: clamp(18px, 4.5vw, 24px);
+  letter-spacing: 0.03em;
+}
+
+.ps-page .ps-brand-title strong {
+  color: #ff9bab;
+}
+
+.ps-page .ps-brand-title small {
+  color: var(--ps-muted);
+}
+
+.ps-page .ps-sound,
+.ps-page .ps-stat,
+.ps-page .ps-footer {
+  border-color: var(--ps-border);
+  background: var(--ps-surface);
+}
+
+.ps-page .ps-stat > span,
+.ps-page .ps-stat strong small,
+.ps-page .ps-headline,
+.ps-page .ps-attempts,
+.ps-page .ps-footer p,
+.ps-page .ps-point-legend,
+.ps-page .ps-notice {
+  color: var(--ps-muted);
+}
+
+.ps-page .ps-attempts,
+.ps-page .ps-notice,
+.ps-page .ps-error {
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.ps-page .ps-error {
+  border-color: #b65467;
+  background: #481825;
+  color: #ffe1e5;
+}
+
+.ps-page .ps-arena {
+  border-color: var(--ps-border);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(57, 29, 43, 0.88),
+    rgba(29, 14, 23, 0.94) 75%
+  );
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3);
+}
+
+.ps-page .ps-grid {
+  background-image:
+    linear-gradient(rgba(255, 180, 199, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 180, 199, 0.12) 1px, transparent 1px);
+}
+
+.ps-page .ps-arena::after {
+  border-color: rgba(255, 183, 191, 0.23);
+}
+
+.ps-page .ps-arena-label {
+  color: #d3a3af;
+}
+
+.ps-page .ps-overlay {
+  justify-content: safe center;
+  overflow-y: auto;
+  padding: clamp(12px, 4vw, 24px);
+  background: linear-gradient(
+    rgba(27, 14, 21, 0.47),
+    rgba(27, 14, 21, 0.78)
+  );
+  backdrop-filter: none;
+}
+
+.ps-page .ps-overlay > * {
+  flex-shrink: 0;
+}
+
+.ps-page .ps-overlay-icon,
+.ps-page .ps-trophy {
+  font-size: clamp(36px, 9vw, 68px);
+  line-height: 1;
+}
+
+.ps-page .ps-overlay h1 {
+  margin: 10px 0;
+  font-size: clamp(26px, 6vw, 44px);
+  letter-spacing: -0.035em;
+}
+
+.ps-page .ps-overlay h1 em {
+  color: #ff9bab;
+}
+
+.ps-page .ps-overlay p {
+  margin-bottom: clamp(10px, 3vw, 18px);
+  color: var(--ps-muted);
+  font-size: clamp(13px, 2.5vw, 15px);
+  line-height: 1.4;
+}
+
+.ps-page .ps-finish h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(42px, 10vw, 68px);
+}
+
+.ps-page .ps-finish h1 small,
+.ps-page .ps-finish-stats,
+.ps-page .ps-finish .ps-small {
+  color: var(--ps-muted);
+}
+
+.ps-page .ps-finish-stats {
+  margin-bottom: 12px;
+}
+
+.ps-page .ps-primary {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 46px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: var(--ps-accent);
+  box-shadow: none;
+  font-family: inherit;
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+}
+
+.ps-page .ps-primary:hover:not(:disabled) {
+  background: #a71d32;
+  filter: none;
+  transform: none;
+}
+
+.ps-page .ps-primary:disabled {
+  background: #75404e;
+  opacity: 1;
+}
+
+.ps-page :is(.ps-primary, .ps-sound, .ps-arena):focus-visible {
+  outline: 2px solid var(--ps-focus);
+  outline-offset: 3px;
+}
+
+.ps-page .ps-timer-label {
+  color: var(--ps-muted);
+}
+
+.ps-page .ps-time-track {
+  background: #51303d;
+}
+
+.ps-page .ps-time-fill {
+  background: linear-gradient(90deg, #f5b36b, #f36d84);
+}
+
+.ps-page .ps-shot-dot {
+  border-color: var(--ps-border);
+  background: #2d1823;
+  color: var(--ps-muted);
+}
+
+.ps-page .ps-shot-dot--active {
+  border-color: #ff9bab;
+  color: #fff;
+}
+
+.ps-page .ps-shot-dot--hit {
+  border-color: #70a98a;
+  background: #25533e;
+  color: #fff;
+}
+
+.ps-page .ps-shot-dot--miss {
+  border-color: #d1788b;
+  background: #642c3c;
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .ps-page.ps-page {
+    padding-block-start: 14px;
+    padding-inline-start: max(10px, env(safe-area-inset-left));
+    padding-inline-end: max(10px, env(safe-area-inset-right));
+  }
+
+  .ps-page .ps-header {
+    margin-bottom: 14px;
+  }
+
+  .ps-page .ps-brand {
+    gap: 9px;
+  }
+
+  .ps-page .ps-stat {
+    padding: 9px 7px;
+  }
+
+  .ps-page .ps-stat > strong {
+    font-size: 17px;
+  }
+
+  .ps-page .ps-stat strong small {
+    font-size: 10px;
+  }
+
+  .ps-page .ps-footer {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .ps-page .ps-finish-caption {
+    letter-spacing: 0.12em;
+  }
+
+  .ps-page .ps-finish-stats strong {
+    font-size: 22px;
+  }
+}
+@media (min-width: 901px) {
+  .ps-page.hnc-game-page {
+    aspect-ratio: 16 / 9;
+    background-size: 100% auto;
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+}

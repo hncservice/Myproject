@@ -1,23 +1,15 @@
-// server/middleware/errorMiddleware.js
+'use strict';
+const { errorMetadata } = require('../infrastructure/logging/errorMetadata');
 module.exports = (err, req, res, next) => {
-  // Always log full error on server
-  console.error('Unhandled error:', err);
-
-  const status = err.status || 500;
-
-  const payload = {
-    message: err.status ? err.message : 'Server error'
-  };
-
-  // Optional error codes you might throw: { status, message, code }
-  if (err.code) {
-    payload.code = err.code;
-  }
-
-  // In non-production, expose more details (helps debugging)
-  if (process.env.NODE_ENV !== 'production') {
-    payload.stack = err.stack;
-  }
-
-  res.status(status).json(payload);
+  console.error('Unhandled error:', errorMetadata(err));
+  if (res.headersSent) return next(err);
+  const candidate = err?.status ?? err?.statusCode;
+  const status = Number.isInteger(candidate) && candidate >= 400 && candidate <= 599 ? candidate : 500;
+  const payload = { message: status < 500 && typeof err?.message === 'string' ? err.message.slice(0, 300) : 'Server error' };
+  const metadata = errorMetadata(err);
+  if (metadata.code !== 'UNEXPECTED_ERROR') payload.code = metadata.code;
+  // Express parser errors can contain fragments of submitted bodies.
+  if (err?.type === 'entity.parse.failed') { payload.message = 'Invalid JSON request'; payload.code = 'INVALID_JSON'; }
+  if (err?.type === 'entity.too.large') { payload.message = 'Request body too large'; payload.code = 'REQUEST_TOO_LARGE'; }
+  return res.status(status).json(payload);
 };

@@ -1,0 +1,1041 @@
+{
+  "roots": {
+    "joi": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\index.js",
+    "jsonwebtoken": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\index.js"
+  },
+  "resolutions": {
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./applyToDefaults\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\applyToDefaults.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\applyToDefaults.js\",\"./assert\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assert.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\assert.js\",\"./assertError\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assertError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\assert.js\",\"./stringify\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\stringify.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\applyToDefaults.js\",\"./clone\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\clone.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\clone.js\",\"./reach\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\reach.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\reach.js\",\"./assert\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assert.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\clone.js\",\"./types\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\types.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\clone.js\",\"./utils\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\utils.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\applyToDefaults.js\",\"./merge\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\merge.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\merge.js\",\"./assert\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assert.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\merge.js\",\"./clone\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\clone.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\merge.js\",\"./utils\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\utils.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\applyToDefaults.js\",\"./reach\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\reach.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./assert\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assert.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./assertError\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assertError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./bench\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\bench.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./block\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\block.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\block.js\",\"./ignore\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\ignore.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./clone\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\clone.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./contain\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\contain.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\contain.js\",\"./assert\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assert.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\contain.js\",\"./deepEqual\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\deepEqual.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\deepEqual.js\",\"./types\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\types.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\contain.js\",\"./escapeRegex\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeRegex.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\contain.js\",\"./utils\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\utils.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./deepEqual\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\deepEqual.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./escapeHeaderAttribute\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeHeaderAttribute.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\escapeHeaderAttribute.js\",\"./assert\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assert.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./escapeHtml\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeHtml.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./escapeJson\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeJson.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./escapeRegex\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeRegex.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./flatten\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\flatten.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./ignore\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\ignore.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./intersect\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\intersect.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./isPromise\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\isPromise.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./merge\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\merge.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./once\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\once.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./reach\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\reach.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./reachTemplate\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\reachTemplate.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\reachTemplate.js\",\"./reach\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\reach.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./stringify\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\stringify.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\hoek\\\\lib\\\\index.js\",\"./wait\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\wait.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./cache\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\cache.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\cache.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\cache.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\common.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\common.js\",\"../package.json\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\package.json",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\common.js\",\"./schemas\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\schemas.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\schemas.js\",\"./index\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\common.js\",\"./messages\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\messages.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\messages.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\messages.js\",\"./template\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\template.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\template.js\",\"@hapi/formula\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\formula\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\template.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\template.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\errors.js\",\"./annotate\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\annotate.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\annotate.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\annotate.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\errors.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\errors.js\",\"./template\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\template.js\",\"./ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\ref.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\ref.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\ref.js\",\"./template\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./compile\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\compile.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\compile.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\compile.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\compile.js\",\"./ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./extend\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\extend.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\extend.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\extend.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\extend.js\",\"./messages\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\messages.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./manifest\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\manifest.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\manifest.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\manifest.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\manifest.js\",\"./messages\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\messages.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\manifest.js\",\"./ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\manifest.js\",\"./template\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\manifest.js\",\"./schemas\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\schemas.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./template\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./trace\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\trace.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\trace.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\trace.js\",\"@hapi/pinpoint\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\pinpoint\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\trace.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/alternatives\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\alternatives.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\alternatives.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\alternatives.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\any.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\any.js\",\"../base\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\base.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./cache\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\cache.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./compile\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\compile.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./extend\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\extend.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./manifest\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\manifest.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./messages\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\messages.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./modify\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\modify.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\modify.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\modify.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\modify.js\",\"./ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./trace\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\trace.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./validator\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\validator.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\validator.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\validator.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\validator.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\validator.js\",\"./state\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\state.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\state.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\state.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\base.js\",\"./values\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\values.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\values.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\values.js\",\"./common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\any.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\any.js\",\"../messages\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\messages.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\alternatives.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\alternatives.js\",\"../compile\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\compile.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\alternatives.js\",\"../errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\alternatives.js\",\"../ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/array\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\array.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\array.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\array.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\array.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\array.js\",\"../compile\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\compile.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/boolean\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\boolean.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\boolean.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\boolean.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\boolean.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\boolean.js\",\"../values\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\values.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/date\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\date.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\date.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\date.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\date.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\date.js\",\"../template\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/function\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\function.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\function.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\function.js\",\"./keys\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\keys.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"@hapi/topo\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\topo\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\topo\\\\lib\\\\index.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"../compile\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\compile.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"../errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"../ref\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\keys.js\",\"../template\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/link\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\link.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\link.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\link.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\link.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\link.js\",\"../compile\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\compile.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\link.js\",\"../errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/number\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\number.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\number.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\number.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\number.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/object\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\object.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\object.js\",\"./keys\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\keys.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/string\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\string.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\string.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\string.js\",\"@hapi/address\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\index.js\",\"./domain\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\domain.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\domain.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\index.js\",\"./email\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\email.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\email.js\",\"./domain\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\domain.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\email.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\index.js\",\"./errors\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\errors.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\index.js\",\"./ip\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\ip.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\ip.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\ip.js\",\"./uri\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\uri.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\uri.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\index.js\",\"./uri\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\uri.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\address\\\\dist\\\\index.js\",\"./decode\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\decode.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\string.js\",\"@hapi/tlds\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\tlds\\dist\\commonjs\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\@hapi\\\\tlds\\\\dist\\\\commonjs\\\\index.js\",\"./tlds.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\tlds\\dist\\commonjs\\tlds.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\string.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\string.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/symbol\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\symbol.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\symbol.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\symbol.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./types/binary\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\binary.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\binary.js\",\"@hapi/hoek\"]": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\binary.js\",\"./any\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\types\\\\binary.js\",\"../common\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\joi\\\\lib\\\\index.js\",\"./schemas\"]": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\schemas.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\index.js\",\"./decode\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\decode.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\decode.js\",\"jws\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\index.js\",\"./lib/sign-stream\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\sign-stream.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\sign-stream.js\",\"safe-buffer\"]": "D:\\spinning wheel comp\\server\\node_modules\\safe-buffer\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\sign-stream.js\",\"./data-stream\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\data-stream.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\data-stream.js\",\"safe-buffer\"]": "D:\\spinning wheel comp\\server\\node_modules\\safe-buffer\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\sign-stream.js\",\"jwa\"]": "D:\\spinning wheel comp\\server\\node_modules\\jwa\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jwa\\\\index.js\",\"safe-buffer\"]": "D:\\spinning wheel comp\\server\\node_modules\\safe-buffer\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jwa\\\\index.js\",\"ecdsa-sig-formatter\"]": "D:\\spinning wheel comp\\server\\node_modules\\ecdsa-sig-formatter\\src\\ecdsa-sig-formatter.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\ecdsa-sig-formatter\\\\src\\\\ecdsa-sig-formatter.js\",\"safe-buffer\"]": "D:\\spinning wheel comp\\server\\node_modules\\safe-buffer\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\ecdsa-sig-formatter\\\\src\\\\ecdsa-sig-formatter.js\",\"./param-bytes-for-alg\"]": "D:\\spinning wheel comp\\server\\node_modules\\ecdsa-sig-formatter\\src\\param-bytes-for-alg.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jwa\\\\index.js\",\"buffer-equal-constant-time\"]": "D:\\spinning wheel comp\\server\\node_modules\\buffer-equal-constant-time\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\sign-stream.js\",\"./tostring\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\tostring.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\index.js\",\"./lib/verify-stream\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\verify-stream.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\verify-stream.js\",\"safe-buffer\"]": "D:\\spinning wheel comp\\server\\node_modules\\safe-buffer\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\verify-stream.js\",\"./data-stream\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\data-stream.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\verify-stream.js\",\"jwa\"]": "D:\\spinning wheel comp\\server\\node_modules\\jwa\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jws\\\\lib\\\\verify-stream.js\",\"./tostring\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\tostring.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\index.js\",\"./verify\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\verify.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"./lib/JsonWebTokenError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\JsonWebTokenError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"./lib/NotBeforeError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\NotBeforeError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\NotBeforeError.js\",\"./JsonWebTokenError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\JsonWebTokenError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"./lib/TokenExpiredError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\TokenExpiredError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\TokenExpiredError.js\",\"./JsonWebTokenError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\JsonWebTokenError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"./decode\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\decode.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"./lib/timespan\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\timespan.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\timespan.js\",\"ms\"]": "D:\\spinning wheel comp\\server\\node_modules\\ms\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"./lib/validateAsymmetricKey\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\validateAsymmetricKey.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\validateAsymmetricKey.js\",\"./asymmetricKeyDetailsSupported\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\asymmetricKeyDetailsSupported.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\asymmetricKeyDetailsSupported.js\",\"semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./internal/re\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\re.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\internal\\\\re.js\",\"./constants\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\constants.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\internal\\\\re.js\",\"./debug\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\debug.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./internal/constants\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\constants.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\semver.js\",\"../internal/debug\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\debug.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\semver.js\",\"../internal/constants\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\constants.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\semver.js\",\"../internal/re\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\re.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\semver.js\",\"../internal/parse-options\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\parse-options.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\semver.js\",\"../internal/identifiers\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\identifiers.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./internal/identifiers\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\identifiers.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/parse\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\parse.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\parse.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/valid\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\valid.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\valid.js\",\"./parse\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\parse.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/clean\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\clean.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\clean.js\",\"./parse\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\parse.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/inc\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\inc.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\inc.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/diff\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\diff.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\diff.js\",\"./parse.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\parse.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/major\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\major.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\major.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/minor\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\minor.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\minor.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/patch\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\patch.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\patch.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/prerelease\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\prerelease.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\prerelease.js\",\"./parse\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\parse.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\compare.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/rcompare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\rcompare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\rcompare.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/compare-loose\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare-loose.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\compare-loose.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/compare-build\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare-build.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\compare-build.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/sort\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\sort.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\sort.js\",\"./compare-build\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare-build.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/rsort\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\rsort.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\rsort.js\",\"./compare-build\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare-build.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/gt\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gt.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\gt.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/lt\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lt.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\lt.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/eq\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\eq.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\eq.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/neq\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\neq.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\neq.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/gte\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gte.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\gte.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/lte\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lte.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\lte.js\",\"./compare\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/cmp\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\cmp.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\cmp.js\",\"./eq\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\eq.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\cmp.js\",\"./neq\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\neq.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\cmp.js\",\"./gt\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gt.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\cmp.js\",\"./gte\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gte.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\cmp.js\",\"./lt\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lt.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\cmp.js\",\"./lte\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lte.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/coerce\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\coerce.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\coerce.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\coerce.js\",\"./parse\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\parse.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\coerce.js\",\"../internal/re\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\re.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./classes/comparator\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\comparator.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\comparator.js\",\"../internal/parse-options\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\parse-options.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\comparator.js\",\"../internal/re\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\re.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\comparator.js\",\"../functions/cmp\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\cmp.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\comparator.js\",\"../internal/debug\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\debug.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\comparator.js\",\"./semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\comparator.js\",\"./range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\range.js\",\"../internal/lrucache\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\lrucache.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\range.js\",\"../internal/parse-options\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\parse-options.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\range.js\",\"./comparator\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\comparator.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\range.js\",\"../internal/debug\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\debug.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\range.js\",\"./semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\range.js\",\"../internal/re\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\re.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\classes\\\\range.js\",\"../internal/constants\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\constants.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./functions/satisfies\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\satisfies.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\functions\\\\satisfies.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/to-comparators\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\to-comparators.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\to-comparators.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/max-satisfying\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\max-satisfying.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\max-satisfying.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\max-satisfying.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/min-satisfying\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\min-satisfying.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\min-satisfying.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\min-satisfying.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/min-version\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\min-version.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\min-version.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\min-version.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\min-version.js\",\"../functions/gt\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gt.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/valid\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\valid.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\valid.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/outside\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\outside.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../classes/semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../classes/comparator\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\comparator.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../functions/satisfies\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\satisfies.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../functions/gt\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gt.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../functions/lt\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lt.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../functions/lte\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lte.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\outside.js\",\"../functions/gte\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gte.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/gtr\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\gtr.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\gtr.js\",\"./outside\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\outside.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/ltr\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\ltr.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\ltr.js\",\"./outside\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\outside.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/intersects\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\intersects.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\intersects.js\",\"../classes/range\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/simplify\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\simplify.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\simplify.js\",\"../functions/satisfies.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\satisfies.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\simplify.js\",\"../functions/compare.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\index.js\",\"./ranges/subset\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\subset.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\subset.js\",\"../classes/range.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\subset.js\",\"../classes/comparator.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\comparator.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\subset.js\",\"../functions/satisfies.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\satisfies.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\semver\\\\ranges\\\\subset.js\",\"../functions/compare.js\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\validateAsymmetricKey.js\",\"./rsaPssKeyDetailsSupported\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\rsaPssKeyDetailsSupported.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\rsaPssKeyDetailsSupported.js\",\"semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"./lib/psSupported\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\psSupported.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\lib\\\\psSupported.js\",\"semver\"]": "D:\\spinning wheel comp\\server\\node_modules\\semver\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\verify.js\",\"jws\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\index.js\",\"./sign\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\sign.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"./lib/timespan\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\timespan.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"./lib/psSupported\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\psSupported.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"./lib/validateAsymmetricKey\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\validateAsymmetricKey.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"jws\"]": "D:\\spinning wheel comp\\server\\node_modules\\jws\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"lodash.includes\"]": "D:\\spinning wheel comp\\server\\node_modules\\lodash.includes\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"lodash.isboolean\"]": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isboolean\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"lodash.isinteger\"]": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isinteger\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"lodash.isnumber\"]": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isnumber\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"lodash.isplainobject\"]": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isplainobject\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"lodash.isstring\"]": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isstring\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\sign.js\",\"lodash.once\"]": "D:\\spinning wheel comp\\server\\node_modules\\lodash.once\\index.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\index.js\",\"./lib/JsonWebTokenError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\JsonWebTokenError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\index.js\",\"./lib/NotBeforeError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\NotBeforeError.js",
+    "[\"D:\\\\spinning wheel comp\\\\server\\\\node_modules\\\\jsonwebtoken\\\\index.js\",\"./lib/TokenExpiredError\"]": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\TokenExpiredError.js"
+  },
+  "builtins": [
+    "url",
+    "util",
+    "buffer",
+    "stream",
+    "crypto"
+  ],
+  "files": [
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\index.js",
+      "sha256": "cdad4cb137a9220e23ab0341aedbfee44570f39bd66c29b56dd9075d085075d0"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\index.js",
+      "sha256": "689a81d34497f7123c66a96a3ecec47f927dd105095b299b38613b2aca9a82dd"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\applyToDefaults.js",
+      "sha256": "2c0a9e04462d507498c82dd145d19c3ef98a68d680f2dc690f967358cd5d4b94"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assert.js",
+      "sha256": "68ab08b8ef37f6f4c6568e6e931dcc947f88239312bd3f198b43417926d57906"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\assertError.js",
+      "sha256": "e22b8a91ccecccd1e94db3b747afe86596779a053ecafa435027e93ed987a5df"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\package.json",
+      "sha256": "3d3109834dcd586f57e23887ca564449e543a2a09f3f3579ef52c118cb30bd54"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\stringify.js",
+      "sha256": "edc1383091d7f181e71e2327edadb3db706cd6cd4a5a57c6f355bf8cfa83ead0"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\clone.js",
+      "sha256": "b581b7f49c317dc1ad3dd3639331bdc0901ecd5f776149bbab8571913e74abdb"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\reach.js",
+      "sha256": "9c7a398e5070a66566e39d0883fb899c587b316a18e70db806bd188509302329"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\types.js",
+      "sha256": "a06662038c46539adfab3c21169d3689445f55bb3de433a16be9552a1c6cae6e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\utils.js",
+      "sha256": "829cb370537ae4ce2ed3f564f5d06735c644410ad0d094dfa6e170c34666cfc2"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\merge.js",
+      "sha256": "c2e217c8c06e0c91478f9ceed834482d1274510fd82eadb81a9da4231ab05e42"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\bench.js",
+      "sha256": "23a2e19b2ba49b1fabb38861144528775e4e2d3eecdd932ef6bbbf341c752aa5"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\block.js",
+      "sha256": "191a54ba73878dcd49ba4e396782c37bc376d39e3618fe40a27d3dc2e1c3a540"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\ignore.js",
+      "sha256": "8aa8e1569ffcaa228bf95eec5534d09b5443ddc226d74229822e400d65304506"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\contain.js",
+      "sha256": "2f8bf207d4f4d01aba1e526f75a18d8573ac6abe8a0afac5ae0c1793590e503f"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\deepEqual.js",
+      "sha256": "f04571a40c2f1d8e9aaf2c8034448f244ed053fd1a4b0d518edf7810fb9f31d8"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeRegex.js",
+      "sha256": "c94cc34e9c0375eb3e93ce1da8001657a006019ce5bc92d28aa65093e739180e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeHeaderAttribute.js",
+      "sha256": "9e3d435de41bd79dbaae62533b8ac53b7be013eddde27d65054092a6cf720e7d"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeHtml.js",
+      "sha256": "181cb7d7f62082c294b0804e563e061ba6cdd3bd4150556c250155b3a2207502"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\escapeJson.js",
+      "sha256": "f97362ff98450cbb992e2395a971f12542a8ab1f964bb38a77472f26071c553d"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\flatten.js",
+      "sha256": "c4556514f34f23995424a9a7a2e72f60909e365ff26ecc433ab76ac7f9a75a49"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\intersect.js",
+      "sha256": "3cf3002ea08730c40e525f764b288e6fcc8745e362e7acfde75fcde4b8bc54ae"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\isPromise.js",
+      "sha256": "f3051113325fbad24dceed90886e8534ab8aa6059b03313e437cff598c6f6db6"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\once.js",
+      "sha256": "9ff8a0c5ec31f3b878c714ce307494e9bd26a9ea5e0fc736f8ba174b3d18d670"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\reachTemplate.js",
+      "sha256": "5ef7ad13955c0bd6224c2cc41f2c2b436596d6d9e0c6be552a987d42e5fae17b"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\hoek\\lib\\wait.js",
+      "sha256": "15f5bf7c3845bd24c5ecb72e2c60c6e7307b946998accb25d9101d925902489e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\cache.js",
+      "sha256": "c3d89a11b6210d959f4661f2e2d3bfcb80f23fd2bbaa7b2e610e35ab576bcf5e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\common.js",
+      "sha256": "ff96e3fed9ab9bf7e819729b58e999a83f97ddb4d8c89155d05813b219b64d99"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\package.json",
+      "sha256": "932ee7f6556fc44e644d49985c622e28a6599d85232342efccd1d806b6a903ec"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\schemas.js",
+      "sha256": "0e648fc7269ecab2a90f5f59335fcb47f601a197671b13af9700f568fa1eb270"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\messages.js",
+      "sha256": "2a26b1b8649d066ac0c76563f59e8e589b8fa3986c4272cb55bda9886e794077"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\template.js",
+      "sha256": "e52c1f85f8600507d74e85a8eb25a8a4f657512199c9bd266491b056d7e6310d"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\formula\\lib\\index.js",
+      "sha256": "7e0a0c03302899457963fb7cd5357cc914d356ad82ff0f59034647b73f37f35b"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\formula\\package.json",
+      "sha256": "738a3146434b9a742ca0af04111862b5e5695b6cdff1affd2e7e0a6cee22d63c"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\errors.js",
+      "sha256": "54ba2078322d343e9eac85e7befa64e6361d7cfe7b4f2148c3e9157bc6b2d14d"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\annotate.js",
+      "sha256": "701177b8caebbf2920d2ad58a7c6285ccb679c8452b5151350c88d6df18818d4"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\ref.js",
+      "sha256": "9a233a0c94324170dfd2b21bf0f703bf8c64f447ad226237c36876ee6b85f331"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\compile.js",
+      "sha256": "da61ca4ba8af14d4b11d43979b6624f114d5e0379cad9e31c3e2a99dabf63ef2"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\extend.js",
+      "sha256": "dd60b965dbb2867733b9267f41b9701cd28808b03813f6f2d746b8d43e4792dd"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\manifest.js",
+      "sha256": "93e22d1d05f0ce049ac2518fd05bfb0deeafa393e83dcb248394d46571fdf166"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\trace.js",
+      "sha256": "548bece4ec2c816cf227a4f00d232d9b32a1b85a8c00848a294e5d6136386b55"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\pinpoint\\lib\\index.js",
+      "sha256": "273098bb257b40229b11693dbe598650c721d6ea5bfbe1030d6c114ed87e77b0"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\pinpoint\\package.json",
+      "sha256": "6035a3219a2d281cd1fe831d8dbe6efce70c9cb0e6763b0b3e67e3476a283199"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\alternatives.js",
+      "sha256": "dca0f519d21c9bec6499e5506520970960bf460a6adcb1c70381890f34ca66d5"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\any.js",
+      "sha256": "da000777f2d5c65b5223b5b362794d31113ea8f3e3486d74c90760255981da08"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\base.js",
+      "sha256": "20e99c7082ad02dfd06618f57b28f0619028d72d7fbf1f0e3c1aa374a9ca7344"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\modify.js",
+      "sha256": "33aed2f8e7b0e7abfb47494f81f9df1e89911559beb833d83450eb3bfda86457"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\validator.js",
+      "sha256": "c1c1664c8ae7dc8d97cb8870d852089c11fd3054e41aed3c44a53df486ae742d"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\state.js",
+      "sha256": "bfd13990874ebaee7e0264a6cac1241b23d4b614555252d6fe35cc0a2b15fb47"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\values.js",
+      "sha256": "88df9a509fb219940a6b250354d08a4af754cd08b23aab9791076f2cb12d0bf8"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\array.js",
+      "sha256": "4318ec6d3079c18f76fb71110d2e5eba4dc79ae395629b7c4e8dc1dbb92e18f6"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\boolean.js",
+      "sha256": "bdee9520d6c735a0f3859b664cbff7e3cc9354ec17bab5e250656e8325f435af"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\date.js",
+      "sha256": "30504258f2e0412ac6ab5b9fce42b7d3f54ce0fb0f9052f03ff3b0596c3a4532"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\function.js",
+      "sha256": "00df11b5bed13073e787b483d5ce9da66218a86df2df768ecf44f446ed0ddc5b"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\keys.js",
+      "sha256": "17d2b58afd6c2aacea6cd3d4781937f29f357d1f928b5a8dfa5bff0c72c81f03"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\topo\\lib\\index.js",
+      "sha256": "af827266e12b2041e4e9d9bdbc1e80ed79a2c0fe35e7ce40fb93ebfcf629e3b7"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\topo\\package.json",
+      "sha256": "0a98577f26f542aa5a1805f83beb9333eebc39cf928270c38f65de9d74351dc4"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\link.js",
+      "sha256": "defa57a24b346290b248fec3cb6ee17e37ba55776d061027116694be57663dde"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\number.js",
+      "sha256": "9a4e8288eefd0f62fedbcb352c903e108074eab49d577b461456fef9c262f32f"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\object.js",
+      "sha256": "c8c650879689e2263811b30ff2eb616e760e9d6eae300784802e0fc8590a86f4"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\string.js",
+      "sha256": "8e84c81c6f0131d77bffdd5f8f42bbd3b8f2a7010af4e49c0d563478ab2d36c6"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\index.js",
+      "sha256": "74013cde6bfcfa2943ad5bb59b84b30233c0efcee5caf472f7fbfc04fb9500c0"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\domain.js",
+      "sha256": "5d718db57cbd20c31948c99f143d3b3a88fe0295c25a7afd005f7f20bd69e51d"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\errors.js",
+      "sha256": "58cbea71976af96d5a666412f80df3358d2c10c753442d989ee3b5ed4cf75291"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\package.json",
+      "sha256": "08d57c0e08b570769d30a8ed96ad3fb631c23964c06c04fefddd6d4abac506d4"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\email.js",
+      "sha256": "27bb76ad90be4c38ab4ad5268a88da5d899169f736840839bb15fd5c829a933c"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\ip.js",
+      "sha256": "c000c3ffcdcf085df2cac0d68099af994149922f9fae438b9bdef8fd313f633a"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\uri.js",
+      "sha256": "7c70098f2b9803d425fe4d81f18b68aea2bc7edddd24ddd480b3ad4169e5ba76"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\address\\dist\\decode.js",
+      "sha256": "c66fc16ad816edccb4963fd0bfc5518b811911f694e208bbb4053a1f3e691fe2"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\tlds\\dist\\commonjs\\index.js",
+      "sha256": "3291889edaff68d1e7a562496af305ca3971f494579c43efa150402d517d35ff"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\tlds\\dist\\commonjs\\tlds.js",
+      "sha256": "96361a3e4183b8e3382993a096f7bd29705b1e7249f33ff386bb71eaaa7978c6"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\tlds\\dist\\commonjs\\package.json",
+      "sha256": "8005a3491db7d92f36ac66369861589f9c47123d3a7c71e643fc2c06168cd45a"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\@hapi\\tlds\\package.json",
+      "sha256": "11e22644add1389cff19baf551c611ff7c83c8d5cc3fa366aa4e66b1b228202e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\symbol.js",
+      "sha256": "988a5abd3a3ecfabe25e15a4b3b5ede11d225173b8547a40aa6abf3f8658bd21"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\joi\\lib\\types\\binary.js",
+      "sha256": "334018ecf31968902378686d32ae689e586f7ea66d0861344e22e781b0fc006c"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\index.js",
+      "sha256": "aae460b3f08f3f8b1cb229ee226fb084540fec04b6ddc8fc01463068ebf4b7de"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\decode.js",
+      "sha256": "32fa49ba4da4e2eb75f91a84385d8718660fe5b51192ed317c6161b5d72a4a89"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jws\\index.js",
+      "sha256": "52b3ac7e9675ed8ef5a1ca48679f0d0da7e1f4639e297a503c9b541846704c52"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\sign-stream.js",
+      "sha256": "7bc82040d98cb865d1a986ce2c6adde5e9651e0551a9ab16583aa171224475b8"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\safe-buffer\\index.js",
+      "sha256": "184d5c4a83512e3f49d4d5b52f7073f601f933bad11f1fbb3ad364ca5e6478e1"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\safe-buffer\\package.json",
+      "sha256": "e4018fdbfe625433371f48274fee26f520bbe865e0d8c85bf3aa07424134b90c"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\data-stream.js",
+      "sha256": "21b28bf70f771856223b8f48c563ac6f7f0158eefe7ca5955dedc122f901fa20"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jws\\package.json",
+      "sha256": "e200bda7aa9c458f1ec643decdbdfa2e68174b791689f052b2af382ca9546ea9"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jwa\\index.js",
+      "sha256": "8b51949114a92cdc8fac5b3cd14c7d6ade0c4a676791c2cffd922e7739933b82"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\ecdsa-sig-formatter\\src\\ecdsa-sig-formatter.js",
+      "sha256": "9c7330949ada946a3c89be79ba66597616342c643ef5ab13a646c72147c11666"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\ecdsa-sig-formatter\\src\\param-bytes-for-alg.js",
+      "sha256": "4352fe33309e8085148db1fabc91748137089d830a85498d4e50a17c813ea1fc"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\ecdsa-sig-formatter\\package.json",
+      "sha256": "f8c0805a13487310192db6ae04452c4315f5538ae87d7bc20de2904902c34027"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\buffer-equal-constant-time\\index.js",
+      "sha256": "873c585bc4b4373d4e9d8d39bd475f9a0816fb7c8fce0f20335f6897090eb068"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\buffer-equal-constant-time\\package.json",
+      "sha256": "2d3df7ecb57811cf6fc43be180d9801c7c70928e5388391a6f258d889449ef4e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jwa\\package.json",
+      "sha256": "b9bb9207f37f9d48a2d705e65bc22c53acdc68c06830e741901f8e32855edf7f"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\tostring.js",
+      "sha256": "f564b878221935e72e05caf3fbc483d44550f10958144d00fb2665beae771bfc"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jws\\lib\\verify-stream.js",
+      "sha256": "ef10ee616c5cc89286781a7e880b4d98f0ce975d54ad1d52fff3868a4437475a"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\package.json",
+      "sha256": "54849822be7522aa777ad65eb962292558c317f449d7eb098e1d0ff46a2a0486"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\verify.js",
+      "sha256": "fa01db296dfa5585bff7b097187ef65fcb017d636ab9900799eb53e0acee0b85"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\JsonWebTokenError.js",
+      "sha256": "35fdb68dea632779c5fa58f225fd02d65a6d8e15a004928a18b48724da423428"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\NotBeforeError.js",
+      "sha256": "7e7de14d16fc9c308c53d4303309e4f924116d470ffec8e91436064382df95ca"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\TokenExpiredError.js",
+      "sha256": "ba5ac1133bbd1db3ebc297f04657b256294771f1688a42588abebdef172f5c70"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\timespan.js",
+      "sha256": "328f90a9a030c4d63159c75123e679c80e851ea9ea732d7f3345db7f4cd519d7"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\ms\\index.js",
+      "sha256": "e5f0b6a946a9b2b356a28557728410717df54ea2f599edb619f9839df6b7b0e9"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\ms\\package.json",
+      "sha256": "1a6b4d9739790c0b94ab96c8cc0507e281c164c311ff4fbf5e57fb8d26290b40"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\validateAsymmetricKey.js",
+      "sha256": "46c209d93f601141c15ed4c5b91a4d5742048f2bfbd04d1aaa5831c03f2b856b"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\asymmetricKeyDetailsSupported.js",
+      "sha256": "aa5ce3d7b296793af5743836266b41c225f53ed3622fb93547b370876bfd6863"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\index.js",
+      "sha256": "646e0b707f56dca7cb90cebc6fe687278bcc1a16fdcc83756dbe23083ff15e06"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\re.js",
+      "sha256": "016655766a1381078a83ba04cd6ba39afc6e64c3e5a95789ad82c3672ae87a94"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\constants.js",
+      "sha256": "38a112baf27ceca0260082ff26ac2fd7a9861cab1af12dd65e720277f68e6ce9"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\package.json",
+      "sha256": "7e0b9f6b53e048b53b3ca1174a2faf1fcf0206497297615d9b5d02fda8f265c5"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\debug.js",
+      "sha256": "8a9f420572260f3cf944463b5090d62a60f0730589dc23a7ec4ca25e2ee41bb3"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\semver.js",
+      "sha256": "d5ba57e5c93f031b1d234fca4bb746746fcd1fe51be7e5ee895601e2c12e2083"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\parse-options.js",
+      "sha256": "fdf51d0de8d5442c35a997ef58cd530d239ce206f961d14c5121354451b01d01"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\identifiers.js",
+      "sha256": "b4916b09dc7869ae0eb05e71c855c942a3a7365f7e6e89185d59a9e45a2451d7"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\parse.js",
+      "sha256": "29a69e15b6d02fe381d573f861881a89590e9d0f0f0ca740c5f85eaf0234c4ad"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\valid.js",
+      "sha256": "0de7ea736cb7807179d46dfac09c830a9338e02b6a07db12d7040cde2def6025"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\clean.js",
+      "sha256": "4eadb0892844cf3ae295121a86163a66c73f89acd1b7f0b114ec115b4539512f"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\inc.js",
+      "sha256": "952069fc8690b7d3af0fe9d55f7c54fe2ac067b48c5e74f6a54f9ce19a334493"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\diff.js",
+      "sha256": "ea876a3256d09f1301d33a95cd6451b6312c055328abfc8fc49b5f27fe6d2afe"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\major.js",
+      "sha256": "5c678480d882f511200fed2c16ec3847dfedb08a1d70328dc2f031d35d825276"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\minor.js",
+      "sha256": "1b051794f1713adec2a236517196691687c35f82e0b596ff3316a78b3cc10ae6"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\patch.js",
+      "sha256": "f02d3c1b059fe3d96ce124886f7eef321d381a95638fd3c4a8d5ccd8e76ffadd"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\prerelease.js",
+      "sha256": "baedbf503d5610ad041bfb56071efa48feb331ca278295c399537d35d3ffb593"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare.js",
+      "sha256": "d404b5aa48aaddc8a654c5da8fb7d4443404b7948589b21ac4b045d1cee4e34c"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\rcompare.js",
+      "sha256": "84fa5e88adf08d15c993cac8cdec6d1a65045b7e95a9c55184230a7f807f4dc0"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare-loose.js",
+      "sha256": "07b6a3a1db0a5210ceb784c1708bd4679f3a94fc73a9c9eb349349e7070a6f78"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\compare-build.js",
+      "sha256": "5ab651d5b40af289bd85c645a92b6d8cfe1a986dc413c797cfcc8d623d7c844c"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\sort.js",
+      "sha256": "c2fe2d3ed0be8a4e9de8f02abdfd5d9c0d3bcc510d88e87af84185592882c4b8"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\rsort.js",
+      "sha256": "6ec659ce3b6c2b173c719286caab04409adba046c0917874ec3b5e36ddfbc7e3"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gt.js",
+      "sha256": "135523704aa48cd98834dd170ee9f74f0e68043b379f32d021db11e6304c5c93"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lt.js",
+      "sha256": "1c897a9bc849320e2e9dc0f6c09555c01ee3ddf30734515d717b88ad7740ea25"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\eq.js",
+      "sha256": "b6e30a7168e52723216fc163d300e2bbabf92ec0251f9ac5438bb6ccf57c8936"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\neq.js",
+      "sha256": "a662883751918822c162183b46b9e20d09489132f82686c92ab78bee67f3a127"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\gte.js",
+      "sha256": "991c5bbe48ecb210a562646872f05862ad9fc0d42186d85aa60bdc6fa323eb9d"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\lte.js",
+      "sha256": "3a8d0b1d00423f60cc7cb810b36ab77b61330831ad237dbe73eb5cecfa412800"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\cmp.js",
+      "sha256": "a63d74e87b73788e78e9ce0a4892b5333d6b809c0de88b31e4ed76cbf17f94b3"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\coerce.js",
+      "sha256": "28a251c5ab210ddf9e97551b9f37a53329fcce91f0c3943dcbc02de1a1de915a"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\comparator.js",
+      "sha256": "054202956430d63d5ff4599fae09760ce465b489e4f0b5ef5ce7cc7ac21157ac"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\classes\\range.js",
+      "sha256": "cf8f8eb6934663ae2a9d04838d4d71555427a2abd3c8748ee5219507969a6b46"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\internal\\lrucache.js",
+      "sha256": "14d087c87da87b6f5c36fc4cdd7d2d14077874b14a68e20fce5b6138fa2ca34f"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\functions\\satisfies.js",
+      "sha256": "8cf5e122b757251671ed6c9d9680904b71cd375845853f05312e608cf2cc2946"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\to-comparators.js",
+      "sha256": "6c5e966210cff270fa2850668aaf8460fac7759f8d99f282521ef7a78f4564e9"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\max-satisfying.js",
+      "sha256": "e1a2c0d6144cc772cd20bbc8ecb9e8a3a4074e9172a3d8e794838b591cdeb416"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\min-satisfying.js",
+      "sha256": "2681abf54098aa670f12826b76a6ec77a2441186ae4243afde3be8ae4908f7ca"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\min-version.js",
+      "sha256": "fefba0a88c2bf74d5cede504b5ae50a8dc3edfd69cf0174a491e2cf3e442614b"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\valid.js",
+      "sha256": "5ef6f995af801868925940cf8df5735d565ebabb090b068695cae65218bcd3ac"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\outside.js",
+      "sha256": "3a2b0b23593d2f49419c06af2af75450cab103b0c25d665d48fe5bca495a21ca"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\gtr.js",
+      "sha256": "8fadad28e36d28e93d498ac7ac20badba2a407312845eabc18e82e90a0732b19"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\ltr.js",
+      "sha256": "e5186fcc03018acf9be6d968755d4c49727aeb0d981d179eb568ae5fbe983038"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\intersects.js",
+      "sha256": "fe87ac5d3020010ad3ec00636dadbf0c669ff07d0f57e0a8165a8264f79a676f"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\simplify.js",
+      "sha256": "7b78581c13322bc68ece2088685386b2a9b51c15b94d0a2063bdf2546bd41934"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\semver\\ranges\\subset.js",
+      "sha256": "299abae66d0bcf7ac4f4bdf593fcf14e6c94964ffdd7c72b844357925693d3c2"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\rsaPssKeyDetailsSupported.js",
+      "sha256": "affc2e0df7e8928b52c2a3078cf2b31541bc39d764ddfbbd5047bb70b3d2147f"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\lib\\psSupported.js",
+      "sha256": "422fd617085929da78d1c4b2d4618af81bec231bffc635301056b4bd09a11b21"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\jsonwebtoken\\sign.js",
+      "sha256": "00779cf25c179c89ff359a5544dea41850efb1c227f5c081cac04cf637ff53a8"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.includes\\index.js",
+      "sha256": "83318ef5471ffa444d442ab55e24ccb772671fbfcc3e494ed2c32715e85ebe8e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.includes\\package.json",
+      "sha256": "475341d4a8eb63cee296d0be3d0180bcf3731d2b9837d3ba74280044bc1e8f48"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isboolean\\index.js",
+      "sha256": "8fee48fd5bafd252cf16ceccc6fe0d3de14f91bdb99ea17287c5fd2af886b0d1"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isboolean\\package.json",
+      "sha256": "2eb21a69e5934d240b5f9b731eb088646c496e0255667ab852fce32e82048d2e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isinteger\\index.js",
+      "sha256": "f08d39de94700d1d233ef6fc7dce458b0959dff006e97a1f071b3c33f4ed1631"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isinteger\\package.json",
+      "sha256": "7247346b82f902b15d2698360d45af5dfb5164f628bdc57b83c996b939a27408"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isnumber\\index.js",
+      "sha256": "8af07547259b1a9f9d55e5e9209242295ced23a63df9f6c0d6f3c58d913309de"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isnumber\\package.json",
+      "sha256": "73b6302bec5815d609e434b440bd8ecd45d3d71b650c0de88d400cab13891000"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isplainobject\\index.js",
+      "sha256": "0f8359da5d7830204b85d5afc6c6321ea35adee76b600531418382930cb90dba"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isplainobject\\package.json",
+      "sha256": "c76488b831ad65dfa3a3e51201c9eb2193313ba1bee05bad910e9c6fa613bcd7"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isstring\\index.js",
+      "sha256": "d974a8434ce40a084b20268fd2b5a40161597961de3cc9679b68b407f5cb10b2"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.isstring\\package.json",
+      "sha256": "6fb3bb13e2d77b249269f9b39d3bd0629206cccb44bf04968643a49678882d0e"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.once\\index.js",
+      "sha256": "0424069c17cc702b439db9bc25302bf0aa7c9037f3bfe2adc78ebeec66af4dc5"
+    },
+    {
+      "path": "D:\\spinning wheel comp\\server\\node_modules\\lodash.once\\package.json",
+      "sha256": "7702448f49d390b35edfe095daa8bd684aba40069e0359c2bacf79606d1468e0"
+    }
+  ]
+}

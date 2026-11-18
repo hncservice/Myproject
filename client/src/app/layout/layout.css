@@ -1,0 +1,235 @@
+:root {
+  --hnc-red: #dc2626;
+  --hnc-red-dark: #991b1b;
+  --hnc-header-bg: rgba(15, 23, 42, 0.96);
+  --hnc-border-soft: rgba(148, 163, 184, 0.4);
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.app-shell-header {
+  --shell-nav-text: #fff7f6;
+  --shell-nav-muted: #e4cdd3;
+  --shell-nav-border: #75404e;
+  --shell-nav-focus: #ffc5cb;
+
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  border-bottom: 1px solid var(--shell-nav-border);
+  background: linear-gradient(110deg, #2c111d, #190d14 70%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.app-shell-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(100%, 1440px);
+  min-height: 68px;
+  margin-inline: auto;
+  padding: 10px clamp(14px, 3vw, 36px);
+}
+
+.app-shell-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: var(--shell-nav-text);
+  text-decoration: none;
+}
+
+.app-shell-brand:hover {
+  color: var(--shell-nav-text);
+}
+
+.app-shell-logo-wrap {
+  display: grid;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 4px;
+  place-items: center;
+  border-radius: 11px;
+  background: #fff7f6;
+}
+
+.app-shell-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+
+.app-shell-brand-title {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.app-shell-nav,
+.app-shell-account {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-shell-nav {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.app-shell-account {
+  gap: 10px;
+  margin-inline-start: 4px;
+}
+
+.app-shell-link,
+.app-shell-logout,
+.app-shell-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 11px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--shell-nav-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.25;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.app-shell-link:hover {
+  background: #3a1b29;
+  color: var(--shell-nav-text);
+}
+
+.app-shell-link[aria-current='page'] {
+  border-color: #a55b70;
+  background: #512336;
+  color: var(--shell-nav-text);
+}
+
+.app-shell-role-pill {
+  color: var(--shell-nav-muted);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-shell-logout,
+.app-shell-menu-toggle {
+  border-color: var(--shell-nav-border);
+  cursor: pointer;
+}
+
+.app-shell-logout {
+  color: #ffbec7;
+}
+
+.app-shell-logout:hover,
+.app-shell-menu-toggle:hover {
+  background: #482232;
+}
+
+.app-shell-menu-toggle {
+  display: none;
+}
+
+.app-shell-header :is(a, button):focus-visible {
+  outline: 2px solid var(--shell-nav-focus);
+  outline-offset: 2px;
+}
+
+.app-shell-main {
+  flex: 1;
+  padding-top: 12px;
+  padding-bottom: 24px;
+}
+
+.app-shell-main > .container {
+  color: #e5e7eb;
+}
+
+@media (max-width: 1080px) {
+  .app-shell-header-inner {
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 6px;
+    min-height: 64px;
+  }
+
+  .app-shell-menu-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .app-shell-nav {
+    display: none;
+    flex: 0 0 100%;
+    min-width: 0;
+    max-height: calc(100vh - 76px);
+    max-height: calc(100dvh - 76px);
+    padding: 8px 2px 4px;
+    overflow-y: auto;
+    border-top: 1px solid var(--shell-nav-border);
+  }
+
+  .app-shell-nav--open {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell-link {
+    justify-content: flex-start;
+    white-space: normal;
+  }
+
+  .app-shell-account {
+    justify-content: space-between;
+    margin: 4px 0 0;
+    padding: 8px 8px 0;
+    border-top: 1px solid var(--shell-nav-border);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-shell-header-inner {
+    padding-inline-start: max(12px, env(safe-area-inset-left));
+    padding-inline-end: max(12px, env(safe-area-inset-right));
+  }
+
+  .app-shell-main {
+    padding-top: 10px;
+  }
+}
+.app-shell-main > .container:has(
+  :is(.hnc-home, .hnc-game-page, .login-page, .user-login-page, .register-page)
+) {
+  max-width: none;
+  padding-inline: 0;
+}
+
+.app-shell-main:has(
+  :is(.hnc-home, .hnc-game-page, .login-page, .user-login-page, .register-page)
+) {
+  padding-top: 0;
+}
+

@@ -19,13 +19,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Optional: verify at startup
-transporter.verify((err, success) => {
-  if (err) {
-    console.warn(' Email transporter verification failed:', err.message);
-  } else {
-    console.log(' Email transporter ready');
-  }
-});
+// Importing configuration must not contact SMTP. Any future transport
+// verification requires an explicitly authorized delivery/integration workflow.
 
 module.exports = transporter;

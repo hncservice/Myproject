@@ -1,0 +1,365 @@
+.hnc-home {
+  --home-background: #160b11;
+  --home-text: #fff7f6;
+  --home-muted: #dbc4ca;
+  --home-border: #75404e;
+  --home-link: #ffb7bf;
+  --home-art: url('../../../assets/bg/HNC_Games_Full_Frame_1920x1080.svg');
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--home-background);
+  color: var(--home-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.hnc-home,
+.hnc-home *,
+.hnc-home *::before,
+.hnc-home *::after {
+  box-sizing: border-box;
+}
+.hnc-home-music {
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: 1px solid var(--home-border);
+  border-radius: 10px;
+  background: rgba(27, 14, 21, 0.65);
+  color: var(--home-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hnc-home-music:hover {
+  background: rgba(70, 30, 45, 0.85);
+}
+.hnc-home-artwork {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(22, 11, 17, 0.55) 0%,
+      rgba(22, 11, 17, 0.32) 45%,
+      rgba(22, 11, 17, 0.76) 100%
+    ),
+    var(--home-art);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.hnc-home-layout {
+  width: min(100%, 1160px);
+  min-width: 0;
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 64px) clamp(14px, 5vw, 48px);
+}
+
+.hnc-home-header {
+  margin-bottom: clamp(18px, 3vw, 32px);
+}
+
+.hnc-home-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.hnc-home-logo {
+  display: block;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #fff7f6;
+  object-fit: contain;
+}
+
+.hnc-home-header h1 {
+  margin: 0;
+  color: var(--home-text);
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  overflow-wrap: anywhere;
+}
+
+.hnc-home-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(14px, 2.5vw, 24px);
+}
+
+.hnc-home-panel {
+  min-width: 0;
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid var(--home-border);
+  border-radius: 22px;
+  background: rgba(27, 14, 21, 0.65);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.hnc-home-panel-title {
+  margin: 0 0 15px;
+  color: var(--home-text);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.hnc-home-prize h3,
+.hnc-home-empty h3 {
+  margin: 0 0 6px;
+  color: var(--home-text);
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.hnc-home-muted {
+  margin: 0;
+  color: var(--home-muted);
+  font-size: 14px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.hnc-home-prize-meta {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.hnc-home-prize-meta div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+
+.hnc-home-prize-meta dt {
+  font-weight: 600;
+}
+
+.hnc-home-prize-meta dd {
+  margin: 0;
+  color: var(--home-text);
+  overflow-wrap: anywhere;
+}
+
+.hnc-home-redemption {
+  display: grid;
+  gap: 12px;
+}
+
+.hnc-home-qr {
+  justify-self: center;
+  width: min(100%, 184px);
+  padding: 10px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.hnc-home-qr img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.hnc-home-code {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--home-border);
+  border-radius: 10px;
+  background: rgba(41, 23, 33, 0.75);
+}
+
+.hnc-home-code p {
+  margin: 0 0 4px;
+  color: var(--home-muted);
+  font-size: 12px;
+}
+
+.hnc-home-code code {
+  display: block;
+  color: var(--home-link);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.hnc-home-alert {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid #b65467;
+  border-radius: 10px;
+  background: #481825;
+  color: #ffe1e5;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.hnc-home :is(a, button):focus-visible {
+  outline: 2px solid #ffc5cb;
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .hnc-home-layout {
+    width: min(100%, 700px);
+  }
+
+  .hnc-home-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+@media (max-width: 480px) {
+  .hnc-home-layout {
+    padding-block-start: 18px;
+    padding-block-end: max(24px, env(safe-area-inset-bottom));
+    padding-inline-start: max(12px, env(safe-area-inset-left));
+    padding-inline-end: max(12px, env(safe-area-inset-right));
+  }
+
+  .hnc-home-panel {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .hnc-home-logo {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.hnc-home-prize-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.hnc-home-prize-heading h3 {
+  flex: 1 1 160px;
+  min-width: 0;
+  margin: 0;
+  font-size: clamp(20px, 4vw, 26px);
+}
+
+.hnc-home-prize-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.hnc-home-prize-status--ready {
+  border-color: #46785e;
+  background: #17382a;
+  color: #c1f5d4;
+}
+
+.hnc-home-prize-status--closed {
+  border-color: var(--home-border);
+  background: #38232f;
+  color: #f1dce4;
+}
+
+.hnc-home-prize .hnc-home-prize-meta {
+  padding: 10px 0;
+  border-block: 1px solid var(--home-border);
+}
+
+.hnc-home-prize .hnc-home-redemption {
+  margin-top: 16px;
+}
+
+.hnc-home-prize-scan {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin: 0;
+  text-align: center;
+}
+
+.hnc-home-prize .hnc-home-qr {
+  width: min(100%, 264px);
+  padding: clamp(12px, 4vw, 20px);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.hnc-home-prize-scan figcaption,
+.hnc-home-prize-note {
+  color: var(--home-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.hnc-home-prize-note {
+  margin: 12px 0 0;
+}
+
+.hnc-home-prize .hnc-home-code summary {
+  min-height: 34px;
+  padding-block: 7px;
+  color: var(--home-link);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hnc-home-prize .hnc-home-code summary:focus-visible {
+  outline: 2px solid #ffc5cb;
+  outline-offset: 2px;
+}
+
+.hnc-home-prize .hnc-home-code[open] code {
+  margin-top: 6px;
+}
+@media (min-width: 901px) {
+  .hnc-home {
+    aspect-ratio: 16 / 9;
+  }
+
+  .hnc-home-artwork {
+    /* First layer is the gradient. Second layer is the poster. */
+    background-size: 100% 100%, 100% auto;
+    background-position: center, center top;
+  }
+}

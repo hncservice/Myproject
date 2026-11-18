@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {validateAndScoreShot}=require('../features/games/services/perfectShotScoringValidator');
+const {positionAt,ratingForDistance}=require('../features/games/services/perfectShotGameplayService');
+const motion={phaseX:1.2,phaseY:.7,speedX:2.1,speedY:1.4,amplitudeX:30,amplitudeY:20};
+const started=100000;
+const p=positionAt(1100,0,motion);
+const payload={shot:1,x:p.x,y:p.y,shotAt:started+1100,receivedAt:started+1600,shotStartedAt:started,shotExpiresAt:started+3500,motion,positionAt,ratingForDistance};
+const good=validateAndScoreShot(payload);
+assert.equal(good.accepted,true);assert.equal(good.score.points,100);assert.equal(good.prizeEligible,false);
+const slow=validateAndScoreShot({...payload,receivedAt:started+2350});
+assert.equal(slow.code,'INVALID_LATENCY');
+const high=validateAndScoreShot({...payload,receivedAt:started+1900});
+assert.equal(high.risk.reviewRequired,true);
+console.log('PASS: Valid score; excessive latency rejected; high claimed latency flagged.');
+console.log('SHADOW MODE: observational only; no MongoDB connection or attempts consumed.');

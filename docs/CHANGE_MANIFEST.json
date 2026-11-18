@@ -1,0 +1,1684 @@
+{
+  "generatedUtc": "2026-10-29T16:02:58.906Z",
+  "scope": "Master audit/initial-batch changed and new source, examples, tools and documentation; excludes this manifest itself, dependencies/build output, secrets and historical artifact duplication",
+  "historicalCheckpointFilesVerified": 245,
+  "backupsVerified": [
+    {
+      "backup": "master-plan-batch-001-2026-10-28T10-34-15-919Z",
+      "path": "server/features/games/services/gameSessionService.js",
+      "sha256": "734f804882de4e00249f9f9791d63c4088b3b1bbda70ddd699a3246ef5d84917"
+    },
+    {
+      "backup": "master-plan-batch-001-2026-10-28T10-34-15-919Z",
+      "path": "server/scripts/testPerfectShotFraudAssessment.js",
+      "sha256": "d1000caf34f7f35e36be875cc6c9fdd477da456c612e18dbcb3ff40b094ef3de"
+    },
+    {
+      "backup": "master-plan-batch-002-2026-10-28T10-42-57-049Z",
+      "path": "server/config/mailer.js",
+      "sha256": "be850d397f147a3a9abaf0c50f78071a1e7b926c39eaff3b0ff45ab58d7f3289"
+    },
+    {
+      "backup": "master-plan-batch-003-2026-10-28T10-46-56-912Z",
+      "path": "client/src/features/authentication/pages/VerifyOtpPage.jsx",
+      "sha256": "c023bf86801ad13e1a30cb52ea2133fdf563e450adae892c5d0f83f5a014f77f"
+    },
+    {
+      "backup": "master-plan-batch-004-2026-10-28T10-51-43-007Z",
+      "path": "server/config/gameConfig.js",
+      "sha256": "bb0a3e46c4f3cdcab22939955c8e1b2d9ea6a9758660b52f3caf76e95b2f4c0f"
+    },
+    {
+      "backup": "master-plan-batch-004-2026-10-28T10-51-43-007Z",
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "8abb8a647c6189123572424a46d197f4c2a5433b95d8a4e97c2a87e6892e4604"
+    },
+    {
+      "backup": "master-plan-batch-004-2026-10-28T10-51-43-007Z",
+      "path": "tools/run-offline-unit-tests.cjs",
+      "sha256": "e6e713262888b66d6d81dbb7cb97295d23e3e1a0fd9da12b2d69a0fc9974e822"
+    },
+    {
+      "backup": "master-plan-batch-005-2026-10-28T11-01-12-412Z",
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "afb5c61925219385817d64a9f904be3cd8add2865e0f5721d47dffda85064426"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/features/authentication/controllers/authController.js",
+      "sha256": "7f424120244a113bac9661ef0ba5ebee69c2455057a401da8c8bf74656b26cb1"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/features/authentication/services/otpVerificationService.js",
+      "sha256": "d259140d90d89c5cfbf3ff3e6291ed303ec370bf0b7b5d919892634ca7ad5b7c"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/features/authentication/models/User.js",
+      "sha256": "9a44ca371ca46e9fe96db4c4a4c63d99f3ef4d4d2a89194a838bf8a9d5a11482"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/features/authentication/middleware/authMiddleware.js",
+      "sha256": "1b20e3c43812d180e222c035c47d91cf5a1122475f5f44b57374c597dc232864"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/features/authentication/routes/authRoutes.js",
+      "sha256": "bc4dd31087ac199941119f36f28157c7e4e33a12a8cca7fbce12cdde439f697e"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/features/games/services/gameStartService.js",
+      "sha256": "fba4da09d2e3eb2c83780dcb9c8e1f816ac7f062aff06fd4bf84afb26806e2d3"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/features/games/services/gameStatusService.js",
+      "sha256": "4803acd6a7479737c066de3f986b66efe84aafb2019380f14998147cb908e2a7"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/authentication/pages/RegisterPage.jsx",
+      "sha256": "a9416cdbb878ca7a15d98789421c36f89aeaa873d16eb4b348070cc3db3c99ea"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/authentication/pages/UserLoginPage.jsx",
+      "sha256": "ee40ed6e14e35c5cccf60fbebde4326d5949950f90ee8f0ccac0a7da26978a50"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/authentication/pages/VerifyOtpPage.jsx",
+      "sha256": "b613297cd36b50c72a1d4a965f09a112aeaf8103d9cac3ad543c9197c3a64f5e"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/authentication/pages/AdminLoginPage.jsx",
+      "sha256": "e5cfed1977694e631373910f676485267e8f16c6e5165b506efee90d96a43b47"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/authentication/pages/VendorLoginPage.jsx",
+      "sha256": "5b3c7c5c9a8dc425e7724d3d920e7e6daa521a5a069527fd0bede4cba1e7dd13"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/authentication/context/AuthContext.jsx",
+      "sha256": "3595bf71952a8890b38a4c7d5fd72cff7d12cc1bbcc3827d475172ab73acc0be"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/authentication/api/authApi.js",
+      "sha256": "c4adecf1441be0e4e5ad81cc036f67456dc44e1d34ba46456419d301ed1e4b7a"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/app/routes/AppRoutes.jsx",
+      "sha256": "374f035e8fc09b42f46a4823f3eeb9bcce69bd8dfcb9f94f6911df2b946f5cb3"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/app/layout/Layout.jsx",
+      "sha256": "935bb15b77257d4da4e571cb39526c92d9b86269ef186576b249846d5adc878b"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "client/src/features/games/pages/UserHomePage.jsx",
+      "sha256": "779a65f7e34df562cda9c2969e6c637f4f74874cd72c138bd2cce48e4fb1f398"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "server/tests/unit/otpVerification.offline.test.cjs",
+      "sha256": "9676ecdf7a5cf067148721f13b21874591000747f55672521185e73c9f92ce8d"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "e3e9fabd96f58234908f0706a0bc68be9679fea991c9b81753ac86d2affe03f1"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "tools/run-offline-unit-tests.cjs",
+      "sha256": "04c94e7c8ff0cc04acf02f873b220712804b46bc11a2c4c6679eb526125d987a"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "tools/verify-offline-structure.cjs",
+      "sha256": "3cd0a9c582ee5c372a5a32155bbe1e8514218cf20ab0c6605c4352a0a4602459"
+    },
+    {
+      "backup": "phase-c-auth-2026-10-28T13-27-41-899Z",
+      "path": "tools/finalize-offline-report.cjs",
+      "sha256": "441712f1edd20c38091c10313f19cb61722e7f723158ae627f542d795ad977d9"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/AUTHENTICATION_PERMISSIONS.md",
+      "sha256": "e0cacbe8815dd412d86b26c0d223c397de19eae34641a01d1121997bad7eabed"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/PROJECT_STATUS.md",
+      "sha256": "9d798a8f4917b214e36784c43f16b9f78b3853c12935fb73b838d8f7896cf4b6"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "sha256": "5c7b6ec5d8bfc8f450c67e480198fb04e1486b59ea09fcfc3888c6debc0d6b5c"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/KNOWN_ISSUES.md",
+      "sha256": "31ee7e3aeaa89d5bba4397c03a12b537d21dd3b3abebae4266cf8e3e362a1f36"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/BATCH_LOG.md",
+      "sha256": "3037b252752f61d4ff9db5d186098f5838465277ddef4ff8e780c94e14ae7446"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/TESTING.md",
+      "sha256": "2c22d5c420a073177600930d5604077c2a64c0bb3121c297154c2845efb15ce8"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/SECURITY_REVIEW.md",
+      "sha256": "5199ef54547b4f0e655826bdcc1263c5c8a8438059ebbf99a3924ee8237bc5b4"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/RELEASE_READINESS.md",
+      "sha256": "3bec675e5fd6de8e85dc9f85333553a4d5c901506b633e3f9abeb010837abdf1"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/ENVIRONMENT_SETUP.md",
+      "sha256": "ec3069fb9d2c9ceab1e4b039ad73e08a7f66fbb7e5762c5a64191e6a247a9d26"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/FRONTEND_MODULES.md",
+      "sha256": "f61b2b03345e7ef781e5c09d3d4f9f1218c7d1c98c505df5a1f345c9974841e2"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/BACKEND_MODULES.md",
+      "sha256": "4e6e5d90a3731018a832931b98d8caf266686cfa12592e2b0445f84d7472c3f1"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/README.md",
+      "sha256": "25a5a1bf2e6a9adedb6d646f3c676afdbebc138913ddd611075606839ffa577f"
+    },
+    {
+      "backup": "phase-c-docs-2026-10-28T14-00-52-348Z",
+      "path": "docs/RECOVERY_ROLLBACK.md",
+      "sha256": "27809d536c4bb47e94393e016405e1c95c1f5eb8d70e4d272b414d58a0e61dce"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/PROJECT_STATUS.md",
+      "sha256": "829004deb791234d8c5a88dcf3294ef5e80969c8ad842500b18f3f4c8ba0c1c9"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "sha256": "d35c6bc8d53e3b9b8292a289309daf3f2a927c2ad6dd070c004238b6227ef4ce"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/BATCH_LOG.md",
+      "sha256": "1baf72fd96ccecff35b9ac8417c41f9b8ce26336db35cd8ed43caa98ea71c199"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/SECURITY_REVIEW.md",
+      "sha256": "7c23e34c5fc69ac10c8fb674107001aadb4d7424927a369f4bd157209f8d1d9f"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/TESTING.md",
+      "sha256": "30195f1caa58e49f1338c0810bdff2824c6dae8c76fec3dabcdf23a7fbe27d53"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/RELEASE_READINESS.md",
+      "sha256": "2643f3f161ed9130e6d9f6441b0ea315c1dbfd0e0a8e3f9db382c63c2033d6d0"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/MODULE_INVENTORY.json",
+      "sha256": "4613d602c14cf00e629ae2ebc7fe164837e68754d5f4d321bf37147d2daf2f0a"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/STRUCTURAL_VERIFICATION.json",
+      "sha256": "481b46d3afb4c46d1d9fa837781a74d6059f63ff130adb9fdde7dab9db7c3dd3"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/CHANGE_MANIFEST.json",
+      "sha256": "b4ee07482b625b52628093ba936d375e33a21da688a61b337e97a4aca66e9036"
+    },
+    {
+      "backup": "phase-d-docs-2026-10-28T15-51-00-000Z",
+      "path": "docs/BACKEND_MODULES.md",
+      "sha256": "323a797c9c5ca1e81cd1acd3e444862d585b3e48f2332c5651d6fecfe4d274ab"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "server/features/vendors/controllers/vendorController.js",
+      "sha256": "1a37c315e0ac13437206e4a6de6b8f9058fcb06ea2296dd2f3063ec22ed3f839"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "server/features/administration/controllers/adminController.js",
+      "sha256": "54b4e2a047af13177c26c58158f8dc6131f60428a565e8ab159f2920b0c79566"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "server/features/administration/routes/adminRoutes.js",
+      "sha256": "dbc53a19fb4265ab8193b2cf7db17925eebd0cf796e2be7e2fdc0c7a9d6f0263"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "server/features/prizes/services/prizeReviewService.js",
+      "sha256": "4e96e7385d54c363d2e03b3704177d507d42526d0db848f0fb85ca7000afa3f0"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "server/features/prizes/controllers/prizeReviewController.js",
+      "sha256": "c96e6d5c17b9860153fbd5ac9f79c56b7cf0ac01c105af71fb30e8773e2b38df"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "client/src/features/vendors/pages/VendorScanPage.jsx",
+      "sha256": "acebcd27ef5788225bb9dbc63b198932c54726c8f972a91e6718c3b4ba5f332f"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "client/src/features/administration/pages/AdminVendorsPage.jsx",
+      "sha256": "0c354f339272e61e9b982d207ea965149dfef6b8623487a72b958a71b656c6c4"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "client/src/features/administration/pages/AdminUsersPage.jsx",
+      "sha256": "36edf370cd8e83a3f37a31859ad9753bb7920e31305aa8f0ba4dfe0de3bf6d68"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "client/src/features/administration/api/adminApi.js",
+      "sha256": "7a24f262000c012e69822119bb5818f05bef1a9fecffabfc4f31760a5a76508c"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "client/src/app/routes/AppRoutes.jsx",
+      "sha256": "48076d60a97e598a57d461fecce8789f6be8f0524710de5f2c08cb642e4a64c4"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "client/src/app/layout/Layout.jsx",
+      "sha256": "a5c97fc18a1329ccc3fc289d98143e0530b828a4ecdd74a77aa5ef5269ac877a"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "6048c2d4bab677f6e3298ebecd1cdb1f6fa32289e0b18044b0d3b7ee916f8020"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "tools/run-offline-unit-tests.cjs",
+      "sha256": "5598174220d9761c9d038d73c8b8868395e4544ce2d7e518f40529955c461a70"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "tools/verify-offline-structure.cjs",
+      "sha256": "ef232e1167e8b0e85613e355c8a34e9c51146441652c07e9573c3f75208778f3"
+    },
+    {
+      "backup": "phase-d-vendor-admin-2026-10-28T15-38-00-000Z",
+      "path": "tools/finalize-offline-report.cjs",
+      "sha256": "75b53154e2d17921c799b32303f7f3757d4aa6dad6fc47cf62f35c418f397f7c"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "server/features/administration/routes/adminRoutes.js",
+      "sha256": "6b72950e68ec728d2a27789640ed0200ceccf63cb2a6db1f2c39a0fa687049ae"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "server/features/prizes/controllers/prizeReviewController.js",
+      "sha256": "c96e6d5c17b9860153fbd5ac9f79c56b7cf0ac01c105af71fb30e8773e2b38df"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "client/src/app/routes/AppRoutes.jsx",
+      "sha256": "51901e955f765b03ab37e1640c9072138d3411354a546a2bcb7423d21f4c3ac6"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "client/src/app/layout/Layout.jsx",
+      "sha256": "a7b6c3464a3e62a0293027b7500c3b071f4732747efa45670663b492c495dd76"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "client/src/features/administration/api/adminApi.js",
+      "sha256": "c336f588c6c9c12f6ab4758e13e2b1fec97205e804d07481dcdf59b60dd9b0b8"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "client/src/features/administration/pages/AdminPrizeReviewsPage.jsx",
+      "sha256": "5d86ee6542ff9cec493717e9cc23159a30700499dc2a8264c31c3c2ae8190564"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "client/src/features/administration/pages/AdminUsersPage.jsx",
+      "sha256": "597ac781195038de573639978ffe771bbe37c6de4f3ffa95f4e94ef48f5ac80c"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "client/src/features/authentication/pages/VerifyOtpPage.jsx",
+      "sha256": "ca9fb34fd5bc734b5d6552f56f09d63b695decbd4d2a2b02abf7c20ba718c439"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "tools/run-offline-unit-tests.cjs",
+      "sha256": "d8fb30166870e5ef75f27806a39c65d4c891ce789afa184ff3b9883e350b5402"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "d1db3fcf2069688461943edcfc9ad3605c62c330c80360569287e17455261700"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "tools/verify-offline-structure.cjs",
+      "sha256": "71da13f4ef1bf8707fa75fde150cceb620376649d51f9aa3272937c6fd62258f"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "tools/finalize-offline-report.cjs",
+      "sha256": "045c2f9a89b4028e9bff3e7bca0ff0ef04e763ce961b054f46e42d109f16d6f5"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "docs/PROJECT_STATUS.md",
+      "sha256": "8b3a78ce94a4387439ccdab917aaf0d8d44df2f10a9f075a58a906faaed5d14c"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "sha256": "8cfbdadc29495eeccf809cc073ee8435e848e490f5a5a49fc79431b6e1102450"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "docs/BATCH_LOG.md",
+      "sha256": "161de9796807a75c33329847864594e82ae0053d2b2f12a591100efde83e5bdf"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "docs/SECURITY_REVIEW.md",
+      "sha256": "99903ef58dd5f34e99cb8d852c3c07f7ec66a4d9e4c211cfbdea0c17e87d1779"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "docs/RELEASE_READINESS.md",
+      "sha256": "7a3d21ee95e8ca70bf46811576b95c888348a893ec0f0a23612ad588bdc1bd36"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "docs/TESTING.md",
+      "sha256": "273548d997589d2e3177d492f2e2384a6abba250f121ff98e83a3fe765e3c504"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "docs/BACKEND_MODULES.md",
+      "sha256": "1c8352c5726d498ef92641c8f1cda94c9389612c7b6ba7b10a6a90a152b3b0b3"
+    },
+    {
+      "backup": "phase-e-campaign-2026-10-28T16-11-06-503Z",
+      "path": "server/tests/unit/vendorAdministration.offline.test.cjs",
+      "sha256": "eaef5b3ae2abcd23f612ce07ba3627a14dd7a0eaf5838de473d3fcd7a6acc796"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "server/middleware/errorMiddleware.js",
+      "sha256": "234cc0a8d0f9e33247b3e39bd16233eace9994fbba256cc6abd258b04d3ccc2c"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "server/features/authentication/services/sessionRevocationService.js",
+      "sha256": "58b911401cfd7d58a44b027861d039a9126d6d35faac4d6cccd7f751edd1617e"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "server/features/administration/controllers/adminController.js",
+      "sha256": "83923b6578cec23dfac0d12f6a6fd20c500b31dc1e2259cbe8dd7f1188636103"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "server/features/vendors/controllers/vendorController.js",
+      "sha256": "eab7f4c81d3fce7a68478d6de55eaee771a96dfc491bbbb125d98fcd6bc842b8"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "server/tests/unit/vendorAdministration.offline.test.cjs",
+      "sha256": "75160f8c3294e6491d59b9a8da9e52a1561f92507d43ea9d69a007628bff97f8"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "2e0530628b0a3a6e75f656138dc61b67f8c4a34c2bdca6b57816576612c0b81d"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "tools/run-offline-unit-tests.cjs",
+      "sha256": "b53fab20902abe888d613d5ef6ed0c42b6a213c00c9028a72dd908f0993b73b6"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "tools/finalize-offline-report.cjs",
+      "sha256": "8954343223a44dd7e1dc9b4cfce4bc5ac34421cd783e9df4992d74131f8e5f59"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "tools/audit-project.cjs",
+      "sha256": "dd384d6414b90bda08a83c328e6d9b6f9ad4ee8bad9645e8a3b4c0a2504c07d2"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "docs/SECURITY_REVIEW.md",
+      "sha256": "3a2179e24cfd2506f251a0c2e1ca6085430df4997cab17424e5318df47af099c"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "docs/PERFORMANCE_TESTING.md",
+      "sha256": "ac90014c27a31b9a1e57621137c7fde58bbd08db5249a4186fe90c66f2856af4"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "docs/RELEASE_READINESS.md",
+      "sha256": "2ea6df5df515aaf2b4c94609d2ce9c8fad8d219fe7e6cd52a54d5c9cf0047a0b"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "docs/BATCH_LOG.md",
+      "sha256": "1663ea49b6888b2da1731b7d35ecec830cf190976fa754bc98d66255ac672840"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "docs/PROJECT_STATUS.md",
+      "sha256": "6783e948d659c5cadb949bed4fcb83bfba18bcbabe8fb9c110c85b12d0111dcf"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "docs/TESTING.md",
+      "sha256": "defa9dc87c42e1bee6e029e2fa3c907d63ec55127c3d08ba27c848ec81d0fcf3"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "sha256": "fff7dc49c7fcf9f65a744d5b3c3205f9f874ddf7e69158a2e0e9f1571ad6af60",
+      "path": "server/infrastructure/email/emailService.js"
+    },
+    {
+      "backup": "phase-f-readiness-2026-10-28T16-43-26-548Z",
+      "path": "server/features/prizes/services/prizeRedemptionService.js",
+      "sha256": "02048fc86252d2618bb41582adaaf3eb911aa32f709589e89ec720f6bdfe644f"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "612a6ca75c260a6ed2c9d74b16c5840742573d26bb8ecbba3527add54d8e36db",
+      "path": "server/tests/unit/integrationReadiness.offline.test.cjs"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "20bf252994b03406648da5112658c4160edc83c0c009a997881d8038c5d10b97",
+      "path": "docs/INTEGRATION_READINESS.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "fbb07ac3c429d65e19f2322b08c260c229aeae50facc6ebfa9a8cd0a1fb34aca",
+      "path": "docs/DATABASE_SCHEMA_AUDIT.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "23b4f53f9b24d1067098dced570fa33c54c5236ba645c2c92644ef195ef05447",
+      "path": "docs/HTTP_TEST_MATRIX.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "bb1a84b273bdf82112bef25176b67cd912eb024ae0cb32be9c231c2da55840be",
+      "path": "docs/CONCURRENCY_RISK_REGISTER.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "495a81ba791265ec1dd78b23f004a94d2a58eb7415670e47452d383f2608b35e",
+      "path": "docs/SECURITY_REVIEW.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "291eb653802169aeafd6281d0498ad1176ce636cbc6cc024d84e23ab26be4707",
+      "path": "docs/PERFORMANCE_TESTING.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "2fa586c8264b2cc48a67e68155a5c5e25ba73a33ffc9ad83e32c00618659db9d",
+      "path": "docs/RELEASE_READINESS.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "9fcfeb2fb90f30146d514c35382e582b731f74db3a57aabc9cda244518dc1cb8",
+      "path": "docs/BATCH_LOG.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "53607eb7cee7cfdfeedeba52a54825a2cfc7f4c1cafb75e0a6f7b153b8250bdf",
+      "path": "docs/PROJECT_STATUS.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "1af3e119f45cd369f0f16b996ab15c7bc1d8332e0df2e5b506d6327b13398be9",
+      "path": "docs/TESTING.md"
+    },
+    {
+      "backup": "phase-f-readiness-handover-2026-10-29T05-56-39-690Z",
+      "sha256": "4538c8b36ecdb1a7259116a8ebf518ffe0bdcc732d91852f8c4de48f772721da",
+      "path": "docs/CHANGE_MANIFEST.json"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "0f12a78f8e2b75e1fd09c84268dbcda5f8035af24d41bdf14aab793d8ebbd76d",
+      "path": "docs/DATABASE_SCHEMA_AUDIT.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "8b3590ab477e7a4b2e3a30684ff7050f639ae8a1a16d8d056d5da1ba0fbdf6fc",
+      "path": "docs/HTTP_TEST_MATRIX.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "71b5fc882e1d9e89411cbd24b6b28ffc4fc92a83d169017208a97cbb5f67b052",
+      "path": "docs/CONCURRENCY_RISK_REGISTER.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "3a2179e24cfd2506f251a0c2e1ca6085430df4997cab17424e5318df47af099c",
+      "path": "docs/SECURITY_REVIEW.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "b29e26fc9848a50200771afc44d5ed6188ce9f9ace303750b86c0b1aee56eae7",
+      "path": "docs/PERFORMANCE_TESTING.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "2ea6df5df515aaf2b4c94609d2ce9c8fad8d219fe7e6cd52a54d5c9cf0047a0b",
+      "path": "docs/RELEASE_READINESS.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "1663ea49b6888b2da1731b7d35ecec830cf190976fa754bc98d66255ac672840",
+      "path": "docs/BATCH_LOG.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "6783e948d659c5cadb949bed4fcb83bfba18bcbabe8fb9c110c85b12d0111dcf",
+      "path": "docs/PROJECT_STATUS.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "defa9dc87c42e1bee6e029e2fa3c907d63ec55127c3d08ba27c848ec81d0fcf3",
+      "path": "docs/TESTING.md"
+    },
+    {
+      "backup": "phase-f-readiness-resume-2026-10-29T05-47-35-924Z",
+      "sha256": "b3625f8aa1df3c65dca4dc0c25d1302eee3726a16c99724b0deb9523c1dc0f12",
+      "path": "docs/CHANGE_MANIFEST.json"
+    },
+    {
+      "backup": "shared-game-assessments-2026-10-28T12-53-58-857Z",
+      "path": "server/features/fraud-monitoring/services/combinedGameplayAssessmentService.js",
+      "sha256": "f9d4cadc3a6d0e594102a31b6c3e37849c5744b4430059107c2290048932d9b4"
+    },
+    {
+      "backup": "shared-game-assessments-2026-10-28T12-53-58-857Z",
+      "path": "server/features/prizes/services/prizeDecisionCreationService.js",
+      "sha256": "9437296214f96481d4fd5a8b61a3ec2ddaa8858d9ae7968e9eab227e6d9dd0bd"
+    },
+    {
+      "backup": "shared-game-assessments-2026-10-28T12-53-58-857Z",
+      "path": "server/features/prizes/services/prizeDecisionRecoveryService.js",
+      "sha256": "40f9e70062c32609b1bbff1646eec06e99a2eeac6e1f8761f9360e8398910a7d"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "server/config/gameConfig.js",
+      "sha256": "c69c374e0c422a2e9a18c42c105b45f4812f92b5e73b6a3466d43cd8000ab61e"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "server/features/games/controllers/gameController.js",
+      "sha256": "f4eee9335f91a0a7ce4e12bb7b5024c9883be50679bec158e45c8a81c1182554"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "server/features/games/controllers/monkeyGameplayController.js",
+      "sha256": "b6f024cad9ba3af7c8f4eda233a893c718184efe105d8403a44cea1c2a3a8260"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "server/features/games/controllers/perfectShotGameplayController.js",
+      "sha256": "4570148a884de3d8b3aac40d588dbf834adddaee37be4bc8ccabc47d326884a0"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "server/features/games/services/gameCompletionDecisionService.js",
+      "sha256": "8836cb8783cf1cc5de828e5ac6f16416e49d5a83517fe0ff2a8806b478bc80e9"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "b59e8835ac421a969a6bfe838138fa2be8db66315439b53e6e6f446f522a9b2e"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "tools/run-offline-assessments.cjs",
+      "sha256": "2c33838358113a577ee02e3fb23f4122e780a4aca346b24836791e005da1d160"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "tools/run-offline-unit-tests.cjs",
+      "sha256": "b9cdf9ef49ac3f17d6a610c9daf145e2ec09f2f9392d0d1790d218a84e4c1577"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "tools/finalize-offline-report.cjs",
+      "sha256": "3fd3bd72ffdb903e97bd6a9f0e1ad08e089d675c110e9f7467ab8386c4055064"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/GAME_DEVELOPER_GUIDE.md",
+      "sha256": "bb89bc10dc68dae752b4a13e8c8ca0ec5660bfbdccddba2f28a8d584a4dc593e"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/BACKEND_MODULES.md",
+      "sha256": "83d3f25f10de067ad35e048de6dd466f021bbe40bbfa26cd585a79f8e28693b6"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "sha256": "d427fe95215ac1f4cb6beb22d34cfe95c6117704cb9a2716c8d44a75ccccc2d4"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/PROJECT_STATUS.md",
+      "sha256": "b8a8b86b267eec8b895009717e86b2b1fa8f5e363b82e9b42c32bae01c62c62b"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/BATCH_LOG.md",
+      "sha256": "fcb9d4943f0557dbc212504efb4ac3345f21e765ea5ebe708883373b9b9126e0"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/KNOWN_ISSUES.md",
+      "sha256": "da05aa5669788343d629128b00fedaafcaac20f66ca582f5eb399f02aab7057a"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/RELEASE_READINESS.md",
+      "sha256": "73bd3bdbb57e780eb7db5842538ab9f17df28ad5a5ca6ed4ab65da1bb32917a4"
+    },
+    {
+      "backup": "shared-game-engine-2026-10-28T12-44-21-761Z",
+      "path": "docs/TESTING.md",
+      "sha256": "94fc3c459c0fa42d66400775a42ba1f23f9b9b29fed9ddc47dd6150367f805d2"
+    },
+    {
+      "backup": "shared-game-engine-tests-2026-10-28T12-49-08-067Z",
+      "path": "server/tests/unit/gameConfig.offline.test.cjs",
+      "sha256": "efb886b9bb33c01f10f9c924aa453388520b3cbd6b9f3d2f4e0f4c816b94ee4b"
+    },
+    {
+      "backup": "shared-game-engine-tests-2026-10-28T12-49-08-067Z",
+      "path": "server/tests/unit/fraudAssessment.benchmark.cjs",
+      "sha256": "2de4271eff6d6a21569f4cd84cdc63f34765f1363e47dfc3108f167492368116"
+    },
+    {
+      "backup": "shared-game-engine-tests-2026-10-28T12-49-08-067Z",
+      "path": "tools/run-offline-benchmark.cjs",
+      "sha256": "81811c37ddf97dae212be52f01d54a021989628ff395690a1e6a6ad016fc2424"
+    },
+    {
+      "backup": "shared-game-store-2026-10-28T12-58-39-877Z",
+      "path": "server/features/games/services/gameStartService.js",
+      "sha256": "63782316623e3cbacedb8524bd253490c3dd296bf527ffcc91e8fc85ddb6314e"
+    }
+  ],
+  "changedOriginalFiles": [
+    "client/src/app/layout/Layout.jsx",
+    "client/src/app/routes/AppRoutes.jsx",
+    "client/src/features/administration/api/adminApi.js",
+    "client/src/features/administration/pages/AdminUsersPage.jsx",
+    "client/src/features/administration/pages/AdminVendorsPage.jsx",
+    "client/src/features/authentication/api/authApi.js",
+    "client/src/features/authentication/context/AuthContext.jsx",
+    "client/src/features/authentication/pages/RegisterPage.jsx",
+    "client/src/features/authentication/pages/UserLoginPage.jsx",
+    "client/src/features/authentication/pages/VerifyOtpPage.jsx",
+    "client/src/features/games/pages/UserHomePage.jsx",
+    "client/src/features/vendors/pages/VendorScanPage.jsx",
+    "server/config/gameConfig.js",
+    "server/config/mailer.js",
+    "server/features/administration/controllers/adminController.js",
+    "server/features/administration/routes/adminRoutes.js",
+    "server/features/authentication/controllers/authController.js",
+    "server/features/authentication/middleware/authMiddleware.js",
+    "server/features/authentication/models/User.js",
+    "server/features/authentication/routes/authRoutes.js",
+    "server/features/authentication/services/otpVerificationService.js",
+    "server/features/fraud-monitoring/services/combinedGameplayAssessmentService.js",
+    "server/features/games/controllers/gameController.js",
+    "server/features/games/controllers/monkeyGameplayController.js",
+    "server/features/games/controllers/perfectShotGameplayController.js",
+    "server/features/games/services/gameCompletionDecisionService.js",
+    "server/features/games/services/gameSessionService.js",
+    "server/features/games/services/gameStartService.js",
+    "server/features/games/services/gameStatusService.js",
+    "server/features/prizes/controllers/prizeReviewController.js",
+    "server/features/prizes/services/prizeDecisionCreationService.js",
+    "server/features/prizes/services/prizeDecisionRecoveryService.js",
+    "server/features/prizes/services/prizeRedemptionService.js",
+    "server/features/prizes/services/prizeReviewService.js",
+    "server/features/vendors/controllers/vendorController.js",
+    "server/infrastructure/email/emailService.js",
+    "server/middleware/errorMiddleware.js",
+    "server/scripts/testPerfectShotFraudAssessment.js"
+  ],
+  "newClientServerSourceFiles": [
+    "client/src/app/routes/AuthenticatedRoutes.test.jsx",
+    "client/src/features/administration/pages/AdminCampaignsPage.jsx",
+    "client/src/features/administration/pages/AdminOperationsPage.jsx",
+    "client/src/features/administration/pages/AdminPrizeReviewsPage.jsx",
+    "client/src/features/administration/pages/AdminRouteAuthorization.test.jsx",
+    "client/src/features/administration/pages/CampaignCompletion.test.jsx",
+    "client/src/features/administration/pages/CampaignRoutes.test.jsx",
+    "client/src/features/administration/pages/VendorAdministration.test.jsx",
+    "client/src/features/administration/reportCsv.js",
+    "client/src/features/authentication/api/authApi.test.js",
+    "client/src/features/authentication/context/AuthContext.test.jsx",
+    "client/src/features/authentication/pages/AuthenticationJourney.test.jsx",
+    "client/src/features/authentication/pages/OtpResendExperience.test.jsx",
+    "client/src/features/authentication/pages/VerifyOtpPage.test.jsx",
+    "client/src/features/games/components/GameSelectionPanel.jsx",
+    "client/src/features/games/components/GameSelectionPanel.test.jsx",
+    "client/src/features/vendors/pages/VendorScanPage.test.jsx",
+    "server/features/administration/controllers/adminOperationsController.js",
+    "server/features/authentication/controllers/sessionController.js",
+    "server/features/authentication/services/authPolicy.js",
+    "server/features/authentication/services/otpChallengeService.js",
+    "server/features/authentication/services/sessionRevocationService.js",
+    "server/features/campaigns/controllers/campaignAdministrationController.js",
+    "server/features/campaigns/models/CampaignDefinition.js",
+    "server/features/campaigns/services/campaignAdministrationService.js",
+    "server/features/campaigns/services/campaignPolicy.js",
+    "server/features/games/engine/gameSessionStoreFactory.js",
+    "server/features/games/engine/legacyGameEngine.js",
+    "server/features/games/engine/legacyGameEngineFactory.js",
+    "server/features/games/engine/persistentGameEngineFactory.js",
+    "server/features/games/engine/registeredGameAssessments.js",
+    "server/features/games/engine/sharedGameEngine.js",
+    "server/features/games/registry/gameRegistry.js",
+    "server/features/games/registry/gameRegistryFactory.js",
+    "server/features/prizes/services/prizeReviewEvidenceService.js",
+    "server/infrastructure/logging/errorMetadata.js",
+    "server/infrastructure/reporting/reportSafety.js",
+    "server/infrastructure/testing/integrationTargetPolicy.js",
+    "server/tests/integration/README.md",
+    "server/tests/integration/adapterSafety.js",
+    "server/tests/integration/config.example.json",
+    "server/tests/integration/databaseIntegrationAdapter.js",
+    "server/tests/integration/expressBootstrapAdapter.js",
+    "server/tests/integration/httpIntegrationAdapter.js",
+    "server/tests/integration/offlineHarness.js",
+    "server/tests/integration/offlineRuntime.js",
+    "server/tests/unit/authMiddleware.offline.test.cjs",
+    "server/tests/unit/campaignReview.offline.test.cjs",
+    "server/tests/unit/customerAuthentication.offline.test.cjs",
+    "server/tests/unit/fraudAssessment.benchmark.cjs",
+    "server/tests/unit/gameConfig.offline.test.cjs",
+    "server/tests/unit/gameEngineCompatibility.offline.test.cjs",
+    "server/tests/unit/gameRegistry.offline.test.cjs",
+    "server/tests/unit/gameSessionService.offline.test.cjs",
+    "server/tests/unit/gameSessionStore.offline.test.cjs",
+    "server/tests/unit/helpers/createAuthFixture.cjs",
+    "server/tests/unit/helpers/createEngineFixture.cjs",
+    "server/tests/unit/helpers/fakeGameSessionModel.cjs",
+    "server/tests/unit/helpers/loadAuthSource.cjs",
+    "server/tests/unit/helpers/loadGameRegistry.cjs",
+    "server/tests/unit/helpers/loadIsolatedService.cjs",
+    "server/tests/unit/helpers/runCases.cjs",
+    "server/tests/unit/helpers/syntheticGame.cjs",
+    "server/tests/unit/integrationAdapters.offline.test.cjs",
+    "server/tests/unit/integrationHarness.offline.test.cjs",
+    "server/tests/unit/integrationReadiness.offline.test.cjs",
+    "server/tests/unit/mailerInitialization.offline.test.cjs",
+    "server/tests/unit/offlineGuard.offline.test.cjs",
+    "server/tests/unit/otpVerification.offline.test.cjs",
+    "server/tests/unit/registeredGameAssessments.offline.test.cjs",
+    "server/tests/unit/sharedGameEngine.offline.test.cjs",
+    "server/tests/unit/vendorAdministration.offline.test.cjs"
+  ],
+  "files": [
+    {
+      "path": "client/.env.example",
+      "sha256": "f335db8a2fcbee1e1ddb26ded8d8e5889cbf4980da3dc76258c655710be11a95",
+      "bytes": 363
+    },
+    {
+      "path": "client/src/app/layout/Layout.jsx",
+      "sha256": "3b4172bec52a2ef3c80df515de6ecb0b0ee162bbc98c93e1092f70e800c7f552",
+      "bytes": 3122
+    },
+    {
+      "path": "client/src/app/routes/AppRoutes.jsx",
+      "sha256": "36c1a06383cc8d29a39ddfcfb5896539804feb2f61ff9f869ba768feb7150289",
+      "bytes": 4767
+    },
+    {
+      "path": "client/src/app/routes/AuthenticatedRoutes.test.jsx",
+      "sha256": "279dc55cd98f574f2397290b8677b6b90da29d23502d3b8295e4fd55187e2eb2",
+      "bytes": 3526
+    },
+    {
+      "path": "client/src/features/administration/api/adminApi.js",
+      "sha256": "61a2c8a9038bfe129b28c42bb7754f1b013738c367031e5c56c402a6877a06e5",
+      "bytes": 2657
+    },
+    {
+      "path": "client/src/features/administration/pages/AdminCampaignsPage.jsx",
+      "sha256": "9ad20d4c165ca43c54c0e550f7373652f7daa7488fe6db00850035a5eeb791ca",
+      "bytes": 8659
+    },
+    {
+      "path": "client/src/features/administration/pages/AdminOperationsPage.jsx",
+      "sha256": "a6062fa80baa17011396045b9a2b461249e0706e542c1ff468e9be3fa43aea46",
+      "bytes": 3442
+    },
+    {
+      "path": "client/src/features/administration/pages/AdminPrizeReviewsPage.jsx",
+      "sha256": "40a45b06a0fd9859b8f191f26e4ee776587ae7056a172cce7f12d69cfc1214c1",
+      "bytes": 4679
+    },
+    {
+      "path": "client/src/features/administration/pages/AdminRouteAuthorization.test.jsx",
+      "sha256": "49c4e44b7f48c528dd3961bffeb1d0c84617608806282cabe2c3ef43a3555bd6",
+      "bytes": 2880
+    },
+    {
+      "path": "client/src/features/administration/pages/AdminUsersPage.jsx",
+      "sha256": "11e8e4f9e66dc5813038928ebf6484cfdf3fa0d6d5817a5a628cb349a4a24ab9",
+      "bytes": 29888
+    },
+    {
+      "path": "client/src/features/administration/pages/AdminVendorsPage.jsx",
+      "sha256": "1aef8bb0eee9ced18975b16e10ade25ece8c8fc0af5187c9a49d061012112c11",
+      "bytes": 24541
+    },
+    {
+      "path": "client/src/features/administration/pages/CampaignCompletion.test.jsx",
+      "sha256": "41e487e10cec558d1309c79630d48026c8a37725178eb70b4f8563a16a3bdb9c",
+      "bytes": 10293
+    },
+    {
+      "path": "client/src/features/administration/pages/CampaignRoutes.test.jsx",
+      "sha256": "0744f3d3628051f32937a25cfeeb1a7dfab8cacc9483ed70f2330e407ff34bdb",
+      "bytes": 2515
+    },
+    {
+      "path": "client/src/features/administration/pages/VendorAdministration.test.jsx",
+      "sha256": "dfaacdfb8610a635af24ccff2c47f2cbfdec8c3db2ac4c8deabd77598e0713a0",
+      "bytes": 10189
+    },
+    {
+      "path": "client/src/features/administration/reportCsv.js",
+      "sha256": "8abc7c2976729b353071437a49cf85137181c25f2f5e7e96174181fd3fec36e3",
+      "bytes": 636
+    },
+    {
+      "path": "client/src/features/authentication/api/authApi.js",
+      "sha256": "439a9b680970e42f5c9006db9300eabf2e344354431164e6080848c377201d79",
+      "bytes": 1094
+    },
+    {
+      "path": "client/src/features/authentication/api/authApi.test.js",
+      "sha256": "79a33f9bde59001e7313d51a956d986d929b5e845a8c72fb8c23b43aaf4167d5",
+      "bytes": 1102
+    },
+    {
+      "path": "client/src/features/authentication/context/AuthContext.jsx",
+      "sha256": "c6b8dda110244ead01349cde5fe2d0a2f2a3aff3f0627f1b4af3a88344e43e82",
+      "bytes": 2474
+    },
+    {
+      "path": "client/src/features/authentication/context/AuthContext.test.jsx",
+      "sha256": "fb117eff9031f981f60caefcb35e423f50cdf43c6273a9b6b1860088b0a2d520",
+      "bytes": 3022
+    },
+    {
+      "path": "client/src/features/authentication/pages/AuthenticationJourney.test.jsx",
+      "sha256": "c547ba7789fa51f4cb9f194aaddbd8ffef9ef5a8b60f127c9903b9786813465a",
+      "bytes": 10322
+    },
+    {
+      "path": "client/src/features/authentication/pages/OtpResendExperience.test.jsx",
+      "sha256": "e68de9b58fcb9e6c5dd8c99fe715d7fc4844ce4b523a616cf398bf63776a8ed6",
+      "bytes": 3092
+    },
+    {
+      "path": "client/src/features/authentication/pages/RegisterPage.jsx",
+      "sha256": "610d41489c21bd858d6589a7add550d7982b49428a522ae4870f65a7f143fa28",
+      "bytes": 10992
+    },
+    {
+      "path": "client/src/features/authentication/pages/UserLoginPage.jsx",
+      "sha256": "97d2d74ef6dbdcb70de6830407d7164177aa6f97e9b8714552ca21e23258f598",
+      "bytes": 7119
+    },
+    {
+      "path": "client/src/features/authentication/pages/VerifyOtpPage.jsx",
+      "sha256": "eac7bb24d0e5f290e8f0b33b4b5fa0a2f8ac168fa5ed14f96f50d7f7ac3148cb",
+      "bytes": 15910
+    },
+    {
+      "path": "client/src/features/authentication/pages/VerifyOtpPage.test.jsx",
+      "sha256": "1a0736349bc3169ed3160a6ee92b4c91aba1f4137c6a2978d3a36d4b3cda4bcb",
+      "bytes": 5025
+    },
+    {
+      "path": "client/src/features/games/components/GameSelectionPanel.jsx",
+      "sha256": "0a107e8ccafd1aea094d36b040c94c6e40d0449f8f31c7e26bf8bd6e02bc12d3",
+      "bytes": 2154
+    },
+    {
+      "path": "client/src/features/games/components/GameSelectionPanel.test.jsx",
+      "sha256": "a21fed5894a9bb8efebf4d8973468a327bbc0c04c9cd8972adc54bc67d7060c7",
+      "bytes": 2239
+    },
+    {
+      "path": "client/src/features/games/pages/UserHomePage.jsx",
+      "sha256": "305bc747d24df3707c4e6cfc677e8eece83a108827172710b30b15cde5046e51",
+      "bytes": 8663
+    },
+    {
+      "path": "client/src/features/vendors/pages/VendorScanPage.jsx",
+      "sha256": "6a28f779dbcf8347525896deb837981342da5a32e549c938c31b25602af76c64",
+      "bytes": 21732
+    },
+    {
+      "path": "client/src/features/vendors/pages/VendorScanPage.test.jsx",
+      "sha256": "f222267aa78838b3915fea912ced790817a0b7804fe39767b982e4121ce198be",
+      "bytes": 3028
+    },
+    {
+      "path": "docs/API_REFERENCE.md",
+      "sha256": "3c4dd8cd1b42c961d00ced4be60f6cf85cb0405276593aa80b55db99d3f3d86e",
+      "bytes": 4662
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "7afdb16e5643c7ee4c1e8eda71d79a752055988b2bbaa6c0fc588590b1d1cb9e",
+      "bytes": 3587
+    },
+    {
+      "path": "docs/AUTHENTICATION_PERMISSIONS.md",
+      "sha256": "b20c3c7eddce0d99824d171b57ce07cf3c16f55c3405a77cd35347c8a429ce42",
+      "bytes": 2357
+    },
+    {
+      "path": "docs/AUTH_SCHEMA_ROLLOUT.md",
+      "sha256": "29d4b9b908683268d57ec00b4c31c024be76aaa92622eedbc3a914ecb611c8b7",
+      "bytes": 2677
+    },
+    {
+      "path": "docs/BACKEND_MODULES.md",
+      "sha256": "f85332f500741441f5bfe04483f247753cf45d1cd4e565c8136d8184ec607168",
+      "bytes": 6604
+    },
+    {
+      "path": "docs/BATCH_LOG.md",
+      "sha256": "5b2be82ee1a6983351b81192483ee132a96d70fd456f08ae00007afd2e4bf4cf",
+      "bytes": 70619
+    },
+    {
+      "path": "docs/CAMPAIGN_MANAGEMENT.md",
+      "sha256": "52879373dc4298c7b6e4618178ca7800d64800d1c0e9c5d51ee78340e47bef5d",
+      "bytes": 10362
+    },
+    {
+      "path": "docs/CONCURRENCY_RISK_REGISTER.md",
+      "sha256": "7bcf175d6b386defb12cef1aba5d897d60f54602b3e354d9ca516ddf43f28582",
+      "bytes": 13081
+    },
+    {
+      "path": "docs/CUSTOMER_AUTHENTICATION.md",
+      "sha256": "26a2942d9dd46871b50a42e79a375a36b45bddbb96742a6892cdf483fb84da56",
+      "bytes": 7521
+    },
+    {
+      "path": "docs/DATABASE_SCHEMA.md",
+      "sha256": "eb8ebe5fb493ddcd364568999e64c40728873b3411310e9f1cffb271ed36472c",
+      "bytes": 15436
+    },
+    {
+      "path": "docs/DATABASE_SCHEMA_AUDIT.md",
+      "sha256": "7e74ad77fc2dc1a8662495a7588bb75b7fa7055476cd71da50fa0543e382e4c2",
+      "bytes": 14234
+    },
+    {
+      "path": "docs/DEPLOYMENT_CHECKLIST.md",
+      "sha256": "ba4b5c611de6435dbdc36e69c6884d587bf495325c294ff0822f81349f4fc285",
+      "bytes": 1848
+    },
+    {
+      "path": "docs/ENVIRONMENT_SETUP.md",
+      "sha256": "6ae1d32c1f84253a8785dc52748a89355de9dac537309a9deb4fe4d5b6712da0",
+      "bytes": 4913
+    },
+    {
+      "path": "docs/FRAUD_PRIZE_LIFECYCLE.md",
+      "sha256": "f189b5fab170658ae7870e81d5249bf63c6dd664eb9b16afb451e198a55e9b10",
+      "bytes": 2715
+    },
+    {
+      "path": "docs/FRONTEND_MODULES.md",
+      "sha256": "01e513bf946cc64caec2cd90644d279d8f3d80f65592aaab756732ae8e951efd",
+      "bytes": 3800
+    },
+    {
+      "path": "docs/GAME_DEVELOPER_GUIDE.md",
+      "sha256": "43253f0f23ef86b47cf650135050241717f5824983c23d7f7bf71306fb4dfb95",
+      "bytes": 9181
+    },
+    {
+      "path": "docs/HTTP_TEST_MATRIX.md",
+      "sha256": "23019b72550fbd51cac4777f2e6cd617de80450618d9b99e1bc363dd27e17f24",
+      "bytes": 17167
+    },
+    {
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "sha256": "ef219ea8ba23b0322fcb8fad037191ef42cb90146ab2249a78bc9a140760d71e",
+      "bytes": 11365
+    },
+    {
+      "path": "docs/INTEGRATION_READINESS.md",
+      "sha256": "4b7d9657146820c05748a0892f046d78d900de29483481e37f5a9ec7227b71f7",
+      "bytes": 20566
+    },
+    {
+      "path": "docs/KNOWN_ISSUES.md",
+      "sha256": "3dc956524df60bea9e23ca29b770ac419cb7ff256125aee81a0abd32668d5286",
+      "bytes": 3223
+    },
+    {
+      "path": "docs/MODULE_INVENTORY.json",
+      "sha256": "413f6f65040b15b0844bc36657101cb4cc8c6ed36974750c4efd93489cec4920",
+      "bytes": 573115
+    },
+    {
+      "path": "docs/MODULE_INVENTORY.md",
+      "sha256": "29285d355dfd5af0f9d05a636bfce2763317b0194cf14cae1a495ca11e59887f",
+      "bytes": 38842
+    },
+    {
+      "path": "docs/PERFORMANCE_TESTING.md",
+      "sha256": "0f362090616df1adee97b29a25134c30a86a48f2d7cfb6474532a5915597d949",
+      "bytes": 13285
+    },
+    {
+      "path": "docs/PHASE_F_FILE_REVIEW.md",
+      "sha256": "de5e4bb8cd43fb093fc7e9b9a5e7dc3a31bdddede4de5b96702853fcf9f2bd5c",
+      "bytes": 4769
+    },
+    {
+      "path": "docs/PHASE_F_ISSUE_REGISTER.md",
+      "sha256": "ab70310dbcb88c74d545dec44a29e0b513f3279ce5c3f94ed6870888fd6edaf8",
+      "bytes": 11274
+    },
+    {
+      "path": "docs/PHASE_G1_HARNESS_READINESS.md",
+      "sha256": "dee50c12d6b864131cc9aa1f7c0cd77d3ac2a23b004cb0879e95f9c0a5e16b3e",
+      "bytes": 10027
+    },
+    {
+      "path": "docs/PHASE_G2A_ADAPTER_READINESS.md",
+      "sha256": "b19bbd035e2bbf97979aff39066682fa06462e61379a90a6209651e5621bab1b",
+      "bytes": 10008
+    },
+    {
+      "path": "docs/PHASE_G2B_EXECUTION_PLAN.json",
+      "sha256": "e0e2d12a4d32cc0cd8613649d03481a33f5a72c3d5136fa1f1ebc33c851ba6a0",
+      "bytes": 12336
+    },
+    {
+      "path": "docs/PHASE_G2B_FINAL_PREFLIGHT.md",
+      "sha256": "cac2393f63e4682bc7deadf53d5370654f5f748c677dd4495442eca10234221a",
+      "bytes": 24673
+    },
+    {
+      "path": "docs/PHASE_G2B_SANDBOX_PROPOSAL.md",
+      "sha256": "62b282098cf1994193aee50c730a1de3e908e4f6f20f2ef08485e362295f1741",
+      "bytes": 9016
+    },
+    {
+      "path": "docs/PHASE_G_SANDBOX_PLAN.md",
+      "sha256": "e63472faa2dbfa72b18bd6808d287b29dc5b683a3e2fc8136abbde8c9fc1ae81",
+      "bytes": 15087
+    },
+    {
+      "path": "docs/PROJECT_STATUS.md",
+      "sha256": "1127f39ee663adacf593743abf9a7fde41a930167541de5980dc417125a4ce12",
+      "bytes": 18389
+    },
+    {
+      "path": "docs/README.md",
+      "sha256": "243cd3d1cfea670e65b967f045f5e9899508fa4c4f6be892ac527dcce63a8887",
+      "bytes": 1959
+    },
+    {
+      "path": "docs/RECOVERY_ROLLBACK.md",
+      "sha256": "83649e458b2fb4f9360095c42f06969de8977912d094c1f0d06070f9ef764a08",
+      "bytes": 1770
+    },
+    {
+      "path": "docs/RELEASE_READINESS.md",
+      "sha256": "f7bdfdf7e22053541a35920cddb5f04582db0a6c252d5dcd5e5a28da67b627f9",
+      "bytes": 6768
+    },
+    {
+      "path": "docs/SECURITY_REVIEW.md",
+      "sha256": "d368b4d995af0e8223a7709066cb7b80142304ecdc951d7643f8544bd116d514",
+      "bytes": 10333
+    },
+    {
+      "path": "docs/STRUCTURAL_VERIFICATION.json",
+      "sha256": "6b41742ac86a68fdc4ae45f5e01f0c19e2d2252a6a06aec0ec0137540b7eefa0",
+      "bytes": 9343
+    },
+    {
+      "path": "docs/TESTING.md",
+      "sha256": "7d10a2938e7ed7c48917ad516553fe0490ff46c5447e4c1983bd574dacaf61bb",
+      "bytes": 14855
+    },
+    {
+      "path": "docs/VENDOR_ADMIN_COMPLETION.md",
+      "sha256": "41f9cdd983d5cfe5c2be3fd0a93d6d9a4ced5115c481fe942046741c327edfa0",
+      "bytes": 6848
+    },
+    {
+      "path": "docs/WINDOWS_SANDBOX_SETUP.md",
+      "sha256": "dee0bb4e035b9f4ab369f729ddd0c8a6d8fb26a5f4c6b37f7de5941419dfafba",
+      "bytes": 39225
+    },
+    {
+      "path": "server/.env.example",
+      "sha256": "aacb544ea6429b9f51e46830b34346b38bd94b442328da4f44d13565c9883adc",
+      "bytes": 1315
+    },
+    {
+      "path": "server/config/gameConfig.js",
+      "sha256": "41a6589c9f36703debb05beb10ec4fbdcef7481938fc02422695d1489d03fb64",
+      "bytes": 679
+    },
+    {
+      "path": "server/config/mailer.js",
+      "sha256": "ba1a28a48bfc9ba4088efa2fc89f88b083716275152e40e72d698cf83438836e",
+      "bytes": 864
+    },
+    {
+      "path": "server/features/administration/controllers/adminController.js",
+      "sha256": "f99b8766e6278f5d602d66c37db1050d66923fb5bc2d49af7ca22c93deda0a57",
+      "bytes": 34316
+    },
+    {
+      "path": "server/features/administration/controllers/adminOperationsController.js",
+      "sha256": "b3c77cadcfd2a282c387269a1bc07b35f3f6ddc8e188b41e1ef06fb91ae1e5cc",
+      "bytes": 3235
+    },
+    {
+      "path": "server/features/administration/routes/adminRoutes.js",
+      "sha256": "1dd2a37c9d826caf1290893e0cda624d334a5b018ccab4458f94593766f91712",
+      "bytes": 3418
+    },
+    {
+      "path": "server/features/authentication/controllers/authController.js",
+      "sha256": "9226ffa39203b4f3ffd9d562182b7c76b1f0e24b6707350d8c3d5966b99dc5af",
+      "bytes": 11217
+    },
+    {
+      "path": "server/features/authentication/controllers/sessionController.js",
+      "sha256": "c9f4359da8958683e0b2362293b43f97876b6d521bb3b02be90a28087f267f63",
+      "bytes": 448
+    },
+    {
+      "path": "server/features/authentication/middleware/authMiddleware.js",
+      "sha256": "90934c55fe43e5b877e4c322634f35d9f27c3ac032d7783f3d8fc0e497d75271",
+      "bytes": 7769
+    },
+    {
+      "path": "server/features/authentication/models/User.js",
+      "sha256": "3311ea29ed1342c742e1a4ae51712bf4358428966b3ce9adecd4a6be3271a1c3",
+      "bytes": 3012
+    },
+    {
+      "path": "server/features/authentication/routes/authRoutes.js",
+      "sha256": "efb054f9e4df03cc9382126dbdb61f0a3ec201a585fb3467bebf264c533bdafc",
+      "bytes": 785
+    },
+    {
+      "path": "server/features/authentication/services/authPolicy.js",
+      "sha256": "a831560f3788ea92fcb154e7dfcb0fcd3b9de17fdcbb4715d0d625575bea07e6",
+      "bytes": 590
+    },
+    {
+      "path": "server/features/authentication/services/otpChallengeService.js",
+      "sha256": "1ee0a10a5991b4e7069195ab6949740aa47821247f7ab66e09417b67db51fc53",
+      "bytes": 2466
+    },
+    {
+      "path": "server/features/authentication/services/otpVerificationService.js",
+      "sha256": "12b95878f663b08b1af22f52c8285c44d58ed46c362f31bae44c39a470b43fd3",
+      "bytes": 4979
+    },
+    {
+      "path": "server/features/authentication/services/sessionRevocationService.js",
+      "sha256": "46390aedea0451bd6ffae5d72f6b3366eca3b74ef7349a783ee7497638215e93",
+      "bytes": 2033
+    },
+    {
+      "path": "server/features/campaigns/controllers/campaignAdministrationController.js",
+      "sha256": "a88b348111f2332db52f248b511357412849b4390dcb8e77c3f93dbb69f9453a",
+      "bytes": 3862
+    },
+    {
+      "path": "server/features/campaigns/models/CampaignDefinition.js",
+      "sha256": "e1fb1759ddedf7db2efa0a67a970f0266f1bb289904cb52177b0abe6bc4ef014",
+      "bytes": 1361
+    },
+    {
+      "path": "server/features/campaigns/services/campaignAdministrationService.js",
+      "sha256": "45ad774d7e5dd4267e7990975a2ce1007f2c2862b45a35f33668d03a92af280d",
+      "bytes": 4266
+    },
+    {
+      "path": "server/features/campaigns/services/campaignPolicy.js",
+      "sha256": "42639090ef3eabc94dfc9c357880931841461ee93915eb2ac105e8e6a8a65198",
+      "bytes": 4923
+    },
+    {
+      "path": "server/features/fraud-monitoring/services/combinedGameplayAssessmentService.js",
+      "sha256": "b65397020c3628ea61dfbc11b3476320b6e027cdcac705f46d47dc2519cbbc0e",
+      "bytes": 1516
+    },
+    {
+      "path": "server/features/games/controllers/gameController.js",
+      "sha256": "2b46597e23361b67ca49bc30e378a6fa17c3ba66d8c7bb3c95d498f1813b6c9c",
+      "bytes": 1115
+    },
+    {
+      "path": "server/features/games/controllers/monkeyGameplayController.js",
+      "sha256": "b21185399bc0e11d9434302c9f3ca0adc70d09b2c01f4d98bfbfbf2bb9c2b25a",
+      "bytes": 350
+    },
+    {
+      "path": "server/features/games/controllers/perfectShotGameplayController.js",
+      "sha256": "872a2079f46ea754e3a6ee57b7084a8439e00a792a05af6b83aa99e0ca7ec68c",
+      "bytes": 587
+    },
+    {
+      "path": "server/features/games/engine/gameSessionStoreFactory.js",
+      "sha256": "3ebcf55dafca423d7a9acbcff6b59415c4ccb0e01c47ce8cd5516b0c6b660292",
+      "bytes": 4937
+    },
+    {
+      "path": "server/features/games/engine/legacyGameEngine.js",
+      "sha256": "662b67b8b7ee42c8608102376a839f7a4f1465cf2f2c3e46f160e4ce3e257ebc",
+      "bytes": 455
+    },
+    {
+      "path": "server/features/games/engine/legacyGameEngineFactory.js",
+      "sha256": "e226c9e565ce2574b9fe086d2b2d7763cf190600d5bc7393ecc6159f1df52944",
+      "bytes": 2087
+    },
+    {
+      "path": "server/features/games/engine/persistentGameEngineFactory.js",
+      "sha256": "293930bf06767bc7ac5a92e0bbfce166b72c7ff36b8e0de44923ed418e68bd01",
+      "bytes": 1330
+    },
+    {
+      "path": "server/features/games/engine/registeredGameAssessments.js",
+      "sha256": "26259842aa72c77aa329cdb50c87adf3b5e13e040f48ba5db6c9c8fb12af7717",
+      "bytes": 2414
+    },
+    {
+      "path": "server/features/games/engine/sharedGameEngine.js",
+      "sha256": "f8d9e6f137e0cfed67ce6426129f18d9739652324e25d62efa004e8851ebc4ce",
+      "bytes": 12751
+    },
+    {
+      "path": "server/features/games/registry/gameRegistry.js",
+      "sha256": "4a098f2d1714f32f63b5dba85b2b0155ade6215edc65e7bff23c5619be83bb76",
+      "bytes": 2259
+    },
+    {
+      "path": "server/features/games/registry/gameRegistryFactory.js",
+      "sha256": "469f1e48bdb27f0ec217547e69fe9e8a4b46cbe74ca2b6a890279992ab462bf5",
+      "bytes": 6576
+    },
+    {
+      "path": "server/features/games/services/gameCompletionDecisionService.js",
+      "sha256": "40afdefd8c2dca3e0e053a2b8ebfe0ff31685bc79822aa7ef983b944fcf47dd8",
+      "bytes": 1627
+    },
+    {
+      "path": "server/features/games/services/gameSessionService.js",
+      "sha256": "f494c20e55a1220dc0d0ccb4d1f9a63b621aad53d7c8e4a413c32fe4ed1b6274",
+      "bytes": 5103
+    },
+    {
+      "path": "server/features/games/services/gameStartService.js",
+      "sha256": "a888f846bfa9e5f230ba8cd188e1bf5dac2f57ff7d0306c95c8669b940759380",
+      "bytes": 6229
+    },
+    {
+      "path": "server/features/games/services/gameStatusService.js",
+      "sha256": "fec3377c429e93ce357d9750fa553ed1a777f0e030032684120e29d285d7b907",
+      "bytes": 3333
+    },
+    {
+      "path": "server/features/prizes/controllers/prizeReviewController.js",
+      "sha256": "d134d3be841f0142a03375711e493e27dd5294910e3754d73055c818073b71ba",
+      "bytes": 7618
+    },
+    {
+      "path": "server/features/prizes/services/prizeDecisionCreationService.js",
+      "sha256": "d1751a3a9674b7251f67d898a1c0d271099fc4a83724e319f13566f1be2272d1",
+      "bytes": 7830
+    },
+    {
+      "path": "server/features/prizes/services/prizeDecisionRecoveryService.js",
+      "sha256": "147a5a02be497d642d2de3e908427bf335eae5ec52f550126923f57947122a28",
+      "bytes": 8026
+    },
+    {
+      "path": "server/features/prizes/services/prizeRedemptionService.js",
+      "sha256": "b7bc5e2291ff7dffee136554223dc08c1c8c94546f2c58afd4ba64493f65443f",
+      "bytes": 8173
+    },
+    {
+      "path": "server/features/prizes/services/prizeReviewEvidenceService.js",
+      "sha256": "9718cafd6e81a66434b4731c3a5279e109096dfdf06c2c2303d7b64a8c0da6db",
+      "bytes": 1271
+    },
+    {
+      "path": "server/features/prizes/services/prizeReviewService.js",
+      "sha256": "3ccbe159a6b8ca1196299ab57b358c4b910ffd66a90158bacfa1ee18e5b0400e",
+      "bytes": 9940
+    },
+    {
+      "path": "server/features/vendors/controllers/vendorController.js",
+      "sha256": "154c8323473be5b4026e469f951b7e6a1d9eb856edcd358745c2c6f3415a2fea",
+      "bytes": 9938
+    },
+    {
+      "path": "server/infrastructure/email/emailService.js",
+      "sha256": "980dd51d4cf950cae9714cfa50ffef4e1d851c3e2293648dc9c9f99bc55e96d3",
+      "bytes": 3612
+    },
+    {
+      "path": "server/infrastructure/logging/errorMetadata.js",
+      "sha256": "2e266d8c6cb6e70a0aaa61e13deacf97fb5863a058c495e7423f7bb0b215c67f",
+      "bytes": 301
+    },
+    {
+      "path": "server/infrastructure/reporting/reportSafety.js",
+      "sha256": "33dd647fa52262433f0e8b24e695879e79a6ce99dc8d4debf799e2fe9aa8060f",
+      "bytes": 298
+    },
+    {
+      "path": "server/infrastructure/testing/integrationTargetPolicy.js",
+      "sha256": "14ad1525e21111058e3f4b02e24e06fd13a39e316ebc72888782f838f740fa7d",
+      "bytes": 2383
+    },
+    {
+      "path": "server/middleware/errorMiddleware.js",
+      "sha256": "d14e368381670288710c8c1f170c9a29e9e97998ebe745369fb52088d81be3e4",
+      "bytes": 1004
+    },
+    {
+      "path": "server/scripts/testPerfectShotFraudAssessment.js",
+      "sha256": "3a42c2ea90b46160edea74ae3fea75f6ba72834294e3cc9e0461eae1269cec9c",
+      "bytes": 4874
+    },
+    {
+      "path": "server/tests/integration/README.md",
+      "sha256": "da405227a76614de8ed89084fbcf5a7dde8786ae2c560c79fd97d56efecefd89",
+      "bytes": 16801
+    },
+    {
+      "path": "server/tests/integration/adapterSafety.js",
+      "sha256": "2645a656e7232c2de980c3d8700126763153864a38f45ae8663441da5f3dd54f",
+      "bytes": 3943
+    },
+    {
+      "path": "server/tests/integration/config.example.json",
+      "sha256": "0de1dc35e14d748206062eece451787d18272ad6bc0f39d48a35ee6b94a2f463",
+      "bytes": 490
+    },
+    {
+      "path": "server/tests/integration/databaseIntegrationAdapter.js",
+      "sha256": "0e95ccaf209927f7871daea0dc2ac903ae79a31788d3acb7c8611b5daef1cb48",
+      "bytes": 6153
+    },
+    {
+      "path": "server/tests/integration/expressBootstrapAdapter.js",
+      "sha256": "a086dda22fe6693e5decd29e2fa665512a49503b64b99b258b664a6075e22bd5",
+      "bytes": 3109
+    },
+    {
+      "path": "server/tests/integration/httpIntegrationAdapter.js",
+      "sha256": "50638e6a7fa4388d0bd4333f09dd6c502149c6dc6805c1bf490be5df7384e9ca",
+      "bytes": 6575
+    },
+    {
+      "path": "server/tests/integration/offlineHarness.js",
+      "sha256": "6f541f4e6c3b2cd27730de7414f10cd01cc1120fb13c2f8f3f7b00ebeb7c7381",
+      "bytes": 13196
+    },
+    {
+      "path": "server/tests/integration/offlineRuntime.js",
+      "sha256": "2c73354c8893b53ff25c93af0b814e1fe1432b84fed6f6e2e1f0b1be0c4f8dda",
+      "bytes": 554
+    },
+    {
+      "path": "server/tests/unit/authMiddleware.offline.test.cjs",
+      "sha256": "8155d40e6b1581d2ae43cf8cbc447a50bff1751b2c7f0962fdc2c03d3e6cd651",
+      "bytes": 4552
+    },
+    {
+      "path": "server/tests/unit/campaignReview.offline.test.cjs",
+      "sha256": "cf4612519a1d57af28d4bf1e0451e1aaabd350c2c92ac7d86c1665311e779c65",
+      "bytes": 17741
+    },
+    {
+      "path": "server/tests/unit/customerAuthentication.offline.test.cjs",
+      "sha256": "149c332f7185665df14302377a70c2612adc6d43ebc0c4e03830d9f46132c7a0",
+      "bytes": 15077
+    },
+    {
+      "path": "server/tests/unit/fraudAssessment.benchmark.cjs",
+      "sha256": "cd2b1359fbe4205ee63336dbc24a244c2a08b3ec18cb3e6ebfc64940667763a1",
+      "bytes": 3035
+    },
+    {
+      "path": "server/tests/unit/gameConfig.offline.test.cjs",
+      "sha256": "1a3851d50ed73da553cbe8a2db5d0a4618a0d299a7a8c53210f273b1bbfdc82f",
+      "bytes": 2435
+    },
+    {
+      "path": "server/tests/unit/gameEngineCompatibility.offline.test.cjs",
+      "sha256": "b925afb81ac93ef8b1eb13da1f1af52529f905f3681bd68a9cce2ffab2bd2536",
+      "bytes": 8413
+    },
+    {
+      "path": "server/tests/unit/gameRegistry.offline.test.cjs",
+      "sha256": "d619b2b0c9785b857d4191dcd3a51b94176b129e22002fd32e59ca284f10c7e8",
+      "bytes": 5913
+    },
+    {
+      "path": "server/tests/unit/gameSessionService.offline.test.cjs",
+      "sha256": "adb7563b63df9a79e84c693c51f91ed0fce11920a1a00f2527139cd84a3d74da",
+      "bytes": 5677
+    },
+    {
+      "path": "server/tests/unit/gameSessionStore.offline.test.cjs",
+      "sha256": "1b7c258f7c2f90d07a2da38c76a8a0c159e2ff1d5b86bfb50d1fdc2bd4526c3c",
+      "bytes": 7679
+    },
+    {
+      "path": "server/tests/unit/helpers/createAuthFixture.cjs",
+      "sha256": "7dbbaac0a90c79e78e929e25a16a9290a2fe809fec1fa08e16fcbb10eb63715a",
+      "bytes": 6352
+    },
+    {
+      "path": "server/tests/unit/helpers/createEngineFixture.cjs",
+      "sha256": "5292df3d0b217e6a029bbc854ae65a937fc0d8c29520369c63d5b2e2fdb10cf7",
+      "bytes": 3594
+    },
+    {
+      "path": "server/tests/unit/helpers/fakeGameSessionModel.cjs",
+      "sha256": "9685db0eb1329799178a951c023c54c2a74f0272c88fa186c56f035bcdfad04e",
+      "bytes": 2936
+    },
+    {
+      "path": "server/tests/unit/helpers/loadAuthSource.cjs",
+      "sha256": "c5fec27fab488c864ed0621c083545bfb410889960e9032baccd0a3354ecf777",
+      "bytes": 989
+    },
+    {
+      "path": "server/tests/unit/helpers/loadGameRegistry.cjs",
+      "sha256": "5063f89a47668b0f995b02f3cdfb2649671adac8765b01ec5472446495cb2354",
+      "bytes": 1147
+    },
+    {
+      "path": "server/tests/unit/helpers/loadIsolatedService.cjs",
+      "sha256": "30d37321be4e0d38244988bdf2f0105fdd876ad9e5fff41b24a7dd132f64fcbe",
+      "bytes": 1289
+    },
+    {
+      "path": "server/tests/unit/helpers/runCases.cjs",
+      "sha256": "2d2f2965261d47bebad5adf8de6f96029e2a389395de9d467cf304c4edee8818",
+      "bytes": 371
+    },
+    {
+      "path": "server/tests/unit/helpers/syntheticGame.cjs",
+      "sha256": "6a992072c562e7ffb227e3348c6aa1e08d9a54def7fe104e01103f3caf96d5d2",
+      "bytes": 1323
+    },
+    {
+      "path": "server/tests/unit/integrationAdapters.offline.test.cjs",
+      "sha256": "93eaf7bd7871c512e1d415dfdc4a85e5b52deb8dc16c05cf868fe973adea5078",
+      "bytes": 32361
+    },
+    {
+      "path": "server/tests/unit/integrationHarness.offline.test.cjs",
+      "sha256": "2c64fab619837493ff127035354041b95a80a887f610ad32ecceb859d2b8758f",
+      "bytes": 15950
+    },
+    {
+      "path": "server/tests/unit/integrationReadiness.offline.test.cjs",
+      "sha256": "30454b6ac5ee4d6ff1d02ae1ea3fb44a54bac4274d91c4cd2e6a0d7960bf7c5f",
+      "bytes": 15016
+    },
+    {
+      "path": "server/tests/unit/mailerInitialization.offline.test.cjs",
+      "sha256": "5cac1e0e590a7fa16df888261beef8ebfb01a19e94986f61f268db6fb87a4049",
+      "bytes": 1345
+    },
+    {
+      "path": "server/tests/unit/offlineGuard.offline.test.cjs",
+      "sha256": "7d3f9fd5f39929544628471a2e6db390f911ff544974afaa010de09e55810bfb",
+      "bytes": 1452
+    },
+    {
+      "path": "server/tests/unit/otpVerification.offline.test.cjs",
+      "sha256": "1d8abca770ac9c3cd9f8ec5791fe04cf70bd720594c7e7e95d4edad27c6be582",
+      "bytes": 4928
+    },
+    {
+      "path": "server/tests/unit/registeredGameAssessments.offline.test.cjs",
+      "sha256": "8bec9c8d1abb8ecaaea8536c4be7473cc8c314a3f1f4b01796dc74b745020dcd",
+      "bytes": 4972
+    },
+    {
+      "path": "server/tests/unit/sharedGameEngine.offline.test.cjs",
+      "sha256": "814abc8389dc48e0d8075c534d46a6dc8d3e0477f56484f568a65d892e5dc414",
+      "bytes": 15086
+    },
+    {
+      "path": "server/tests/unit/vendorAdministration.offline.test.cjs",
+      "sha256": "59cd65a45b045d91b572ddaaa4ba5bc370e6cd686a0beb97cab35c75c883d0c4",
+      "bytes": 21726
+    },
+    {
+      "path": "tools/audit-project.cjs",
+      "sha256": "660f07c45a8ebb5558bc70f3835564648715db9d97989a26229333a9d29a866b",
+      "bytes": 11638
+    },
+    {
+      "path": "tools/auth-library-manifest.json",
+      "sha256": "41cea43bc6aa27e7633a78c3abf8342d75f1fdf17fcdd87c4d6f1bc5b2c602e1",
+      "bytes": 100073
+    },
+    {
+      "path": "tools/finalize-offline-report.cjs",
+      "sha256": "83bebafe5444276f07a194f647cef072884a61125dd9238529aa88d3596406af",
+      "bytes": 4109
+    },
+    {
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "9a4e4224c5ddba6f4b1a696aed0064ac2593f05285a8361046d0057e01f134e2",
+      "bytes": 7544
+    },
+    {
+      "path": "tools/review-auth-libraries.cjs",
+      "sha256": "2890df068d395864ab11e512f8820fade79e091cda5b45b6f2fef2f2134c1aeb",
+      "bytes": 2920
+    },
+    {
+      "path": "tools/run-offline-assessments.cjs",
+      "sha256": "c576b3b7bb2fdd12732cb51969c97149e0beb09bee246b2df227eb2407888e77",
+      "bytes": 5896
+    },
+    {
+      "path": "tools/run-offline-benchmark.cjs",
+      "sha256": "6d1fad391ce74fe7af1f783f05525370cddfd221c9ed5f0c937aa0cd2564c696",
+      "bytes": 2514
+    },
+    {
+      "path": "tools/run-offline-unit-tests.cjs",
+      "sha256": "81e7c80f732296778800a01f5c6c249adf64c9f42d19c81bcecfbed15f7f4dbf",
+      "bytes": 8336
+    },
+    {
+      "path": "tools/verify-offline-structure.cjs",
+      "sha256": "2a82e4d8b8d375f8b445ef75dcfb8bd1c3d6b03b9500b11cff37e9745b33237a",
+      "bytes": 9074
+    }
+  ],
+  "limitations": "Hashes detect changes against this record; no signature/authenticity claim. Full platform remains incomplete. Rerun after intentional documentation/inventory changes."
+}

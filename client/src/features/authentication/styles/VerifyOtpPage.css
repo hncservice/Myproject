@@ -1,0 +1,267 @@
+.verify-otp-page {
+  --otp-bg: #160b11;
+  --otp-text: #fff7f6;
+  --otp-muted: #dbc4ca;
+  --otp-border: #94717e;
+  --otp-link: #ffb7bf;
+  --otp-focus: #ffc5cb;
+  --otp-art: url('../../../assets/bg/HNC_Games_Full_Frame_1920x1080.svg');
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--otp-bg);
+  color: var(--otp-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.verify-otp-page,
+.verify-otp-page *,
+.verify-otp-page *::before,
+.verify-otp-page *::after {
+  box-sizing: border-box;
+}
+
+.verify-otp-artwork {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(22, 11, 17, 0.05) 0%,
+      rgba(22, 11, 17, 0.14) 42%,
+      rgba(22, 11, 17, 0.80) 100%
+    ),
+    var(--otp-art);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.verify-otp-layout {
+  display: grid;
+  align-items: center;
+  justify-items: end;
+  width: min(100%, 1440px);
+  min-width: 0;
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 72px);
+}
+
+.verify-otp-card {
+  width: min(100%, 440px);
+  min-width: 0;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid #75404e;
+  border-radius: 22px;
+  background: rgba(27, 14, 21, 0.55);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.verify-otp-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.verify-otp-logo {
+  display: block;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #fff7f6;
+  object-fit: contain;
+}
+
+.verify-otp-intro {
+  margin-bottom: 20px;
+}
+
+.verify-otp-intro h1 {
+  margin: 0 0 8px;
+  color: var(--otp-text);
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.verify-otp-intro p,
+.verify-otp-helper {
+  margin: 0;
+  color: var(--otp-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.verify-otp-intro strong {
+  color: var(--otp-text);
+}
+
+.verify-otp-message {
+  margin: 0 0 16px;
+  padding: 11px 13px;
+  border: 1px solid;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.verify-otp-message--error {
+  border-color: #b65467;
+  background: #481825;
+  color: #ffe1e5;
+}
+
+.verify-otp-message--notice {
+  border-color: #54886c;
+  background: #16382b;
+  color: #d4fae4;
+}
+
+.verify-otp-form {
+  display: grid;
+  gap: 14px;
+}
+
+.verify-otp-digits {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(4px, 1.4vw, 9px);
+  direction: ltr;
+}
+
+.verify-otp-digit {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 8px 0;
+  border: 1px solid var(--otp-border);
+  border-radius: 10px;
+  background: rgba(41, 23, 33, 0.75);
+  color: var(--otp-text);
+  color-scheme: dark;
+  font: inherit;
+  font-size: clamp(18px, 4vw, 25px);
+  font-weight: 750;
+  text-align: center;
+}
+
+.verify-otp-submit {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #b9253d;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.verify-otp-submit:hover:not(:disabled) {
+  background: #a71d32;
+}
+
+.verify-otp-submit:disabled {
+  background: #75404e;
+  cursor: not-allowed;
+}
+
+.verify-otp-page :is(input, button, a):focus-visible {
+  outline: 2px solid var(--otp-focus);
+  outline-offset: 2px;
+}
+
+.verify-otp-footer {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #75404e;
+  color: var(--otp-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.verify-otp-footer p {
+  margin: 0;
+}
+
+.verify-otp-footer a,
+.verify-otp-resend {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  color: var(--otp-link);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.verify-otp-resend {
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.verify-otp-resend:disabled {
+  color: var(--otp-muted);
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px),
+       (max-height: 500px) and (orientation: landscape) {
+  .verify-otp-artwork {
+    background-image:
+      linear-gradient(rgba(22, 11, 17, 0.25), rgba(22, 11, 17, 0.50)),
+      var(--otp-art);
+  }
+
+  .verify-otp-layout {
+    justify-items: center;
+    padding-block-start: clamp(16px, 5vw, 32px);
+    padding-block-end: max(24px, env(safe-area-inset-bottom));
+    padding-inline-start: max(12px, env(safe-area-inset-left));
+    padding-inline-end: max(12px, env(safe-area-inset-right));
+  }
+
+  .verify-otp-card {
+    padding: clamp(16px, 5vw, 28px);
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .verify-otp-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .verify-otp-brand,
+  .verify-otp-intro {
+    margin-bottom: 16px;
+  }
+}

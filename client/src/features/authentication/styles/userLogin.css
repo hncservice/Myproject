@@ -1,0 +1,260 @@
+.user-login-page {
+  --user-login-bg: #160b11;
+  --user-login-text: #fff7f6;
+  --user-login-muted: #dbc4ca;
+  --user-login-border: #94717e;
+  --user-login-link: #ffb7bf;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--user-login-bg);
+  color: var(--user-login-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.user-login-page,
+.user-login-page *,
+.user-login-page *::before,
+.user-login-page *::after {
+  box-sizing: border-box;
+}
+
+.user-login-artwork {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(22, 11, 17, 0.05) 0%,
+      rgba(22, 11, 17, 0.14) 42%,
+      rgba(22, 11, 17, 0.80) 100%
+    ),
+    url('../../../assets/bg/HNC_Games_Full_Frame_1920x1080.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.user-login-layout {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: min(100%, 1440px);
+  min-width: 0;
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 72px);
+}
+
+.user-login-card {
+  width: min(100%, 440px);
+  min-width: 0;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid #75404e;
+  border-radius: 22px;
+  background: rgba(27, 14, 21, 0.55);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.user-login-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.user-login-logo {
+  display: block;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #fff7f6;
+  object-fit: contain;
+}
+
+.user-login-intro {
+  margin-bottom: 22px;
+}
+
+.user-login-intro h1 {
+  margin: 0 0 8px;
+  color: var(--user-login-text);
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.user-login-intro p {
+  margin: 0;
+  color: var(--user-login-muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.user-login-alert {
+  margin: 0 0 16px;
+  padding: 11px 13px;
+  border: 1px solid #b65467;
+  border-radius: 10px;
+  background: #481825;
+  color: #ffe1e5;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.user-login-form {
+  display: grid;
+  gap: 15px;
+}
+
+.user-login-field {
+  min-width: 0;
+}
+
+.user-login-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--user-login-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.user-login-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--user-login-border);
+  border-radius: 10px;
+  background: rgba(41, 23, 33, 0.75);
+  color: var(--user-login-text);
+  color-scheme: dark;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.user-login-password {
+  position: relative;
+}
+
+.user-login-input--password {
+  padding-inline-end: 76px;
+}
+
+.user-login-toggle {
+  position: absolute;
+  inset-block: 2px;
+  inset-inline-end: 2px;
+  min-width: 66px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--user-login-link);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.user-login-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 3px;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #b9253d;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.user-login-submit:hover:not(:disabled) {
+  background: #a71d32;
+}
+
+.user-login-submit:disabled {
+  background: #8c4050;
+  cursor: wait;
+}
+
+.user-login-page :is(input, button, a):focus-visible {
+  outline: 2px solid #ffc5cb;
+  outline-offset: 2px;
+}
+
+.user-login-footer {
+  margin-top: 20px;
+  padding-top: 8px;
+  border-top: 1px solid #75404e;
+  color: var(--user-login-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.user-login-footer p {
+  margin: 0;
+}
+
+.user-login-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-inline-start: 4px;
+  color: var(--user-login-link);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 900px),
+       (max-height: 500px) and (orientation: landscape) {
+  .user-login-artwork {
+    background-image:
+      linear-gradient(rgba(22, 11, 17, 0.25), rgba(22, 11, 17, 0.50)),
+      url('../../../assets/bg/HNC_Games_Full_Frame_1920x1080.svg');
+  }
+
+  .user-login-layout {
+    justify-items: center;
+    padding-block-start: clamp(16px, 5vw, 32px);
+    padding-block-end: max(24px, env(safe-area-inset-bottom));
+    padding-inline-start: max(12px, env(safe-area-inset-left));
+    padding-inline-end: max(12px, env(safe-area-inset-right));
+  }
+
+  .user-login-card {
+    padding: clamp(16px, 5vw, 28px);
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .user-login-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-login-brand,
+  .user-login-intro {
+    margin-bottom: 16px;
+  }
+}

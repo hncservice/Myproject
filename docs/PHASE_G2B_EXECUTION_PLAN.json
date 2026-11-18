@@ -1,0 +1,309 @@
+{
+  "phase": "G2B final offline preflight",
+  "runner": {
+    "reviewed": false,
+    "path": "tools/run-sandbox-integration.cjs",
+    "exists": false
+  },
+  "detailedSpecification": "docs/PHASE_G2B_FINAL_PREFLIGHT.md",
+  "stages": [
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage db-identity",
+      "requiresPreviousStagePass": false,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 30,
+        "inFlight": 1,
+        "logicalCommands": 10
+      },
+      "rollback": "Close owned handles on mismatch; no alternate target or production probe",
+      "expectedResult": "Approved actual database, member, replica set and least-privilege identity only; no business writes",
+      "status": "BLOCKED",
+      "order": 1,
+      "id": "db-identity",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage schema-indexes",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 60,
+        "inFlight": 1,
+        "logicalCommands": 30
+      },
+      "rollback": "No mutation; missing schema or index blocks all mutation stages",
+      "expectedResult": "Exact approved model namespaces and existing required index options verified; no DDL",
+      "status": "BLOCKED",
+      "order": 2,
+      "id": "schema-indexes",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage auth-otp",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 180,
+        "inFlight": 1,
+        "logicalCommands": 30
+      },
+      "rollback": "Quarantine identity; preserve consumed challenges and monotonic versions",
+      "expectedResult": "Synthetic service registration, OTP consume and revocation respect uniqueness, expiry and attempt budgets",
+      "status": "BLOCKED",
+      "order": 3,
+      "id": "auth-otp",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage game-persistence",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 60,
+        "inFlight": 1,
+        "logicalCommands": 20
+      },
+      "rollback": "Retain sessions and attempts; no eligibility reset",
+      "expectedResult": "Existing games persist one owned start/resume with server IDs and consumed attempt limits",
+      "status": "BLOCKED",
+      "order": 4,
+      "id": "game-persistence",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage completion-idempotency",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 60,
+        "inFlight": 1,
+        "logicalCommands": 20
+      },
+      "rollback": "Reconcile unknown commit before retry; do not reset terminal state",
+      "expectedResult": "One terminal mutation, stable receipt and server-verified evidence on duplicate submission",
+      "status": "BLOCKED",
+      "order": 5,
+      "id": "completion-idempotency",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage decision-recovery",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 120,
+        "inFlight": 1,
+        "logicalCommands": 20
+      },
+      "rollback": "Retain held or live claims; reconcile existing decision; no reroll",
+      "expectedResult": "One preliminary decision with exclusive bounded recovery; allocation remains false",
+      "status": "BLOCKED",
+      "order": 6,
+      "id": "decision-recovery",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage qr-simulation",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 60,
+        "inFlight": 1,
+        "logicalCommands": 20
+      },
+      "rollback": "Retain redeemed state and reconcile inventory; no real award or QR",
+      "expectedResult": "Historical synthetic fixture yields one vendor claim and inventory increment; memory delivery only",
+      "status": "BLOCKED",
+      "order": 7,
+      "id": "qr-simulation",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage http-order",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 60,
+        "inFlight": 2,
+        "logicalCommands": 20
+      },
+      "rollback": "Close owned listener and requests; preserve routes and limits",
+      "expectedResult": "Pinned real dispatcher preserves health, middleware order, public/auth/503 contracts and five mounts",
+      "status": "BLOCKED",
+      "order": 8,
+      "id": "http-order",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage concurrency-2",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 180,
+        "inFlight": 2,
+        "logicalCommands": 40
+      },
+      "rollback": "Abort wave and quarantine fixtures; no automatic retry or ramp",
+      "expectedResult": "One CAS winner per authorized workflow, with matching audit and inventory invariants",
+      "status": "BLOCKED",
+      "order": 9,
+      "id": "concurrency-2",
+      "commandApproved": false
+    },
+    {
+      "proposedCommand": "node tools/run-sandbox-integration.cjs --plan docs/PHASE_G2B_EXECUTION_PLAN.json --authorization local-checkpoints/phase-g2b-authorization/approval.json --stage cleanup-check",
+      "requiresPreviousStagePass": true,
+      "commandImplemented": false,
+      "limits": {
+        "seconds": 60,
+        "inFlight": 1,
+        "logicalCommands": 30
+      },
+      "rollback": "Read or close only; any deletion requires separate reviewed capability and permission",
+      "expectedResult": "Owned ID/revision invariants, safety hashes and zero owned open handles; retain fixtures",
+      "status": "BLOCKED",
+      "order": 10,
+      "id": "cleanup-check",
+      "commandApproved": false
+    }
+  ],
+  "date": "2026-10-29",
+  "liveExecutionAuthorized": false,
+  "safety": {
+    "experimentalReportRegistered": false,
+    "autoIndex": false,
+    "automaticCleanup": false,
+    "realQrDeliveryAllowed": false,
+    "queryProductionToProveDenialAllowed": false,
+    "realEmailAllowed": false,
+    "reverseProxyOrLoadTestingAllowed": false,
+    "campaignParticipationEnabled": false,
+    "allocationEnabled": false,
+    "productionDatabaseTestAllowed": false,
+    "autoCreate": false,
+    "dropDatabaseAllowed": false
+  },
+  "isolationProvenForLive": false,
+  "version": 1,
+  "proposedHardLimits": {
+    "evidenceMiB": 5,
+    "seconds": 1200,
+    "logicalCommands": 500,
+    "maxPoolSize": 5,
+    "applicationCpuCores": 1,
+    "timeoutMs": 2000,
+    "sandboxServerRamMiB": 512,
+    "enforcementVerified": false,
+    "nodeHeapMiB": 256,
+    "httpInFlight": 2,
+    "totalSyntheticDocuments": 128,
+    "sandboxServerCpuCores": 1,
+    "maxConnecting": 1,
+    "ownedTcpConnections": 8,
+    "profileSeconds": 300,
+    "applicationRssMiB": 512,
+    "httpRequestsPerSecond": 1,
+    "seedDocuments": 40,
+    "dbClients": 1,
+    "casesPerProfile": 100
+  },
+  "intendedTarget": {
+    "credentialProvider": null,
+    "databaseName": "hnc_step15q_sandbox",
+    "replicaSet": "hnc_isolated",
+    "members": [
+      "127.0.0.1:27018"
+    ],
+    "actualPrivilegeAttestation": null,
+    "httpBaseUrl": "http://127.0.0.1:5501",
+    "host": "127.0.0.1",
+    "status": "UNVERIFIED_NOT_APPROVED",
+    "osEgressAttestation": null,
+    "dedicatedNonProductionInstanceAttestation": null,
+    "mongoPort": 27018
+  },
+  "authorization": {
+    "containsCredentials": false,
+    "present": false,
+    "proposedPath": "local-checkpoints/phase-g2b-authorization/approval.json",
+    "humanAuthorizationEventRequired": true
+  },
+  "blockers": [
+    "No implemented or reviewed live runner and capability runtime",
+    "No independent OS egress or dedicated-instance attestation",
+    "No actual connected role, grant or topology verification",
+    "Real routers and models are not bound through reviewed sandbox ports",
+    "Metadata and driver handshake permissions not approved; no DDL allowed",
+    "Real-schema seed, acknowledgement and cleanup ownership receipts absent",
+    "Current HTTP contract lacks auth-header, query and raw-body support",
+    "Hard native cancellation, retries, handle and resource ceilings unverified"
+  ],
+  "executionReady": false,
+  "sourceHashes": [
+    {
+      "path": "server/tests/integration/adapterSafety.js",
+      "sha256": "2645a656e7232c2de980c3d8700126763153864a38f45ae8663441da5f3dd54f"
+    },
+    {
+      "path": "server/tests/integration/databaseIntegrationAdapter.js",
+      "sha256": "0e95ccaf209927f7871daea0dc2ac903ae79a31788d3acb7c8611b5daef1cb48"
+    },
+    {
+      "path": "server/tests/integration/httpIntegrationAdapter.js",
+      "sha256": "50638e6a7fa4388d0bd4333f09dd6c502149c6dc6805c1bf490be5df7384e9ca"
+    },
+    {
+      "path": "server/tests/integration/expressBootstrapAdapter.js",
+      "sha256": "a086dda22fe6693e5decd29e2fa665512a49503b64b99b258b664a6075e22bd5"
+    },
+    {
+      "path": "server/tests/integration/offlineHarness.js",
+      "sha256": "6f541f4e6c3b2cd27730de7414f10cd01cc1120fb13c2f8f3f7b00ebeb7c7381"
+    },
+    {
+      "path": "server/tests/integration/offlineRuntime.js",
+      "sha256": "2c73354c8893b53ff25c93af0b814e1fe1432b84fed6f6e2e1f0b1be0c4f8dda"
+    },
+    {
+      "path": "tools/offline-unit-guard.cjs",
+      "sha256": "9a4e4224c5ddba6f4b1a696aed0064ac2593f05285a8361046d0057e01f134e2"
+    },
+    {
+      "path": "server/server.js",
+      "sha256": "d75133789fc988363e1b43075f2e1e78e7ca664f5d66eb3c9b4f216777f7be80"
+    }
+  ],
+  "fixturePolicy": {
+    "serverGeneratedIdsRequireAcknowledgedOwnershipBinding": true,
+    "schemaTestFieldsAllowed": false,
+    "cleanupMode": "retain; scoped read-only cleanup-check",
+    "runIdPolicy": "Unique 18 lowercase hex characters; never reused",
+    "owner": "Unspecified until approval",
+    "actualSeedReceipt": null,
+    "emailDomain": "example.invalid",
+    "seedLedgerRequired": true
+  },
+  "approvedOfflineCommands": [
+    {
+      "command": "node tools/run-offline-unit-tests.cjs",
+      "cwd": "D:\\spinning wheel comp"
+    },
+    {
+      "command": "node tools/run-offline-assessments.cjs",
+      "cwd": "D:\\spinning wheel comp"
+    },
+    {
+      "command": "node tools/verify-offline-structure.cjs",
+      "cwd": "D:\\spinning wheel comp"
+    },
+    {
+      "command": "npx --no-install vitest run src --environment jsdom",
+      "cwd": "D:\\spinning wheel comp\\client"
+    },
+    {
+      "command": "npm run build",
+      "cwd": "D:\\spinning wheel comp\\client"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "campaignId": "hnc-campaign-2026-01",
+  "requested": 3,
+  "evaluated": 3,
+  "found": 2,
+  "missing": 1,
+  "reports": [
+    {
+      "sessionId": "6adf89e997346f75288bb00d",
+      "campaignId": "hnc-campaign-2026-01",
+      "gameId": "monkey",
+      "status": "completed",
+      "outcome": "qualified",
+      "score": 7,
+      "startedAt": "2026-10-26T17:11:29.628Z",
+      "completedAt": "2026-10-26T17:11:42.778Z",
+      "integrity": {
+        "assessmentVersion": 2,
+        "reviewRequired": false,
+        "riskReasons": []
+      },
+      "behavior": {
+        "behaviorVersion": 1,
+        "reviewSuggested": false,
+        "signals": [],
+        "enforcementAllowed": false
+      },
+      "preliminaryReviewRequired": false,
+      "behaviorAffectsPrizeDecision": false,
+      "advisoryReviewSuggested": false,
+      "readOnly": true
+    },
+    {
+      "sessionId": "6adf89ea97346f75288bb013",
+      "campaignId": "hnc-campaign-2026-01",
+      "gameId": "monkey",
+      "status": "completed",
+      "outcome": "qualified",
+      "score": 7,
+      "startedAt": "2026-10-26T17:11:30.367Z",
+      "completedAt": "2026-10-26T17:11:40.367Z",
+      "integrity": {
+        "assessmentVersion": 2,
+        "reviewRequired": false,
+        "riskReasons": []
+      },
+      "behavior": {
+        "behaviorVersion": 1,
+        "reviewSuggested": true,
+        "signals": [
+          "HIGHLY_REGULAR_TAP_CADENCE"
+        ],
+        "enforcementAllowed": false
+      },
+      "preliminaryReviewRequired": false,
+      "behaviorAffectsPrizeDecision": false,
+      "advisoryReviewSuggested": true,
+      "readOnly": true
+    }
+  ],
+  "notFound": [
+    "6adf89ef97346f75288bb021"
+  ],
+  "reportType": "observational",
+  "databaseModified": false,
+  "prizeAllocated": false,
+  "decisionModified": false
+}

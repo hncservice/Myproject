@@ -1,0 +1,344 @@
+{
+  "generatedUtc": "2026-10-29T07:43:07.141Z",
+  "backendSyntaxFiles": 185,
+  "syntaxFailed": [],
+  "reachablePreviewFiles": [
+    "client/src/app/App.jsx",
+    "client/src/features/fraud-monitoring/components/FraudMonitoringDashboard.jsx",
+    "client/src/features/fraud-monitoring/components/FraudMonitoringDashboardRenderer.jsx",
+    "client/src/features/fraud-monitoring/data/fraudDashboardDataProvider.js",
+    "client/src/features/fraud-monitoring/data/fraudDashboardFilters.js",
+    "client/src/features/fraud-monitoring/data/fraudDashboardPresentationAdapter.js",
+    "client/src/features/fraud-monitoring/data/fraudDashboardStateController.js",
+    "client/src/features/fraud-monitoring/data/fraudDashboardViewModel.js",
+    "client/src/features/fraud-monitoring/data/fraudReportValidator.js",
+    "client/src/features/fraud-monitoring/integration/useOfflineFraudDashboard.js",
+    "client/src/features/fraud-monitoring/preview/FraudDashboardPreview.jsx",
+    "client/src/main.jsx"
+  ],
+  "previewConcerns": [],
+  "apiMounts": [
+    {
+      "line": 229,
+      "call": "app.use",
+      "path": "/api/auth",
+      "handlers": [
+        "authRoutes"
+      ]
+    },
+    {
+      "line": 231,
+      "call": "app.use",
+      "path": "/api/spin",
+      "handlers": [
+        "spinRoutes"
+      ]
+    },
+    {
+      "line": 233,
+      "call": "app.use",
+      "path": "/api/vendor",
+      "handlers": [
+        "vendorRoutes"
+      ]
+    },
+    {
+      "line": 235,
+      "call": "app.use",
+      "path": "/api/admin",
+      "handlers": [
+        "adminRoutes"
+      ]
+    },
+    {
+      "line": 236,
+      "call": "app.use",
+      "path": "/api/games",
+      "handlers": [
+        "gameRoutes"
+      ]
+    }
+  ],
+  "unchangedInvariants": [
+    {
+      "file": "server/server.js",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "server/features/administration/routes/adminRoutes.js",
+      "state": "changed",
+      "reviewedAuthChange": true
+    },
+    {
+      "file": "server/features/authentication/routes/authRoutes.js",
+      "state": "changed",
+      "reviewedAuthChange": true
+    },
+    {
+      "file": "server/features/games/routes/gameRoutes.js",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "server/features/games/routes/spinRoutes.js",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "server/features/vendors/routes/vendorRoutes.js",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/src/main.jsx",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/src/app/App.jsx",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/src/app/routes/AppRoutes.jsx",
+      "state": "changed",
+      "reviewedAuthChange": true
+    },
+    {
+      "file": "client/src/features/fraud-monitoring/components/FraudMonitoringDashboard.jsx",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/src/shared/api/axiosInstance.js",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/vite.config.js",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/vercel.json",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/package.json",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "client/package-lock.json",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "server/package.json",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "server/package-lock.json",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    },
+    {
+      "file": "server/features/prizes/services/prizeAllocationService.js",
+      "state": "unchanged",
+      "reviewedAuthChange": false
+    }
+  ],
+  "allocationDisabled": true,
+  "campaignParticipationDisabled": true,
+  "unresolvedActive": [],
+  "historicalUnresolved": [
+    {
+      "file": "client/security-checkpoints/Step15R22O/fraudReportSandboxAdapter.js",
+      "line": 20,
+      "specifier": "./fraudReportApi",
+      "kind": "ImportDeclaration",
+      "target": null
+    },
+    {
+      "file": "client/security-checkpoints/Step15R22O/fraudReportSandboxAdapter.js",
+      "line": 24,
+      "specifier": "./fraudReportValidator",
+      "kind": "ImportDeclaration",
+      "target": null
+    },
+    {
+      "file": "client/src/App.backup.jsx",
+      "line": 3,
+      "specifier": "./components/Layout",
+      "kind": "ImportDeclaration",
+      "target": null
+    },
+    {
+      "file": "client/src/App.backup.jsx",
+      "line": 4,
+      "specifier": "./routes/AppRoutes",
+      "kind": "ImportDeclaration",
+      "target": null
+    }
+  ],
+  "bundleMarkerFindings": [],
+  "checkpointDifferences": [
+    {
+      "file": "client/src/app/layout/Layout.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/app/routes/AppRoutes.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/administration/api/adminApi.js",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/administration/pages/AdminUsersPage.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/administration/pages/AdminVendorsPage.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/authentication/api/authApi.js",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/authentication/context/AuthContext.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/authentication/pages/RegisterPage.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/authentication/pages/UserLoginPage.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/authentication/pages/VerifyOtpPage.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/games/pages/UserHomePage.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "client/src/features/vendors/pages/VendorScanPage.jsx",
+      "state": "changed"
+    },
+    {
+      "file": "server/config/gameConfig.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/config/mailer.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/administration/controllers/adminController.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/administration/routes/adminRoutes.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/authentication/controllers/authController.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/authentication/middleware/authMiddleware.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/authentication/models/User.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/authentication/routes/authRoutes.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/authentication/services/otpVerificationService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/fraud-monitoring/services/combinedGameplayAssessmentService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/games/controllers/gameController.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/games/controllers/monkeyGameplayController.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/games/controllers/perfectShotGameplayController.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/games/services/gameCompletionDecisionService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/games/services/gameSessionService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/games/services/gameStartService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/games/services/gameStatusService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/prizes/controllers/prizeReviewController.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/prizes/services/prizeDecisionCreationService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/prizes/services/prizeDecisionRecoveryService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/prizes/services/prizeRedemptionService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/prizes/services/prizeReviewService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/features/vendors/controllers/vendorController.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/infrastructure/email/emailService.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/middleware/errorMiddleware.js",
+      "state": "changed"
+    },
+    {
+      "file": "server/scripts/testPerfectShotFraudAssessment.js",
+      "state": "changed"
+    }
+  ],
+  "errors": [],
+  "limitations": "No application module execution, HTTP/API/database/email/transaction testing. Bundle string checks are supplementary; runtime mocks and source graph provide separate evidence."
+}

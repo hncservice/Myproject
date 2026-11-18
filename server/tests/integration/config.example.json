@@ -1,0 +1,16 @@
+{
+  "target": {
+    "mongoUri": "mongodb://127.0.0.1:27018/hnc_step15q_sandbox?replicaSet=hnc_isolated&authSource=hnc_step15q_sandbox",
+    "httpBaseUrl": "http://127.0.0.1:5501",
+    "environment": "integration-sandbox",
+    "emailAdapter": "memory",
+    "allocationEnabled": false,
+    "campaignParticipationEnabled": false
+  },
+  "runId": "000000000000000001",
+  "connectionTimeoutMs": 1000,
+  "requestTimeoutMs": 1000,
+  "durationMs": 300000,
+  "maxConcurrency": 5,
+  "maxCases": 100
+}

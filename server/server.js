@@ -6,13 +6,14 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const gameRoutes = require('./features/games/routes/gameRoutes');
 
 const connectDB = require('./config/db');
 
-const authRoutes = require('./routes/authRoutes');
-const spinRoutes = require('./routes/spinRoutes');
-const vendorRoutes = require('./routes/vendorRoutes');
-const adminRoutes = require('./routes/adminRoutes');
+const authRoutes = require('./features/authentication/routes/authRoutes');
+const spinRoutes = require('./features/games/routes/spinRoutes');
+const vendorRoutes = require('./features/vendors/routes/vendorRoutes');
+const adminRoutes = require('./features/administration/routes/adminRoutes');
 
 const errorMiddleware = require('./middleware/errorMiddleware');
 
@@ -32,6 +33,7 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
   // Local frontend
   'http://localhost:5173',
+  'http://localhost:5174',
   'http://localhost:3000',
 
   // Production frontend
@@ -138,6 +140,7 @@ app.use(
   })
 );
 
+
 // ======================================================
 // 6. ROOT / HEALTH ROUTES
 // ======================================================
@@ -230,6 +233,7 @@ app.use('/api/spin', spinRoutes);
 app.use('/api/vendor', vendorRoutes);
 
 app.use('/api/admin', adminRoutes);
+app.use('/api/games', gameRoutes);
 
 // ======================================================
 // 10. 404 HANDLER
@@ -253,7 +257,7 @@ app.use(errorMiddleware);
 // 12. LOCAL SERVER
 // ======================================================
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // When running:
 // node server.js

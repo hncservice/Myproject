@@ -1,0 +1,25 @@
+# INERT TEMPLATE. Do not pass to mongod until separately approved, rendered and
+# checked. Unresolved placeholders deliberately prevent valid startup.
+# All paths belong INSIDE the dedicated guest, never a production dbPath.
+storage:
+  dbPath: '<GUEST_ONLY_EMPTY_DATA_DIRECTORY>'
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: <APPROVED_VERSION_VALID_CACHE_GB>
+systemLog:
+  destination: file
+  path: '<GUEST_ONLY_MONGOD_LOG_PATH>'
+  logAppend: true
+net:
+  bindIp: 127.0.0.1
+  port: 27018
+  ipv6: false
+  maxIncomingConnections: 16
+security:
+  authorization: enabled
+  keyFile: '<GUEST_ONLY_PRIVATE_REPLICA_KEY_PATH>'
+replication:
+  replSetName: hnc_isolated
+setParameter:
+  disableSplitHorizonIPCheck: <APPROVED_VERSION_SPECIFIC_BOOLEAN>
+  enableLocalhostAuthBypass: <BOOTSTRAP_TRUE_OR_FINAL_FALSE_AFTER_APPROVAL>

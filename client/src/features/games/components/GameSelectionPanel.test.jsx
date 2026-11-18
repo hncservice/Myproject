@@ -1,0 +1,12 @@
+import React from 'react';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import GameSelectionPanel from './GameSelectionPanel';
+const mocks = vi.hoisted(() => ({ status: vi.fn(), navigate: vi.fn() }));
+vi.mock('../api/gameApi', () => ({ getGamesStatus: mocks.status }));
+vi.mock('react-router-dom', () => ({ useNavigate: () => mocks.navigate }));
+beforeEach(() => vi.resetAllMocks()); afterEach(cleanup);
+it('selection navigates to existing games and mount never starts a session', async () => { mocks.status.mockResolvedValue({ data: { games: [{ id: 'perfect-shot', label: 'Perfect Shot', attemptsLeft: 3, locked: false }] } }); render(<GameSelectionPanel />); fireEvent.click(await screen.findByRole('button', { name: 'Play Perfect Shot' })); expect(mocks.navigate).toHaveBeenCalledExactlyOnceWith('/user/perfect-shot'); expect(mocks.status).toHaveBeenCalledTimes(1); });
+it('locked and exhausted games cannot be selected', async () => { mocks.status.mockResolvedValue({ data: { games: [{ id: 'monkey', label: 'Monkey', attemptsLeft: 0, locked: true, lockReason: 'NO_ATTEMPTS_LEFT' }] } }); render(<GameSelectionPanel />); expect((await screen.findByRole('button', { name: 'Play Monkey' })).disabled).toBe(true); expect(mocks.navigate).not.toHaveBeenCalled(); });
+it('errors fail closed and retry only fetches eligibility', async () => { mocks.status.mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce({ data: { games: [] } }); render(<GameSelectionPanel />); await screen.findByRole('alert'); fireEvent.click(screen.getByRole('button', { name: 'Refresh eligibility' })); await waitFor(() => expect(mocks.status).toHaveBeenCalledTimes(2)); expect(mocks.navigate).not.toHaveBeenCalled(); });
+it('malformed known-game data fails closed and unregistered games are not offered', async () => { mocks.status.mockResolvedValue({ data: { games: [{ id: 'synthetic-proof', label: 'Unsafe', attemptsLeft: 3, locked: false }, { id: 'monkey', label: {}, attemptsLeft: 3, locked: false }] } }); render(<GameSelectionPanel />); await screen.findByRole('alert'); expect(screen.queryByRole('button', { name: /Play/ })).toBeNull(); });
