@@ -14,7 +14,7 @@ export default function GameSelectionPanel() {
       const games = response?.data?.games;
       if (!Array.isArray(games)) throw new Error('Invalid eligibility response');
       const supported = games.filter(game => ['monkey', 'perfect-shot'].includes(game?.id));
-      if (supported.some(game => typeof game.label !== 'string' || game.label.length > 100 || typeof game.locked !== 'boolean' || !Number.isInteger(game.attemptsLeft) || game.attemptsLeft < 0 || game.attemptsLeft > 3 || (game.lockReason != null && typeof game.lockReason !== 'string'))) throw new Error('Invalid eligibility response');
+      if (supported.some(game => typeof game.label !== 'string' || game.label.length > 100 || typeof game.locked !== 'boolean' || !Number.isInteger(game.attemptsLeft) || game.attemptsLeft < 0 || game.attemptsLeft > (game.id === 'perfect-shot' ? 5 : 3) || (game.lockReason != null && typeof game.lockReason !== 'string'))) throw new Error('Invalid eligibility response');
       if (active) setState({ loading: false, error: '', games: supported });
     }).catch(() => { if (active) setState({ loading: false, error: 'Unable to check eligibility. Please retry.', games: [] }); });
     return () => { active = false; };
