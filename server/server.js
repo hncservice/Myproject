@@ -97,6 +97,9 @@ const corsOptions = {
     'Content-Length'
   ],
 
+  // Cache allowed preflight methods/headers; origin whitelist remains unchanged.
+  maxAge: 600,
+
   optionsSuccessStatus: 204
 };
 
@@ -139,6 +142,10 @@ app.use(
     limit: '1mb'
   })
 );
+
+// Capture only after the complete request body is parsed, before DB/auth waits.
+// A slowly uploaded body must not receive a backdated scoring timestamp.
+app.use(require('./features/games/middleware/perfectShotRequestTiming').capturePerfectShotRequestTiming);
 
 
 // ======================================================

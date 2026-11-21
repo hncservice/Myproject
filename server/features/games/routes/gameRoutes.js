@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 const router = require('express').Router();
 
@@ -23,16 +23,9 @@ const prizeDecision = require(
 // =====================================================
 // AUTHENTICATION
 // =====================================================
-router.use((req, res, next) => {
-  if (
-    req.method === 'POST' &&
-    /^\/perfect-shot\/shoot\/?$/i.test(req.path)
-  ) {
-    req.perfectShotRouteEnteredMs = Date.now();
-  }
-
-  next();
-});
+const { capturePerfectShotRequestTiming } = require('../middleware/perfectShotRequestTiming');
+// Fallback for alternate bootstraps. Never overwrite an earlier server stamp.
+router.use(capturePerfectShotRequestTiming);
 
 router.use(authUser);
 
@@ -90,6 +83,8 @@ router.post('/monkey/hit', monkey.hit);
 // =====================================================
 // PERFECT SHOT ENDPOINTS
 // =====================================================
+
+router.get('/perfect-shot/timing', perfectShot.timing);
 
 router.post('/perfect-shot/next', perfectShot.nextShot);
 
