@@ -90,4 +90,8 @@ router.post('/perfect-shot/next', perfectShot.nextShot);
 
 router.post('/perfect-shot/shoot', perfectShot.shoot);
 
+const burgerRun = require('../controllers/burgerRunGameplayController');
+router.post('/burger-run/prepare', burgerRun.prepare);
+router.post('/burger-run/finish', burgerRun.finish);
+
 module.exports = router;

@@ -7,6 +7,7 @@ import RegisterPage from '../../features/authentication/pages/RegisterPage';
 import VerifyOtpPage from '../../features/authentication/pages/VerifyOtpPage';
 import SpinPage from '../../features/games/spin/SpinPage';
 import MonkeyGamePage from '../../features/games/monkey/MonkeyGamePage';
+import BurgerRunPage from '../../features/games/burger-run/BurgerRunPage';
 import PerfectShotGame from '../../features/games/perfect-shot/PerfectShotGame';
 
 import VendorLoginPage from '../../features/authentication/pages/VendorLoginPage';
@@ -61,6 +62,8 @@ const AppRoutes = () => {
     </ProtectedRoute>
   }
 />
+
+      <Route path="/user/burger-run" element={<ProtectedRoute allowedRole="user" redirectTo="/user/login"><BurgerRunPage /></ProtectedRoute>} />
 
       {/* Vendor */}
       <Route path="/vendor/login" element={<VendorLoginPage />} />

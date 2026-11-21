@@ -13,7 +13,7 @@ if (MANAGED_CAMPAIGN_ID && (
   throw new Error('HNC_MANAGED_CAMPAIGN_ID must identify a separate managed campaign.');
 }
 
-const GAME_IDS = Object.freeze({ MONKEY: 'monkey', PERFECT_SHOT: 'perfect-shot' });
+const GAME_IDS = Object.freeze({ MONKEY: 'monkey', PERFECT_SHOT: 'perfect-shot', BURGER_RUN: 'burger-run' });
 const gameRegistry = require('../features/games/registry/gameRegistry');
 const GAMES = Object.freeze(Object.fromEntries(
   gameRegistry.list().map(game => [game.id, game.config])

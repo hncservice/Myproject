@@ -21,6 +21,7 @@ function SessionTime({ value }) {
 function gameName(gameId) {
   if (gameId === "monkey") return "Whack the Monkey";
   if (gameId === "perfect-shot") return "Perfect Shot";
+  if (gameId === "burger-run") return "HNC Burger Run";
   return gameId;
 }
 
@@ -188,6 +189,7 @@ export default function FraudMonitoringDashboardRenderer({
                 <option value="all">All Games</option>
                 <option value="monkey">Monkey</option>
                 <option value="perfect-shot">Perfect Shot</option>
+                <option value="burger-run">HNC Burger Run</option>
               </select>
             </label>
             <label>

@@ -25,7 +25,7 @@ const NO_PRIZE_WEIGHT = 40;
 // const ALLOCATION_ENABLED = false;
 const ALLOCATION_ENABLED = process.env.ALLOCATION_ENABLED === 'true';
 
-const VALID_GAMES = ['monkey', 'perfect-shot'];
+const VALID_GAMES = ['monkey', 'perfect-shot', 'burger-run'];
 
 const MAX_RANDOM_RANGE = 281474976710655;
 

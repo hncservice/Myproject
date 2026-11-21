@@ -49,7 +49,7 @@ const perfectConfig = (config) =>
   config.scoreToQualify <= config.totalShots * 100;
 
 const registry = createGameRegistry({
-  approvedGameIds: ['monkey', 'perfect-shot'],
+  approvedGameIds: ['monkey', 'perfect-shot', 'burger-run'],
   definitions: [
     {
       id: 'monkey',
@@ -100,6 +100,17 @@ const registry = createGameRegistry({
         verify,
         assessIntegrity,
         assessBehavior,
+      },
+    },
+    {
+      id: 'burger-run', version: 1, execution: 'legacy', preliminaryDecisions: true,
+      config: { id: 'burger-run', label: 'HNC Burger Run', maxAttempts: 3, sessionTtlMs: 120000, requiredFood: 10, maxRunSeconds: 90 },
+      actions: ['prepare', 'finish'], limits: { maxEvidenceBytes: 16384, maxEvents: 1 },
+      handlers: {
+        validateConfig: c => keys(c, ['id', 'label', 'maxAttempts', 'sessionTtlMs', 'requiredFood', 'maxRunSeconds']) && c.requiredFood === 10 && c.maxRunSeconds === 90,
+        verify: session => require('../burger-run/burgerRunAssessment').assessIntegrity(session),
+        assessIntegrity: session => require('../burger-run/burgerRunAssessment').assessIntegrity(session),
+        assessBehavior: session => require('../burger-run/burgerRunAssessment').assessBehavior(session),
       },
     },
   ],

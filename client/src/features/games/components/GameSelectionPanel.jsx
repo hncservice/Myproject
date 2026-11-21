@@ -13,7 +13,7 @@ export default function GameSelectionPanel() {
     getGamesStatus().then(response => {
       const games = response?.data?.games;
       if (!Array.isArray(games)) throw new Error('Invalid eligibility response');
-      const supported = games.filter(game => ['monkey', 'perfect-shot'].includes(game?.id));
+      const supported = games.filter(game => ['monkey', 'perfect-shot', 'burger-run'].includes(game?.id));
       if (supported.some(game => typeof game.label !== 'string' || game.label.length > 100 || typeof game.locked !== 'boolean' || !Number.isInteger(game.attemptsLeft) || game.attemptsLeft < 0 || game.attemptsLeft > (game.id === 'perfect-shot' ? 5 : 3) || (game.lockReason != null && typeof game.lockReason !== 'string'))) throw new Error('Invalid eligibility response');
       if (active) setState({ loading: false, error: '', games: supported });
     }).catch(() => { if (active) setState({ loading: false, error: 'Unable to check eligibility. Please retry.', games: [] }); });
@@ -26,7 +26,7 @@ export default function GameSelectionPanel() {
     {state.games.map(game => <div key={game.id}>
       <p>{game.label} — Attempts remaining: {game.attemptsLeft}</p>
       {game.lockReason && <p>{game.lockReason}</p>}
-      <button type="button" disabled={game.locked !== false || !Number.isInteger(game.attemptsLeft) || game.attemptsLeft <= 0} onClick={() => navigate(game.id === 'monkey' ? '/monkey-game' : '/user/perfect-shot')}>Play {game.label}</button>
+      <button type="button" disabled={game.locked !== false || !Number.isInteger(game.attemptsLeft) || game.attemptsLeft <= 0} onClick={() => navigate(game.id === 'monkey' ? '/monkey-game' : game.id === 'burger-run' ? '/user/burger-run' : '/user/perfect-shot')}>Play {game.label}</button>
     </div>)}
     <button type="button" disabled={state.loading} onClick={() => setReload(value => value + 1)}>Refresh eligibility</button>
   </section>;

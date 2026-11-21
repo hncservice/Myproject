@@ -8,7 +8,7 @@ const { reviewEvidence } = require('../../prizes/services/prizeReviewEvidenceSer
 const querySchema = Joi.object({
   page: Joi.number().integer().min(1).max(100000).default(1),
   limit: Joi.number().integer().min(1).max(25).default(20),
-  gameId: Joi.string().valid('all', 'monkey', 'perfect-shot').default('all'),
+  gameId: Joi.string().valid('all', 'monkey', 'perfect-shot', 'burger-run').default('all'),
   q: Joi.string().trim().max(100).allow('').default(''),
 }).unknown(false);
 

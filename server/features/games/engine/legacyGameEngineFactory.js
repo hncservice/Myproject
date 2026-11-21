@@ -2,7 +2,7 @@
 
 // Compatibility boundary: preserve argument, return, and error identity.
 function createLegacyGameEngine({
-  registry, sessions, start, status, monkey, perfectShot,
+  registry, sessions, start, status, monkey, perfectShot, burgerRun,
 }) {
   function legacy(operation, userId, gameId, ...args) {
     const game = registry.find(gameId);
@@ -26,6 +26,7 @@ function createLegacyGameEngine({
       next: perfectShot.nextShot,
       shoot: perfectShot.shoot,
     }),
+    ...(burgerRun ? { 'burger-run': Object.freeze({ prepare: burgerRun.prepare, finish: burgerRun.finish }) } : {}),
   });
 
   function submitEvidence(userId, gameId, action, body, ...args) {
@@ -51,6 +52,10 @@ function createLegacyGameEngine({
   }
 
   return Object.freeze({
+    ...(burgerRun ? { burgerRun: Object.freeze({
+      prepare: (user, body) => submitEvidence(user, 'burger-run', 'prepare', body),
+      finish: (user, body) => submitEvidence(user, 'burger-run', 'finish', body),
+    }) } : {}),
     discover: () => registry.discover(),
     getGameStatus: status.getGameStatus,
     startGame: (user, game, ...args) =>
