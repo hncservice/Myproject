@@ -299,3 +299,39 @@
     border-radius: 16px;
   }
 }
+.hnc-back-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  max-width: 100%;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  border: 1px solid #a56579;
+  border-radius: 12px;
+  background: #321b28;
+  color: #ffe1b5;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.hnc-back-home:hover {
+  background: #51283b;
+  color: #fff3dd;
+}
+
+.hnc-back-home:focus-visible {
+  outline: 3px solid #ffd28b;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .hnc-back-home {
+    padding: 10px 13px;
+    font-size: 13px;
+  }
+}

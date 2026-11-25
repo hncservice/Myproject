@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../authentication/context/AuthContext';
 import {
   getGamesStatus,
@@ -687,6 +687,10 @@ export default function MonkeyGamePage() {
               Tap the monkey when it appears. Hit {requiredHits} within{' '}
               {maxRounds} rounds to qualify.
             </p>
+            <Link to="/user/home" className="hnc-back-home">
+  <span aria-hidden="true">←</span>
+  Back to Home
+</Link>
           </div>
 
           <div className="monkey-chances">

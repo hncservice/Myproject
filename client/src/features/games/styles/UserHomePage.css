@@ -836,3 +836,33 @@
     transform: none;
   }
 }
+
+.hnc-home-draws .ps-primary {
+  min-height: 46px;
+  padding: 11px 18px;
+  border: 1px solid #e68a9b;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #b9253d, #812144);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.hnc-home-draws .ps-primary:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.hnc-home-draws button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+@media (max-width: 480px) {
+  .hnc-home-draws .ps-primary {
+    width: 100%;
+  }
+}

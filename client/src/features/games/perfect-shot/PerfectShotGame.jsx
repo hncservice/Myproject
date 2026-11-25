@@ -6,7 +6,7 @@ import '../styles/PerfectShotGame.css';
 import perfectShotBg from '../../../assets/sounds/perfectshotbg.mp3';
 import tapSound from '../../../assets/sounds/tap.mp3';
 import { createServerClock, targetAt, arenaPoint, readArenaGeometry } from './perfectShotTiming.mjs';
-
+import { Link } from 'react-router-dom';
 const SHOTS = 5;
 const TIME_MS = 3500;
 const POLL_MS = 150;
@@ -715,6 +715,10 @@ useEffect(() => {
           >
             {muted ? '🔇' : '🔊'}
           </button>
+          <Link to="/user/home" className="hnc-back-home">
+  <span aria-hidden="true">←</span>
+  Back to Home
+</Link>
         </header>
 
         <div className="ps-status" aria-label="Game statistics">

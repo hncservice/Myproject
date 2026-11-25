@@ -5,6 +5,8 @@ import { useAuth } from '../../authentication/context/AuthContext';
 import GameSelectionPanel from '../components/GameSelectionPanel';
 import '../styles/UserHomePage.css';
 import homeMusic from '../../../assets/sounds/play5.mp3';
+import axiosInstance from '../../../shared/api/axiosInstance';
+import PrizeDecisionPanel from '../components/PrizeDecisionPanel';
 
 function PrizeDetails({ win }) {
   const expiry = win.qrExpiry ? new Date(win.qrExpiry) : null;
@@ -117,6 +119,155 @@ function PrizeDetails({ win }) {
           )}
         </div>
       )}
+    </div>
+  );
+}
+const HOME_GAMES = [
+  { id: 'monkey', label: 'Whak the Monkey' },
+  { id: 'perfect-shot', label: 'Perfect Shot' },
+  { id: 'burger-run', label: 'HNC Burger Run' },
+];
+
+function HomePrizeDraws() {
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [refresh, setRefresh] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadQualifiedGames() {
+      setLoading(true);
+      setError('');
+      setSessions([]);
+
+      const results = await Promise.allSettled(
+        HOME_GAMES.map(async (game) => {
+          const { data } = await axiosInstance.get(
+            `/games/${game.id}/history`
+          );
+
+          if (!Array.isArray(data?.items)) {
+            throw new Error('Invalid game history');
+          }
+
+          return data.items
+            .filter(
+              (session) =>
+                session.gameId === game.id &&
+                session.status === 'completed' &&
+                session.outcome === 'qualified' &&
+                typeof session.sessionId === 'string' &&
+                /^[a-f0-9]{24}$/i.test(session.sessionId)
+            )
+            .map((session) => ({
+              sessionId: session.sessionId.toLowerCase(),
+              gameLabel: game.label,
+              completedAt: session.completedAt,
+            }));
+        })
+      );
+
+      if (!active) return;
+
+      const qualified = results.flatMap((result) =>
+        result.status === 'fulfilled' ? result.value : []
+      );
+
+      const unique = [
+        ...new Map(
+          qualified.map((session) => [
+            session.sessionId,
+            session,
+          ])
+        ).values(),
+      ];
+
+      unique.sort(
+        (a, b) =>
+          (Date.parse(b.completedAt) || 0) -
+          (Date.parse(a.completedAt) || 0)
+      );
+
+      setSessions(unique);
+
+      if (results.some((result) => result.status === 'rejected')) {
+        setError(
+          'Some game results could not be loaded. Please refresh.'
+        );
+      }
+
+      setLoading(false);
+    }
+
+    void loadQualifiedGames();
+
+    return () => {
+      active = false;
+    };
+  }, [refresh]);
+
+  return (
+    <div className="hnc-home-draws" aria-busy={loading}>
+      {loading && (
+        <p className="hnc-home-muted" role="status">
+          Checking your completed games…
+        </p>
+      )}
+
+      {error && (
+        <p className="hnc-home-alert" role="alert">
+          {error}
+        </p>
+      )}
+
+      {!loading && !error && sessions.length === 0 && (
+        <div className="hnc-home-empty">
+          <h3>No qualified game yet</h3>
+          <p className="hnc-home-muted">
+            Complete a game successfully to qualify for a prize draw.
+          </p>
+        </div>
+      )}
+
+      {!loading &&
+        sessions.map((session) => (
+          <section
+            key={`${session.sessionId}:${refresh}`}
+            style={{ marginTop: 18 }}
+            aria-label={`${session.gameLabel} prize result`}
+          >
+            <h3
+              style={{
+                margin: '0 0 6px',
+                color: 'var(--home-text)',
+                fontSize: 18,
+              }}
+            >
+              🎉 {session.gameLabel}
+            </h3>
+
+            <p className="hnc-home-muted">
+              You completed this game successfully.
+              Check your result below.
+            </p>
+
+            <PrizeDecisionPanel
+              gameSessionId={session.sessionId}
+              allowDecisionRecovery
+            />
+          </section>
+        ))}
+
+      <button
+        type="button"
+        className="hnc-home-music"
+        disabled={loading}
+        onClick={() => setRefresh((value) => value + 1)}
+      >
+        {loading ? 'Checking results…' : 'Refresh game results'}
+      </button>
     </div>
   );
 }
@@ -238,14 +389,15 @@ function toggleHomeMusic() {
               </p>
             )}
 
-            {!loading && !error && !win && (
+            {/* {!loading && !error && !win && (
               <div className="hnc-home-empty">
                 <h3>No prize yet</h3>
                 <p className="hnc-home-muted">
                   Choose a game for a chance to win.
                 </p>
               </div>
-            )}
+            )} */}
+            {!loading && !error && !win && <HomePrizeDraws />}
 
             {!loading && !error && win && <PrizeDetails win={win} />}
           </section>

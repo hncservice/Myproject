@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import background from '../../../assets/sounds/game-bg-loop.mp3';
-import start from '../../../assets/sounds/game-start.mp3';
-import collect from '../../../assets/sounds/tap.mp3';
-import hit from '../../../assets/sounds/monkey-miss.mp3';
-import win from '../../../assets/sounds/game-win.mp3';
-import lose from '../../../assets/sounds/game-lose.mp3';
+import background from '../../../assets/sounds/jumpbackground.mp3';
+import start from '../../../assets/sounds/srart.mp3';
+import collect from '../../../assets/sounds/win.mp3';
+import hit from '../../../assets/sounds/jump.mp3';
+import win from '../../../assets/sounds/win.mp3';
+import lose from '../../../assets/sounds/los.mp3';
 import { createBurgerRunAudio } from './burgerRunAudio.mjs';
 
 export function useBurgerRunAudio(mode) {
