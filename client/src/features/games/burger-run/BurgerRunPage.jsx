@@ -6,11 +6,17 @@ import { RULES, level, create, step, replay } from './burgerRunRules.mjs';
 import { drawGame } from './burgerRunRenderer.mjs';
 import './BurgerRunPage.css';
 import { useBurgerRunAudio } from './useBurgerRunAudio';
+import { createRunnerInput, createSwipeJump, ACTION_BITS } from './burgerRunControls.mjs';
 
 const base = '/games/burger-run';
 const message = e => e?.response?.data?.message || e?.message || 'Unable to load the game.';
 export default function BurgerRunPage() {
-  const canvas = useRef(null), run = useRef(null), frame = useRef(null), keys = useRef(new Set()), alive = useRef(false), busy = useRef(false);
+  const canvas = useRef(null), run = useRef(null), frame = useRef(null), input = useRef(null), alive = useRef(false), busy = useRef(false);
+  if (!input.current) input.current = createRunnerInput();
+  const swipes = useRef(null);
+  if (!swipes.current) swipes.current = createSwipeJump();
+  const stageRef = useRef(null), lastHudTick = useRef(0);
+  const [expanded, setExpanded] = useState(false), [pressedMask, setPressedMask] = useState(0), [swipePulse, setSwipePulse] = useState(0);
   const submitRef = useRef(null), lastSave = useRef(0);
   const [status, setStatus] = useState(null), [loading, setLoading] = useState(true), [error, setError] = useState('');
   const [hasActive, setHasActive] = useState(false);
@@ -60,24 +66,25 @@ export default function BurgerRunPage() {
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(redraw) : null;
     if (canvas.current) observer?.observe(canvas.current);
     window.addEventListener('resize', redraw);
-    return () => { alive.current = false; keys.current.clear(); save(); if (frame.current) cancelAnimationFrame(frame.current); observer?.disconnect(); window.removeEventListener('resize', redraw); };
+    return () => { alive.current = false; input.current.clear(); save(); if (frame.current) cancelAnimationFrame(frame.current); observer?.disconnect(); window.removeEventListener('resize', redraw); };
   }, [loadStatus, save]);
 
   useEffect(() => {
     const keyMap = { ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right', ArrowUp: 'jump', w: 'jump', W: 'jump', ' ': 'jump' };
     const down = e => {
-      if (mode !== 'playing' || !keyMap[e.key] || /INPUT|TEXTAREA|SELECT/.test(e.target?.tagName) || e.target?.closest?.('.br-controls')) return;
-      e.preventDefault(); if (!e.repeat) audioRef.current.unlock(); keys.current.add(keyMap[e.key]);
+      if (mode !== 'playing' || !keyMap[e.key] || e.target?.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+      if (e.key === ' ' && e.target?.closest?.('button, a')) return;
+      e.preventDefault(); if (!e.repeat) audioRef.current.unlock(); input.current.set(`key:${e.code || e.key}`, keyMap[e.key]); setPressedMask(input.current.peekMask());
     };
-    const up = e => { if (e.target?.closest?.('.br-controls')) return; if (keyMap[e.key]) { keys.current.delete(keyMap[e.key]); if (mode === 'playing') e.preventDefault(); } };
-    const release = () => { keys.current.clear(); save(); };
+    const up = e => { input.current.remove(`key:${e.code || e.key}`); setPressedMask(input.current.peekMask()); if (mode === 'playing' && keyMap[e.key] && !e.target?.closest?.('button, a, input, textarea, select')) e.preventDefault(); };
+    const release = () => { input.current.clear(); swipes.current.clear(); setPressedMask(0); save(); };
     window.addEventListener('keydown', down); window.addEventListener('keyup', up); window.addEventListener('blur', release);
     document.addEventListener('visibilitychange', release);
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); window.removeEventListener('blur', release); document.removeEventListener('visibilitychange', release); };
   }, [mode, save]);
 
   useEffect(() => {
-    if (mode !== 'playing') return undefined;
+    if (mode !== 'playing') { input.current.clear(); swipes.current.clear(); setPressedMask(0); return undefined; }
     let last = performance.now(), accumulator = 0;
     const tick = now => {
       const r = run.current;
@@ -85,7 +92,7 @@ export default function BurgerRunPage() {
       if (document.hidden) { last = now; frame.current = requestAnimationFrame(tick); return; }
       accumulator += Math.min(100, now - last); last = now;
       while (accumulator >= 1000 / RULES.hz && r.state.phase === 'playing') {
-        const mask = (keys.current.has('left') ? 1 : 0) | (keys.current.has('right') ? 2 : 0) | (keys.current.has('jump') ? 4 : 0);
+        const mask = input.current.nextMask();
         const lastInput = r.inputs[r.inputs.length - 1];
         if (mask !== lastInput[1]) {
           if (lastInput[0] === r.state.tick) lastInput[1] = mask;
@@ -101,7 +108,7 @@ export default function BurgerRunPage() {
         accumulator -= 1000 / RULES.hz;
       }
       drawGame(canvas.current, r.state, r.world);
-      if (r.state.tick % 6 === 0 || r.state.phase !== 'playing') setHud({ food: r.state.collected.length, hearts: r.state.hearts, progress: Math.min(100, r.state.x / r.world.finish * 100), seconds: Math.max(0, Math.ceil((RULES.maxTicks - r.state.tick) / RULES.hz)) });
+      if (r.state.tick - lastHudTick.current >= 6 || r.state.tick < lastHudTick.current || r.state.phase !== 'playing') { lastHudTick.current = r.state.tick; setPressedMask(input.current.peekMask()); setHud({ food: r.state.collected.length, hearts: r.state.hearts, progress: Math.min(100, r.state.x / r.world.finish * 100), seconds: Math.max(0, Math.ceil((RULES.maxTicks - r.state.tick) / RULES.hz)) }); }
       if (now - lastSave.current > 1000) { save(); lastSave.current = now; }
       if (Date.now() >= Date.parse(r.expiresAt)) { setError('This attempt has expired. Refresh eligibility to continue.'); setMode('expired'); void loadStatus().catch(() => {}); return; }
       if (r.state.phase !== 'playing') { save(); void submitRef.current(); return; }
@@ -114,7 +121,7 @@ export default function BurgerRunPage() {
   async function start() {
     if (busy.current || mode === 'playing' || mode === 'paused') return;
     audioRef.current.begin();
-    busy.current = true; setMode('starting'); setError(''); setResult(null); setDecisionSession(null); keys.current.clear();
+    busy.current = true; setMode('starting'); setError(''); setResult(null); setDecisionSession(null); input.current.clear();
     try {
       const { data: session } = await axiosInstance.post(`${base}/start`, {});
       if (!alive.current) return;
@@ -138,6 +145,8 @@ export default function BurgerRunPage() {
       setOrphan(null); setHasActive(true); setStatus(v => ({ ...v, attemptsLeft: session.attemptsLeft })); save();
       setHud({ food: state.collected.length, hearts: state.hearts, progress: state.x / 4650 * 100, seconds: Math.ceil((RULES.maxTicks - state.tick) / 60) });
       drawGame(canvas.current, state, run.current.world);
+      canvas.current?.focus?.({ preventScroll: true });
+      stageRef.current?.scrollIntoView?.({ block: 'center', behavior: 'auto' });
       setMode(state.phase === 'playing' ? 'playing' : 'retry');
     } catch (e) { if (alive.current) { setError(message(e)); setMode('idle'); } }
     finally { busy.current = false; }
@@ -149,34 +158,84 @@ export default function BurgerRunPage() {
     catch (e) { if (alive.current) setError(message(e)); }
     finally { busy.current = false; }
   }
-  function control(action, pressed, event) {
-    if (mode !== 'playing') return;
-    event.preventDefault();
-    if (pressed) { audioRef.current.unlock(); keys.current.add(action); event.currentTarget.setPointerCapture?.(event.pointerId); }
-    else keys.current.delete(action);
+  useEffect(() => {
+    if (!expanded) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const escape = e => { if (e.key === 'Escape') setExpanded(false); };
+    window.addEventListener('keydown', escape);
+    return () => { document.body.style.overflow = previous; window.removeEventListener('keydown', escape); };
+  }, [expanded]);
+
+  function releasePointer(event) {
+    input.current.remove(`pointer:${event.pointerId}`);
+    setPressedMask(input.current.peekMask());
   }
+  function buttonProps(action) {
+    return {
+      type: 'button', disabled: mode !== 'playing',
+      className: `br-circle br-circle--${action}${pressedMask & ACTION_BITS[action] ? ' is-held' : ''}`,
+      'aria-label': action === 'jump' ? 'Jump' : `Move ${action}`,
+      onPointerDown: e => {
+        if (mode !== 'playing' || (e.pointerType === 'mouse' && e.button !== 0)) return;
+        e.preventDefault(); audioRef.current.unlock(); input.current.set(`pointer:${e.pointerId}`, action);
+        setPressedMask(input.current.peekMask());
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* Pointer may already have ended. */ }
+      },
+      onPointerUp: releasePointer, onPointerCancel: releasePointer, onLostPointerCapture: releasePointer,
+      onKeyDown: e => { if (mode === 'playing' && !e.repeat && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); audioRef.current.unlock(); input.current.set(`button:${action}:${e.key}`, action); setPressedMask(input.current.peekMask()); } },
+      onKeyUp: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.current.remove(`button:${action}:${e.key}`); setPressedMask(input.current.peekMask()); } },
+      onBlur: () => { input.current.remove(`button:${action}:Enter`); input.current.remove(`button:${action}: `); setPressedMask(input.current.peekMask()); },
+    };
+  }
+  function swipeStart(e) {
+    if (mode !== 'playing' || !['touch', 'pen'].includes(e.pointerType)) return;
+    e.preventDefault(); audioRef.current.unlock();
+    swipes.current.start(e.pointerId, e.clientX, e.clientY, performance.now());
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* Optional capture. */ }
+  }
+  function swipeMove(e) {
+    if (mode !== 'playing') return;
+    if (swipes.current.move(e.pointerId, e.clientX, e.clientY, performance.now())) {
+      input.current.queueJump(); setPressedMask(input.current.peekMask()); setSwipePulse(value => value + 1);
+    }
+  }
+  function pause() { if (mode === 'paused') audioRef.current.unlock(); input.current.clear(); save(); setMode(mode === 'playing' ? 'paused' : 'playing'); }
   const playing = mode === 'playing', running = playing || mode === 'paused';
-  return <main className="br-page hnc-game-page">
+  return <main className={`br-page hnc-game-page${expanded ? ' br-page--expanded' : ''}`}>
     <div className="br-wrap">
-      <header className="br-header"><div><p className="br-eyebrow">HNC GAMES · LEVEL 01</p><h1>HNC Burger Run <span>🍔</span></h1><p>Run, jump and bring the flavour home.</p></div><Link to="/user/home" className="br-link">All games</Link></header>
-      <section className="br-card" aria-label="HNC Burger Run">
+      <header className="br-header"><div><p className="br-eyebrow">HNC GAMES · LEVEL 01</p><h1>HNC Burger Run <span>🍔</span></h1><p>Run, jump and bring the flavour home.</p></div><Link to="/user/home" className="br-link">← Back to Home</Link></header>
+      <section className="br-card br-game-card" aria-label="HNC Burger Run">
+        <div className="br-toolbar">
+          <Link to="/user/home" className="br-toolbar-home">← Home</Link>
+          <span className="br-toolbar-title">BURGER RUN <span>LEVEL 01</span></span>
+          <button type="button" aria-label={audio.soundEnabled ? 'Mute sound' : 'Enable sound'} aria-pressed={audio.soundEnabled} onClick={audio.toggleSound}>{audio.soundEnabled ? '♫' : '♪̸'}</button>
+          <button type="button" aria-label={expanded ? 'Exit expanded game' : 'Expand game'} aria-pressed={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? '↙' : '⛶'}</button>
+          <button type="button" aria-label={playing ? 'Pause game' : 'Continue game'} disabled={!running} onClick={pause}>{playing ? 'Ⅱ' : '▶'}</button>
+        </div>
         <div className="br-hud"><div><span>FOOD</span><strong>{hud.food}<small> / {RULES.requiredFood}</small></strong></div><div><span>HEARTS</span><strong aria-label={`${hud.hearts} hearts remaining`}>{'♥'.repeat(Math.max(0,hud.hearts)) || '—'}</strong></div><div><span>TIME</span><strong>{hud.seconds}<small>s</small></strong></div></div>
-        <div className="br-stage"><canvas ref={canvas} aria-label="Burger character platform game. Use the Left, Right and Jump controls below." />
+        <div ref={stageRef} className={`br-stage${playing ? ' br-stage--playing' : ''}`}>
+          <canvas ref={canvas} tabIndex={0} onPointerDown={swipeStart} onPointerMove={swipeMove} onPointerUp={e=>swipes.current.end(e.pointerId)} onPointerCancel={e=>swipes.current.end(e.pointerId)} onLostPointerCapture={e=>swipes.current.end(e.pointerId)} aria-label="Burger Run game. Hold a direction button to move. Swipe up on the game to jump, or use the Jump button." />
+          {playing && <div className="br-stage-tip" aria-hidden="true">↑ Swipe up to jump</div>}
+          {playing && swipePulse > 0 && <span key={swipePulse} className="br-swipe-pop" aria-hidden="true">↑</span>}
           {!running && <div className="br-overlay"><span className="br-badge">{mode === 'finished' ? result?.outcome === 'qualified' ? 'DELIVERY COMPLETE' : 'TRY ANOTHER RUN' : 'A LITTLE ADVENTURE. A LOT OF FLAVOUR.'}</span><h2>{mode === 'finished' ? `${result?.score ?? 0} points` : 'Ready, chef?'}</h2><p>{mode === 'saving' ? 'Checking your run…' : mode === 'retry' ? 'Your run is saved on this device. Retry submitting it.' : `Collect ${RULES.requiredFood} food items, avoid obstacles and reach HOT N COOL.`}</p>
             {mode === 'retry' ? <button className="br-primary" onClick={() => void submit()}>Retry result</button> : orphan ? <button className="br-primary" onClick={() => void abandon()}>End unfinished attempt</button> : <button className="br-primary" disabled={loading || ['starting','saving','expired'].includes(mode) || status?.hasPrize || (!hasActive && (status?.locked || !status))} onClick={() => void start()}>{loading ? 'Loading…' : mode === 'starting' ? 'Starting…' : status?.hasPrize ? 'Prize already awarded' : 'Start / resume run'}</button>}
           </div>}
-          {mode === 'paused' && <div className="br-overlay"><h2>Paused</h2><p>The session expiry still applies.</p><button className="br-primary" onClick={() => { audioRef.current.unlock(); keys.current.clear(); setMode('playing'); }}>Continue</button></div>}
+          {mode === 'paused' && <div className="br-overlay"><h2>Paused</h2><p>The session expiry still applies.</p><button className="br-primary" onClick={() => { audioRef.current.unlock(); input.current.clear(); setMode('playing'); }}>Continue</button></div>}
         </div>
         <div className="br-progress" aria-label={`Journey ${Math.round(hud.progress)} percent`}><span style={{ width: `${hud.progress}%` }} /></div>
-        <div className="br-controls" aria-label="Game controls">{[['left','←','Move left'],['right','→','Move right'],['jump','↥ Jump','Jump']].map(([action,label,aria]) => <button key={action} type="button" disabled={!playing} aria-label={aria} onPointerDown={e=>control(action,true,e)} onPointerUp={e=>control(action,false,e)} onPointerCancel={e=>control(action,false,e)} onLostPointerCapture={()=>keys.current.delete(action)} onKeyDown={e=>{if(!e.repeat&&(e.key==='Enter'||e.key===' ')){e.preventDefault();audioRef.current.unlock();keys.current.add(action);}}} onKeyUp={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();keys.current.delete(action);}}}>{label}</button>)}<button type="button" disabled={!running} onClick={()=>{if(!playing)audioRef.current.unlock();keys.current.clear();save();setMode(playing?'paused':'playing');}}>{playing?'Pause':'Continue'}</button></div>
-        <button type="button" className="br-refresh" style={{ marginTop: 12 }} aria-pressed={audio.soundEnabled} onClick={audio.toggleSound}>{audio.soundEnabled ? '🔊 Sound on — mute' : '🔇 Sound off — enable'}</button>
-        <p className="br-meta">Attempts remaining: <strong>{status?.attemptsLeft ?? '…'} / {status?.maxAttempts ?? 3}</strong> · Desktop: ← → and Space · Mobile: hold arrows and tap Jump</p>
+        <div className="br-controls" aria-label="Game controls">
+          <div className="br-direction-pad"><button {...buttonProps('left')}><span aria-hidden="true">◀</span></button><span className="br-pad-dot" aria-hidden="true" /><button {...buttonProps('right')}><span aria-hidden="true">▶</span></button><span className="br-pad-label">MOVE</span></div>
+          <p className="br-control-tip">Swipe up on the screen<br /><strong>or tap JUMP</strong></p>
+          <button {...buttonProps('jump')}><span aria-hidden="true">↥</span><small>JUMP</small></button>
+        </div>
+        <p className="br-meta">Attempts remaining: <strong>{status?.attemptsLeft ?? '…'} / {status?.maxAttempts ?? 3}</strong> · PC: ← → / A D + Space · Touch: hold a direction + swipe up or tap Jump</p>
         {error && <p className="br-error" role="alert">{error}</p>}
         <p className="br-note">Qualifying runs are reviewed before the prize draw. One campaign prize per customer across all games.</p>
         <button className="br-refresh" disabled={running || busy.current} onClick={()=>{setLoading(true);loadStatus().then(()=>{setError('');if(mode==='expired')setMode('idle');}).catch(e=>setError(message(e))).finally(()=>{if(alive.current)setLoading(false);});}}>Refresh eligibility</button>
       </section>
       {decisionSession && <section className="br-card"><PrizeDecisionPanel key={decisionSession} gameSessionId={decisionSession} allowDecisionRecovery /></section>}
-      <footer className="br-guide"><div><span>01</span><h3>Collect the good stuff</h3><p>Fries, juice and stars all count. Aim for at least ten.</p></div><div><span>02</span><h3>Keep your chef safe</h3><p>Jump over crates, spilled drinks and the moving barrier.</p></div><div><span>03</span><h3>Find your finish</h3><p>Reach the HNC restaurant before the run ends.</p></div></footer>
+      <footer className="br-guide"><div><span>01</span><h3>Collect the good stuff</h3><p>Fries, juice and stars all count. Aim for at least ten.</p></div><div><span>02</span><h3>Keep your chef safe</h3><p>Swipe up or tap Jump to clear crates, spills and the moving barrier.</p></div><div><span>03</span><h3>Find your finish</h3><p>Reach the HNC restaurant before the run ends.</p></div></footer>
     </div>
   </main>;
 }
